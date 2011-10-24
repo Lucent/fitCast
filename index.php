@@ -1,7 +1,15 @@
 <!doctype html>
 <html>
 <head>
-<style>input[type=text]	{ width: 5ex; }</style>
+<style>
+table, fieldset		{ display: inline-block; }
+legend				{ font-weight: bold; }
+form				{ display: inline; }
+input[type=text]	{ width: 5ex; }
+#PredictedWeight	{ float: right; }
+</style>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>var data = [];</script>
 </head>
 <body>
 <form method="get">
@@ -28,6 +36,8 @@ function expenditure($sex, $weight, $height, $age) {
 <legend>Lifestyle (BMR=<?= round($bmr) ?>)</legend>
 <input type="radio" name="lifestyle" value="sedentary" id="sedentary" checked><label for="sedentary">Sedentary: <?= round(expenditure($_GET["sex"], $_GET["weight"], $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"])) ?> cal/day</label><br>
 </fieldset>
+
+<br>
 
 <table>
 <thead>
@@ -65,12 +75,39 @@ for ($x = -20; $x < 0; $x++) { ?>
 	<td><?= round($loss / 3500, 2) ?></td>
 	<td><?= round($cumulative / 3500, 2) ?></td>
 	<td><?= round($_GET["weight"] - $cumulative / 3500, 1) ?></td>
+	<script>data.push([new Date(<?= date("Y", strtotime($x." day")) ?>, <?= date("n", strtotime($x." day")) - 1 ?>, <?= date("j", strtotime($x." day")) ?>), <?= $_GET["weight"] - $cumulative / 3500 ?>]);</script>
 	</tr>
 <? } ?>
 </tbody>
 </table>
 
+<div id="PredictedWeight"></div>
+<br>
 <input type="submit">
 </form>
+
+<script type="text/javascript">
+google.load('visualization', '1.0', {'packages':['corechart']});
+google.setOnLoadCallback(drawChart);
+
+function drawChart() {
+var tableData = new google.visualization.DataTable();
+tableData.addColumn('date', 'Date');
+tableData.addColumn('number', 'Weight');
+tableData.addRows(data);
+
+// Set chart options
+var options = {'width':600, 'height':400, "legend": "none", "vAxis": {"title": "Weight (lbs)"}};
+
+// Instantiate and draw our chart, passing in some options.
+var chart = new google.visualization.LineChart(document.getElementById('PredictedWeight'));
+var formatter = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
+	formatter.format(tableData, 1);
+chart.draw(tableData, options);
+}
+</script>
+
+
+
 </body>
 </html>
