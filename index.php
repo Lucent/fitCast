@@ -64,7 +64,7 @@ for ($x = -20; $x < 0; $x++) { ?>
 	<td>-</td>
 	<td><input name="exercise<?= $x ?>" type="text" size="4" value="<?= $_GET["exercise".$x] ?>"></td>
 	<td>=</td>
-	<td><input name="net<?= $x ?>" type="text" size="4" value="<?= $_GET["day".$x] - $_GET["exercise".$x] ?>"></td>
+	<td id="net<?= $x ?>"><?= $_GET["day".$x] - $_GET["exercise".$x] ?></td>
 	<?
 	if ($_GET["day".$x] == "")
 		$loss = 0;
