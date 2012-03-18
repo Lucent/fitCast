@@ -8,8 +8,10 @@ form				{ display: inline; }
 input[type=text]	{ width: 5ex; }
 #PredictedWeight	{ float: right; }
 </style>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script>var data = [];</script>
+<script src="https://www.google.com/jsapi"></script>
+<script src="Script/weightcast.js"></script>
+<script>
+</script>
 </head>
 <body>
 <form method="get">
@@ -39,7 +41,7 @@ function expenditure($sex, $weight, $height, $age) {
 
 <br>
 
-<table>
+<table id="Table">
 <thead>
 <tr>
  <th colspan="2">Date</th>
