@@ -78,13 +78,13 @@ var drawChart = function() {
 
 	var color_table_row = function(num, color) {
 		document.getElementById("Table").tBodies[0].rows[num].style.backgroundColor = color;
-	}
+	};
 	var chart_hover = function(e) {
 		color_table_row(e.row, "yellow")
-	}
+	};
 	var chart_leave = function(e) {
 		color_table_row(e.row, "")
-	}
+	};
 	var lastClicked;
 	var click_chart = function() {
 		var selectedItem = chart.getSelection()[0];
@@ -95,23 +95,48 @@ var drawChart = function() {
 			lastClicked = selectedItem.row;
 		}
 	}
+	var enter_table_row = function() {
+		chart.setSelection([{row: this.idx}]);
+		chart_hover({row: this.idx});
+	};
+	var leave_table_row = function() {
+		chart.setSelection([{}]);
+		chart_leave({row: this.idx});
+	};
 	google.visualization.events.addListener(chart, "onmouseover", chart_hover);
 	google.visualization.events.addListener(chart, "onmouseout", chart_leave);
 	google.visualization.events.addListener(chart, "select", click_chart);
 
 	chart.draw(tableData, options);
 
-	bind_cell_hovers(chart);
-};
-
-var bind_cell_hovers = function(chart) {
 	var tbl = document.getElementById("Table").tBodies[0].rows;
 	for (var row = 0; row < tbl.length; row++) {
 		tbl[row].idx = row;
-		tbl[row].onmouseover = function() { chart.setSelection([{"row": this.idx}]); }
-		tbl[row].onmouseout = function() { chart.setSelection([{}]); }
-		tbl[row].onclick = function() { chart.setSelection([{}]); }
+		better_mouseover(tbl[row], enter_table_row);
+		better_mouseout(tbl[row], leave_table_row);
+
+		tbl[row].onclick = click_chart;
 	}
+};
+
+var better_mouseover = function(sink, callback) {
+	if (typeof sink.onmouseenter !== "undefined")
+		sink.onmouseenter = callback;
+	else
+		sink.onmouseover = function (e) {
+			for (var el = e.relatedTarget; el && (el !== sink); el = el.parentNode) {};
+			if (!el) callback();
+		};
+};
+
+var better_mouseout = function(sink, callback) {
+	if (typeof sink.onmouseleave !== "undefined")
+		sink.onmouseleave = callback;
+	else
+		sink.onmouseout = function (e) {
+			for (var el = e.relatedTarget; el && (el !== sink); el = el.parentNode) {};
+			if (!el) callback();
+		};
 };
 
 onload = function() {
