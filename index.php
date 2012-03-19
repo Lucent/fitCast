@@ -3,7 +3,7 @@
 <head>
 <style>
 body				{ font-family: sans-serif; }
-h1					{ margin-bottom: 0; }
+h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
 table, fieldset		{ display: inline-block; }
 table				{ border-collapse: collapse; }
@@ -11,6 +11,8 @@ fieldset			{ padding: 1ex; border: medium solid green; -ms-border-radius: 1ex; }
 fieldset *			{ color: green; }
 legend				{ font-weight: bold; }
 form				{ display: inline; }
+th					{ padding: 1ex 0.5ex; letter-spacing: -1px; }
+th span				{ display: block; font-weight: normal; }
 input[type=text]	{ width: 5ex; font-size: medium; }
 #PredictedWeight	{ float: right; }
 .odd				{ background-color: #EEE; }
@@ -19,9 +21,9 @@ input[type=text]	{ width: 5ex; font-size: medium; }
 <script src="Script/weightcast.js"></script>
 </head>
 <body>
+<nav style="float: right;"><a href="faq.html">Questions</a> <a href="/?weight=200&age=29&sex=m&feet=6&inches=0&lifestyle=1.2&day-20=3000&exercise-20=&day-19=6000&exercise-19=&day-18=2000&exercise-18=&day-17=1800&exercise-17=&day-16=2000&exercise-16=&day-15=1700&exercise-15=&day-14=3000&exercise-14=&day-13=1500&exercise-13=&day-12=2500&exercise-12=&day-11=1900&exercise-11=&day-10=1700&exercise-10=&day-9=1600&exercise-9=&day-8=5&exercise-8=1200&day-7=1900&exercise-7=&day-6=5&exercise-6=2000&day-5=5&exercise-5=2000&day-4=5&exercise-4=2000&day-3=5&exercise-3=4000&day-2=5&exercise-2=3000&day-1=5&exercise-1=4000">Load sample data</a></nav>
 <h1>WeightCast</h1>
 <h2>Forecasting your weight with more precision than a jeweler's scale.</h2>
-<nav><a href="faq.html">Questions</a></nav>
 <form method="get">
 
 <fieldset>
@@ -49,18 +51,18 @@ $bmr = expenditure($_GET["sex"], $_GET["weight"], $_GET["feet"] * 12 + $_GET["in
 
 <br>
 
-<table id="Table" cellspacing=0 cellpadding=5>
+<table id="Table" cellpadding="4">
 <thead>
 <tr>
  <th colspan="2">Date</th>
- <th>Intake<br>(cal)</th>
+ <th>Food <span>(cal)</span></th>
  <th></th>
- <th>Exercise<br>(cal)</th>
+ <th>Exercise <span>(cal)</span></th>
  <th></th>
- <th>Net<br>(cal)</th>
- <th>Today<br>(lbs)</th>
- <th>Cumulative<br>(lbs)</th>
- <th>Predicted<br>(lbs)</th>
+ <th>Net <span>(cal)</span></th>
+ <th>Today <span>(lbs)</span></th>
+ <th>Change <span>(lbs)</span></th>
+ <th>Weight <span>(lbs)</span></th>
 </tr>
 </thead>
 <tbody>
