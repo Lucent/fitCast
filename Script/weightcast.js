@@ -6,9 +6,9 @@ var calc_color = function(value, start, end, min, max) {
 	result = start + ((( Math.round(((((end & 0xFF0000) >> 16) - ((start & 0xFF0000) >> 16)) * n))) << 16) + (( Math.round(((((end & 0x00FF00) >> 8) - ((start & 0x00FF00) >> 8)) * n))) << 8) + (( Math.round((((end & 0x0000FF) - (start & 0x0000FF)) * n)))));
 
 	return "#" + ((result >= 0x100000) ? "" : (result >= 0x010000) ? "0" : (result >= 0x001000) ? "00" : (result >= 0x000100) ? "000" : (result >= 0x000010) ? "0000" : "00000") + result.toString(16);
-}
+};
 
-function approximateFractions(d) {
+var approximateFractions = function(d) {
 	var numerators = [0, 1];
 	var denominators = [1, 0];
 
@@ -33,9 +33,9 @@ function approximateFractions(d) {
 
 		d2 = 1/(d2-L2);
 	}
-}
+};
 
-function getMaxNumerator(f) {
+var getMaxNumerator = function(f) {
 	 var f2 = null;
 	 var ixe = f.toString().indexOf("E");
 	 if (ixe == -1) ixe = f.toString().indexOf("e");
@@ -60,26 +60,61 @@ function getMaxNumerator(f) {
 	 for (var i = numDigitsPastDecimal; i > 0 && L % 5 == 0; i--) L /= 5;
 
 	 return L;
-}
+};
 
-function drawChart() {
+var drawChart = function() {
 	var tableData = new google.visualization.DataTable();
 	tableData.addColumn('date', 'Date');
 	tableData.addColumn('number', 'Weight');
 	tableData.addRows(data);
 
 	// Set chart options
-	var options = {'width':600, 'height':400, "legend": "none", "vAxis": {"title": "Weight (lbs)"}};
+	var options = {width: 600, height: 400, legend: "none", pointSize: 2, vAxis: {title: "Weight (lbs)"}, hAxis: {showTextEvery: 1}};
 
 	// Instantiate and draw our chart, passing in some options.
 	var chart = new google.visualization.LineChart(document.getElementById('PredictedWeight'));
 	var formatter = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
 	formatter.format(tableData, 1);
+
+	var color_table_row = function(num, color) {
+		document.getElementById("Table").tBodies[0].rows[num].style.backgroundColor = color;
+	}
+	var chart_hover = function(e) {
+		color_table_row(e.row, "yellow")
+	}
+	var chart_leave = function(e) {
+		color_table_row(e.row, "")
+	}
+	var lastClicked;
+	var click_chart = function() {
+		var selectedItem = chart.getSelection()[0];
+		if (lastClicked)
+			document.getElementById("Table").tBodies[0].rows[lastClicked].style.border = "";
+		if (selectedItem) {
+			document.getElementById("Table").tBodies[0].rows[selectedItem.row].style.border = "medium solid green";
+			lastClicked = selectedItem.row;
+		}
+	}
+	google.visualization.events.addListener(chart, "onmouseover", chart_hover);
+	google.visualization.events.addListener(chart, "onmouseout", chart_leave);
+	google.visualization.events.addListener(chart, "select", click_chart);
+
 	chart.draw(tableData, options);
-}
+
+	bind_cell_hovers(chart);
+};
+
+var bind_cell_hovers = function(chart) {
+	var tbl = document.getElementById("Table").tBodies[0].rows;
+	for (var row = 0; row < tbl.length; row++) {
+		tbl[row].idx = row;
+		tbl[row].onmouseover = function() { chart.setSelection([{"row": this.idx}]); }
+		tbl[row].onmouseout = function() { chart.setSelection([{}]); }
+		tbl[row].onclick = function() { chart.setSelection([{}]); }
+	}
+};
 
 onload = function() {
-
 	var tbl = document.getElementById("Table").tBodies[0].rows;
 	var goodColor = "00FF00", badColor = "FF0000", max = 0.3;
 
@@ -88,6 +123,7 @@ onload = function() {
 		var todayChgVal = todayChgCell.innerHTML;
 		var negative = todayChgVal < 0;
 
+		// Color background of cells red to green
 		if (negative) {
 			if (todayChgVal < -1 * max)
 				todayChgCell.style.backgroundColor = "#" + goodColor;
@@ -100,8 +136,11 @@ onload = function() {
 				todayChgCell.style.backgroundColor = calc_color(todayChgVal, "FFFFFF", badColor, 0, max);
 		}
 
+		// Change numbers to fractions
 		var frac = approximateFractions(Math.abs(todayChgVal));
 //		todayChgCell.innerHTML = (negative ? "-" : "") + frac[0] + "/" + frac[1];
+
+		// Bind chart events
 	}
 };
 
