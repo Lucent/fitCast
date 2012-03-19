@@ -89,13 +89,13 @@ for ($x = -20; $x < 0; $x++) { ?>
 	if ($_GET["day".$x] == "")
 		$loss = 0;
 	else
-		$loss = $_GET["day".$x] - expenditure($_GET["sex"], $_GET["weight"] - $cumulative / 3500, $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"]) - $_GET["exercise".$x];
-	$cumulative -= $loss;
+		$loss = $_GET["day".$x] - expenditure($_GET["sex"], $_GET["weight"] + $cumulative / 3500, $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"]) - $_GET["exercise".$x];
+	$cumulative += $loss;
 	?>
 	<td align="right"><?= sprintf("%.2f", round($loss / 3500, 2)) ?></td>
 	<td align="right"><?= sprintf("%.1f", round($cumulative / 3500, 1)) ?></td>
-	<td><?= round($_GET["weight"] - $cumulative / 3500, 1) ?></td>
-	<script>data.push([new Date(<?= date("Y", strtotime($x." day")) ?>, <?= date("n", strtotime($x." day")) - 1 ?>, <?= date("j", strtotime($x." day")) ?>), <?= $_GET["weight"] - $cumulative / 3500 ?>]);</script>
+	<td><?= round($_GET["weight"] + $cumulative / 3500, 1) ?></td>
+	<script>data.push([new Date(<?= date("Y", strtotime($x." day")) ?>, <?= date("n", strtotime($x." day")) - 1 ?>, <?= date("j", strtotime($x." day")) ?>), <?= $_GET["weight"] + $cumulative / 3500 ?>]);</script>
 </tr>
 <? } ?>
 </tbody>
