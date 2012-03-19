@@ -21,6 +21,7 @@ input[type=text]	{ width: 5ex; font-size: medium; }
 <body>
 <h1>WeightCast</h1>
 <h2>Forecasting your weight with more precision than a jeweler's scale.</h2>
+<nav><a href="faq.html">Questions</a></nav>
 <form method="get">
 
 <fieldset>
