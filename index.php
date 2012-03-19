@@ -66,7 +66,7 @@ for ($x = -20; $x < 0; $x++) { ?>
 	<td>-</td>
 	<td><input name="exercise<?= $x ?>" type="text" size="4" value="<?= $_GET["exercise".$x] ?>"></td>
 	<td>=</td>
-	<td id="net<?= $x ?>"><?= $_GET["day".$x] - $_GET["exercise".$x] ?></td>
+	<td align="right" id="net<?= $x ?>"><?= $_GET["day".$x] - $_GET["exercise".$x] ?></td>
 	<?
 	if ($_GET["day".$x] == "")
 		$loss = 0;
@@ -74,8 +74,8 @@ for ($x = -20; $x < 0; $x++) { ?>
 		$loss = $_GET["day".$x] - expenditure($_GET["sex"], $_GET["weight"] - $cumulative / 3500, $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"]) - $_GET["exercise".$x];
 	$cumulative -= $loss;
 	?>
-	<td><?= round($loss / 3500, 2) ?></td>
-	<td><?= round($cumulative / 3500, 2) ?></td>
+	<td align="right"><?= round($loss / 3500, 2) ?></td>
+	<td align="right"><?= round($cumulative / 3500, 2) ?></td>
 	<td><?= round($_GET["weight"] - $cumulative / 3500, 1) ?></td>
 	<script>data.push([new Date(<?= date("Y", strtotime($x." day")) ?>, <?= date("n", strtotime($x." day")) - 1 ?>, <?= date("j", strtotime($x." day")) ?>), <?= $_GET["weight"] - $cumulative / 3500 ?>]);</script>
 	</tr>
