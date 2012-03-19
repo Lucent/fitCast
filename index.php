@@ -8,10 +8,18 @@ form				{ display: inline; }
 input[type=text]	{ width: 5ex; }
 #PredictedWeight	{ float: right; }
 </style>
-<script src="https://www.google.com/jsapi"></script>
 <script src="Script/weightcast.js"></script>
-<script>
-</script>
+<? /*
+Generated from:
+'http://www.google.com/jsapi?autoload=' + encodeURIComponent(JSON.stringify({
+    "modules": [{
+        "name": "visualization",
+        "version": "1",
+        "packages": ["corechart"],
+        "callback": "drawChart"
+    }]
+})) */ ?>
+<script src="http://www.google.com/jsapi?autoload=%7B%22modules%22%3A%5B%7B%22name%22%3A%22visualization%22%2C%22version%22%3A%221%22%2C%22packages%22%3A%5B%22corechart%22%5D%2C%22callback%22%3A%22drawChart%22%7D%5D%7D"></script>
 </head>
 <body>
 <form method="get">
@@ -87,29 +95,6 @@ for ($x = -20; $x < 0; $x++) { ?>
 <br>
 <input type="submit">
 </form>
-
-<script type="text/javascript">
-google.load('visualization', '1.0', {'packages':['corechart']});
-google.setOnLoadCallback(drawChart);
-
-function drawChart() {
-var tableData = new google.visualization.DataTable();
-tableData.addColumn('date', 'Date');
-tableData.addColumn('number', 'Weight');
-tableData.addRows(data);
-
-// Set chart options
-var options = {'width':600, 'height':400, "legend": "none", "vAxis": {"title": "Weight (lbs)"}};
-
-// Instantiate and draw our chart, passing in some options.
-var chart = new google.visualization.LineChart(document.getElementById('PredictedWeight'));
-var formatter = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
-	formatter.format(tableData, 1);
-chart.draw(tableData, options);
-}
-</script>
-
-
 
 </body>
 </html>

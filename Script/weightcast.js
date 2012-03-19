@@ -62,8 +62,24 @@ function getMaxNumerator(f) {
 	 return L;
 }
 
+function drawChart() {
+	var tableData = new google.visualization.DataTable();
+	tableData.addColumn('date', 'Date');
+	tableData.addColumn('number', 'Weight');
+	tableData.addRows(data);
+
+	// Set chart options
+	var options = {'width':600, 'height':400, "legend": "none", "vAxis": {"title": "Weight (lbs)"}};
+
+	// Instantiate and draw our chart, passing in some options.
+	var chart = new google.visualization.LineChart(document.getElementById('PredictedWeight'));
+	var formatter = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
+	formatter.format(tableData, 1);
+	chart.draw(tableData, options);
+}
 
 onload = function() {
+
 	var tbl = document.getElementById("Table").tBodies[0].rows;
 	var goodColor = "00FF00", badColor = "FF0000", max = 0.3;
 
