@@ -2,11 +2,19 @@
 <html>
 <head>
 <style>
+body				{ font-family: sans-serif; }
+h1					{ margin-bottom: 0; }
+h2					{ font-size: medium; }
 table, fieldset		{ display: inline-block; }
+table				{ border-collapse: collapse; }
+fieldset			{ padding: 1ex; border: medium solid green; -ms-border-radius: 1ex; }
+fieldset *			{ color: green; }
 legend				{ font-weight: bold; }
 form				{ display: inline; }
-input[type=text]	{ width: 5ex; }
+input[type=text]	{ width: 5ex; font-size: medium; }
 #PredictedWeight	{ float: right; }
+.odd				{ background-color: #EEE; }
+.NewWeek			{ border-top: thin solid black; }
 </style>
 <script src="Script/weightcast.js"></script>
 <? /*
@@ -22,6 +30,8 @@ Generated from:
 <script src="http://www.google.com/jsapi?autoload=%7B%22modules%22%3A%5B%7B%22name%22%3A%22visualization%22%2C%22version%22%3A%221%22%2C%22packages%22%3A%5B%22corechart%22%5D%2C%22callback%22%3A%22drawChart%22%7D%5D%7D"></script>
 </head>
 <body>
+<h1>WeightCast</h1>
+<h2>Forecasting your weight with more precision than a jeweler's scale.</h2>
 <form method="get">
 
 <fieldset>
@@ -49,7 +59,7 @@ function expenditure($sex, $weight, $height, $age) {
 
 <br>
 
-<table id="Table">
+<table id="Table" cellspacing=0 cellpadding=5>
 <thead>
 <tr>
  <th colspan="2">Date</th>
@@ -67,7 +77,7 @@ function expenditure($sex, $weight, $height, $age) {
 <?
 $cumulative = 0;
 for ($x = -20; $x < 0; $x++) { ?>
-	<tr>
+<tr class="<?= $x % 2 ? "even" : "odd" ?> <?= date("D", strtotime($x . " day")) == "Sun" ? "NewWeek" : "" ?>">
 	<td align="right"><?= date("D", strtotime($x . " day")) ?></td>
 	<td><?= date("M j", strtotime($x . " day")) ?></td>
 	<td><input name="day<?= $x ?>" type="text" size="4" value="<?= $_GET["day".$x] ?>"></td>
@@ -75,18 +85,18 @@ for ($x = -20; $x < 0; $x++) { ?>
 	<td><input name="exercise<?= $x ?>" type="text" size="4" value="<?= $_GET["exercise".$x] ?>"></td>
 	<td>=</td>
 	<td align="right" id="net<?= $x ?>"><?= $_GET["day".$x] - $_GET["exercise".$x] ?></td>
-	<?
+<?
 	if ($_GET["day".$x] == "")
 		$loss = 0;
 	else
 		$loss = $_GET["day".$x] - expenditure($_GET["sex"], $_GET["weight"] - $cumulative / 3500, $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"]) - $_GET["exercise".$x];
 	$cumulative -= $loss;
 	?>
-	<td align="right"><?= round($loss / 3500, 2) ?></td>
-	<td align="right"><?= round($cumulative / 3500, 2) ?></td>
+	<td align="right"><?= sprintf("%.2f", round($loss / 3500, 2)) ?></td>
+	<td align="right"><?= sprintf("%.1f", round($cumulative / 3500, 1)) ?></td>
 	<td><?= round($_GET["weight"] - $cumulative / 3500, 1) ?></td>
 	<script>data.push([new Date(<?= date("Y", strtotime($x." day")) ?>, <?= date("n", strtotime($x." day")) - 1 ?>, <?= date("j", strtotime($x." day")) ?>), <?= $_GET["weight"] - $cumulative / 3500 ?>]);</script>
-	</tr>
+</tr>
 <? } ?>
 </tbody>
 </table>
