@@ -56,8 +56,8 @@ function getMaxNumerator(f) {
 	 if (L2 == 0) numIntDigits = 0;
 	 var numDigitsPastDecimal = numDigits - numIntDigits;
 
-	 for (var i = numDigitsPastDecimal; i > 0 && L%2 == 0; i--) L /= 2;
-	 for (var i = numDigitsPastDecimal; i > 0 && L%5 == 0; i--) L /= 5;
+	 for (var i = numDigitsPastDecimal; i > 0 && L % 2 == 0; i--) L /= 2;
+	 for (var i = numDigitsPastDecimal; i > 0 && L % 5 == 0; i--) L /= 5;
 
 	 return L;
 }
@@ -65,7 +65,7 @@ function getMaxNumerator(f) {
 
 onload = function() {
 	var tbl = document.getElementById("Table").tBodies[0].rows;
-	var goodColor = "00FF00", badColor = "FF0000", max = 1;
+	var goodColor = "00FF00", badColor = "FF0000", max = 0.3;
 
 	for (var row = 0; row < tbl.length; row++) {
 		var todayChgCell = tbl[row].cells[7];
