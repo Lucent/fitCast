@@ -34,16 +34,16 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 <?
 function expenditure($sex, $weight, $height, $age) {
 	if ($sex == "m")
-		$bmr = 66 + 6.23 * $weight + 12.7 * $height - 6.76 * $age;
+		return 66 + 6.23 * $weight + 12.7 * $height - 6.76 * $age;
 	elseif ($sex == "f")
-		$bmr = 655 + 4.35 * $weight + 4.7 * $height - 4.7 * $age;
-	return $bmr * 1.2;
+		return 655 + 4.35 * $weight + 4.7 * $height - 4.7 * $age;
 }
+$bmr = expenditure($_GET["sex"], $_GET["weight"], $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"]);
 ?>
 
 <fieldset>
 <legend>Lifestyle (BMR=<?= round($bmr) ?>)</legend>
-<input type="radio" name="lifestyle" value="sedentary" id="sedentary" checked><label for="sedentary">Sedentary: <?= round(expenditure($_GET["sex"], $_GET["weight"], $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"])) ?> cal/day</label><br>
+<input type="radio" name="lifestyle" value="1.2" id="sedentary" checked><label for="sedentary">Sedentary: <?= round($bmr * $_GET["lifestyle"]) ?> cal/day</label><br>
 </fieldset>
 
 <br>
@@ -78,7 +78,7 @@ for ($x = -20; $x < 0; $x++) { ?>
 	if ($_GET["day".$x] == "")
 		$loss = 0;
 	else
-		$loss = $_GET["day".$x] - expenditure($_GET["sex"], $_GET["weight"] + $cumulative / 3500, $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"]) - $_GET["exercise".$x];
+		$loss = $_GET["day".$x] - expenditure($_GET["sex"], $_GET["weight"] + $cumulative / 3500, $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"]) * $_GET["lifestyle"] - $_GET["exercise".$x];
 	$cumulative += $loss;
 	?>
 	<td align="right"><?= sprintf("%.2f", round($loss / 3500, 2)) ?></td>
