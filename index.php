@@ -17,17 +17,6 @@ input[type=text]	{ width: 5ex; font-size: medium; }
 .NewWeek			{ border-top: thin solid black; }
 </style>
 <script src="Script/weightcast.js"></script>
-<? /*
-Generated from:
-'http://www.google.com/jsapi?autoload=' + encodeURIComponent(JSON.stringify({
-    "modules": [{
-        "name": "visualization",
-        "version": "1",
-        "packages": ["corechart"],
-        "callback": "drawChart"
-    }]
-})) */ ?>
-<script src="http://www.google.com/jsapi?autoload=%7B%22modules%22%3A%5B%7B%22name%22%3A%22visualization%22%2C%22version%22%3A%221%22%2C%22packages%22%3A%5B%22corechart%22%5D%2C%22callback%22%3A%22drawChart%22%7D%5D%7D"></script>
 </head>
 <body>
 <h1>WeightCast</h1>

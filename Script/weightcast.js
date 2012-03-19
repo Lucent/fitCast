@@ -139,7 +139,25 @@ var better_mouseout = function(sink, callback) {
 		};
 };
 
+var load_script = function(file) {
+	var s = document.createElement("script");
+	s.src = file;
+	s.setAttribute("async", "true");
+	s.type = "text/javascript";
+	document.getElementsByTagName("head")[0].appendChild(s);
+};
+
 onload = function() {
+	var chart_lib = "http://www.google.com/jsapi?autoload=" + encodeURIComponent(JSON.stringify({
+		"modules": [{
+			"name": "visualization",
+			"version": "1",
+			"packages": ["corechart"],
+			"callback": "drawChart"
+		}]
+	}));
+	load_script(chart_lib);
+
 	var tbl = document.getElementById("Table").tBodies[0].rows;
 	var goodColor = "00FF00", badColor = "FF0000", max = 0.3;
 
