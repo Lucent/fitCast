@@ -8,6 +8,15 @@ var calc_color = function(value, start, end, min, max) {
 	return "#" + ((result >= 0x100000) ? "" : (result >= 0x010000) ? "0" : (result >= 0x001000) ? "00" : (result >= 0x000100) ? "000" : (result >= 0x000010) ? "0000" : "00000") + result.toString(16);
 };
 
+var getminmax = function(values) {
+	var minmax = [Number.MAX_VALUE, Number.MIN_VALUE];
+	for (var x in valueArray) {
+		if (valueArray[x] < minmax[0] && valueArray[x] != -Infinity && !isNaN(valueArray[x]) && valueArray[x] !== "") minmax[0] = valueArray[x];
+		if (valueArray[x] > minmax[1] && valueArray[x] != -Infinity && !isNaN(valueArray[x]) && valueArray[x] !== "") minmax[1] = valueArray[x];
+	}
+	return minmax;
+};
+
 var approximateFractions = function(d) {
 	var numerators = [0, 1];
 	var denominators = [1, 0];
@@ -159,7 +168,9 @@ onload = function() {
 	load_script(chart_lib);
 
 	var tbl = document.getElementById("Table").tBodies[0].rows;
-	var goodColor = "00FF00", badColor = "FF0000", max = 0.3;
+	var goodColor = "00FF00",
+		badColor = "FF0000",
+		max = 0.3;
 
 	for (var row = 0; row < tbl.length; row++) {
 		var todayChgCell = tbl[row].cells[7];
