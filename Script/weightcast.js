@@ -174,20 +174,16 @@ onload = function() {
 
 	for (var row = 0; row < tbl.length; row++) {
 		var todayChgCell = tbl[row].cells[7];
-		var todayChgVal = todayChgCell.innerHTML;
+		var todayChgVal = todayChgCell.innerHTML * 1;
 		var negative = todayChgVal < 0;
 
 		// Color background of cells red to green
 		if (negative) {
-			if (todayChgVal < -1 * max)
-				todayChgCell.style.backgroundColor = "#" + goodColor;
-			else
-				todayChgCell.style.backgroundColor = calc_color(todayChgVal, "FFFFFF", goodColor, 0, -1 * max);
+			todayChgVal = Math.max(todayChgVal, -1 * max);
+			todayChgCell.style.backgroundColor = calc_color(todayChgVal, "FFFFFF", goodColor, 0, -1 * max);
 		} else {
-			if (todayChgVal > max)
-				todayChgCell.style.backgroundColor = "#" + badColor;
-			else
-				todayChgCell.style.backgroundColor = calc_color(todayChgVal, "FFFFFF", badColor, 0, max);
+			todayChgVal = Math.min(todayChgVal, max);
+			todayChgCell.style.backgroundColor = calc_color(todayChgVal, "FFFFFF", badColor, 0, max);
 		}
 
 		// Change numbers to fractions
