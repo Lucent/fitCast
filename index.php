@@ -5,7 +5,7 @@
 body				{ font-family: sans-serif; }
 h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
-table, fieldset		{ display: inline-block; }
+fieldset			{ display: inline-block; }
 table				{ border-collapse: collapse; }
 fieldset			{ padding: 1ex; border: medium solid green; -ms-border-radius: 1ex; }
 fieldset *			{ color: green; }
@@ -15,8 +15,21 @@ th					{ padding: 1ex 0.5ex; letter-spacing: -1px; }
 th span				{ display: block; font-weight: normal; }
 input[type=text]	{ width: 5ex; font-size: medium; }
 #PredictedWeight	{ float: right; }
-.odd				{ background-color: #EEE; }
+#Table				{ max-height: 10em; overflow: scroll; }
+.odd				{ ackground-color: #EEE; }
 .NewWeek			{ border-top: thin solid black; }
+
+tr					{ border-bottom: thin solid #CCC; }
+.Day				{ line-height: 2.5; padding: 0 0.8ex; text-align: right; }
+.Date				{ background: -webkit-linear-gradient(left, #FFF 0%, #EEE 75%, #DDD 100%); padding-right: 1em; }
+.Food, .Exercise	{ padding: 0 1ex; }
+.Minus, .Equals		{ font-weight: bold; }
+.Net				{ text-align: right; padding-right: 1em; }
+.Today				{ text-align: right; padding: 0 1ex; }
+.Change				{ text-align: right; padding: 0 1ex; }
+.Weight				{ text-align: right; padding: 0 1ex; }
+
+
 </style>
 <script src="Script/weightcast.js"></script>
 </head>
@@ -57,14 +70,14 @@ $bmr = expenditure($_GET["sex"], $_GET["weight"], $_GET["feet"] * 12 + $_GET["in
 </fieldset>
 
 <br>
+<div id="PredictedWeight"></div>
 
-<table id="Table" cellpadding="4">
+<table id="Table" cellpadding="0" cellspacing="0" border="0">
 <thead>
 <tr>
  <th colspan="2">Date</th>
  <th>Food <span>(cal)</span></th>
- <th></th>
- <th>Exercise <span>(cal)</span></th>
+ <th colspan="2">Exercise <span>(cal)</span></th>
  <th></th>
  <th>Net <span>(cal)</span></th>
  <th>Today <span>(lbs)</span></th>
@@ -77,13 +90,13 @@ $bmr = expenditure($_GET["sex"], $_GET["weight"], $_GET["feet"] * 12 + $_GET["in
 $cumulative = 0;
 for ($x = -20; $x < 0; $x++) { ?>
 <tr class="<?= $x % 2 ? "even" : "odd" ?> <?= date("D", strtotime($x . " day")) == "Sun" ? "NewWeek" : "" ?>">
-	<td align="right"><?= date("D", strtotime($x . " day")) ?></td>
-	<td><?= date("M j", strtotime($x . " day")) ?></td>
-	<td><input name="day<?= $x ?>" type="text" size="4" value="<?= $_GET["day".$x] ?>"></td>
-	<td>-</td>
-	<td><input name="exercise<?= $x ?>" type="text" size="4" value="<?= $_GET["exercise".$x] ?>"></td>
-	<td>=</td>
-	<td align="right" id="net<?= $x ?>"><?= $_GET["day".$x] - $_GET["exercise".$x] ?></td>
+	<td class="Day"><?= date("D", strtotime($x . " day")) ?></td>
+	<td class="Date"><?= date("M j", strtotime($x . " day")) ?></td>
+	<td class="Food"><input name="day<?= $x ?>" type="text" size="4" value="<?= $_GET["day".$x] ?>"></td>
+	<td class="Minus">-</td>
+	<td class="Exercise"><input name="exercise<?= $x ?>" type="text" size="4" value="<?= $_GET["exercise".$x] ?>"></td>
+	<td class="Equals">=</td>
+	<td class="Net" id="net<?= $x ?>"><?= $_GET["day".$x] - $_GET["exercise".$x] ?></td>
 <?
 	if ($_GET["day".$x] == "")
 		$loss = 0;
@@ -91,17 +104,15 @@ for ($x = -20; $x < 0; $x++) { ?>
 		$loss = $_GET["day".$x] - expenditure($_GET["sex"], $_GET["weight"] + $cumulative / 3500, $_GET["feet"] * 12 + $_GET["inches"], $_GET["age"]) * $_GET["lifestyle"] - $_GET["exercise".$x];
 	$cumulative += $loss;
 	?>
-	<td align="right"><?= sprintf("%.2f", round($loss / 3500, 2)) ?></td>
-	<td align="right"><?= sprintf("%.1f", round($cumulative / 3500, 1)) ?></td>
-	<td><?= round($_GET["weight"] + $cumulative / 3500, 1) ?></td>
+	<td class="Today"><?= sprintf("%.2f", round($loss / 3500, 2)) ?></td>
+	<td class="Change"><?= sprintf("%.1f", round($cumulative / 3500, 1)) ?></td>
+	<td class="Weight"><?= round($_GET["weight"] + $cumulative / 3500, 1) ?></td>
 	<script>data.push([new Date(<?= date("Y", strtotime($x." day")) ?>, <?= date("n", strtotime($x." day")) - 1 ?>, <?= date("j", strtotime($x." day")) ?>), <?= $_GET["weight"] + $cumulative / 3500 ?>]);</script>
 </tr>
 <? } ?>
 </tbody>
 </table>
 
-<div id="PredictedWeight"></div>
-<br>
 <input type="submit">
 </form>
 
