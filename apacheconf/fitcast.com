@@ -2,11 +2,12 @@
 	ServerName weightcast.com
 	ServerAlias *.weightcast.com
 
-	CustomLog /var/log/apache2/weightcast.log combined
+	CustomLog /var/log/apache2/fitcast.log combined
+	AddDefaultCharset UTF-8
 
 	ServerAdmin webmaster@localhost
 
-	DocumentRoot /var/www/weightcast
+	DocumentRoot /var/www/fitcast
 	<Directory />
 		Options FollowSymLinks
 		AllowOverride None
