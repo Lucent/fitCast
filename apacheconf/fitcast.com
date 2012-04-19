@@ -1,6 +1,6 @@
 <VirtualHost 72.14.190.37:80>
-	ServerName weightcast.com
-	ServerAlias *.weightcast.com
+	ServerName fitcast.com
+	ServerAlias *.fitcast.com weightcast.com *.weightcast.com
 
 	CustomLog /var/log/apache2/fitcast.log combined
 	AddDefaultCharset UTF-8
