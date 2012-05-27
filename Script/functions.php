@@ -6,7 +6,8 @@ function expenditure($sex, $weight, $height, $age) {
 		return 655 + 4.35 * $weight + 4.7 * $height - 4.7 * $age;
 }
 
-$days = 14;
+$days = 15; $blocksize = 50; $leftmargin = 90; $verticalblocks = 4;
+
 $sex = $_GET["sex"];
 $weight = $_GET["weight"];
 $height = $_GET["feet"] * 12 + $_GET["inches"];

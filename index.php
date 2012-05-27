@@ -7,24 +7,24 @@
 body				{ font-family: sans-serif; }
 h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
-h3					{ margin: 1ex 0 1ex 80px; width: 700px; text-align: center; display: block; }
+h3					{ margin: 1ex 0 1ex <?= $leftmargin - 10 ?>px; text-align: center; display: block; }
 h3 span				{ margin: 0 1em; font-size: x-large; }
 table				{ border-collapse: collapse; }
 fieldset			{ display: inline-block; padding: 1ex; border: medium solid green; -ms-border-radius: 1ex; }
 fieldset *			{ color: green; }
 legend				{ font-weight: bold; }
 form				{ display: inline; }
-th:first-child		{ padding-right: 10px; text-align: right; letter-spacing: -1px; width: 80px; }
+th:first-child		{ padding-right: 10px; text-align: right; letter-spacing: -1px; width: <?= $leftmargin - 10 ?>px; }
 
 input[type=text]	{ width: 35px; margin: 0; font-size: 100%; }
 #Table				{ max-height: 10em; overflow: scroll; }
-#Table td			{ width: 50px; padding: 0.8ex 0; text-align: center; font-size: 15px; }
-#Table .Selected	{ border: 1px solid green; width: 48px; }
-#Chart				{ height: 215px; }
-#Table, #Chart		{ width: 790px; }
+#Table td			{ width: <?= $blocksize ?>px; padding: 0.8ex 0; text-align: center; font-size: 15px; }
+#Table .Selected	{ border: 1px solid green; width: <?= $blocksize - 2 ?>px; }
+#Chart				{ height: <?= $blocksize * $verticalblocks + 10 + 10 ?>px; }
+#Table, #Chart		{ width: <?= $days * $blocksize + $leftmargin ?>px; }
 .Date				{ text-align: center; }
 .Spacer th			{ padding-top: 1em; padding-bottom: 0.5ex; text-align: left; }
-.NewWeek			{ border-left: 1px solid #CCC; width: 49px ! important; }
+.NewWeek			{ border-left: 1px solid #CCC; width: <?= $blocksize - 1 ?>px ! important; }
 .Actual td			{ background-color: #99CCFF; }
 .Measured td		{ background-color: #FF9977; }
 
@@ -32,7 +32,7 @@ tr					{ border-bottom: thin solid #CCC; }
 tr.Date				{ border-bottom: none; }
 </style>
 <script>
-var days = <?= $days ?>;
+var days = <?= $days ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>, endday = <?= 27 ?>;
 <? output_json_table($days, $weight, $cumulative, $measured); ?>
 </script>
 <script src="Script/interactivity.js"></script>

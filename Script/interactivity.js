@@ -80,7 +80,7 @@ var drawChart = function() {
 	var tableData = new google.visualization.arrayToDataTable(data);
 
 	// Set chart options
-	var topbuffer = 10, bottombuffer = 10, blocksize = 50, leftmargin = 90, verticalblocks = 4;
+	var topbuffer = 10, bottombuffer = 10;
 	var options = {
 		width: days * blocksize + leftmargin,
 		height: verticalblocks * blocksize + topbuffer + bottombuffer,
@@ -95,10 +95,11 @@ var drawChart = function() {
 		},
 		hAxis: {
 			gridlines: { count: days + 1 },
-			viewWindow: { min: 13, max: 27 },
+			viewWindow: { min: endday - days, max: endday },
 			baselineColor: "#CCC"
 		},
 		vAxis: {
+			gridlines: { count: verticalblocks + 1 },
 			title: "Weight (lbs)",
 			titleTextStyle: {
 				fontSize: "16",
@@ -123,7 +124,7 @@ var drawChart = function() {
 	var color_table_row = function(num, color) {
 		var rows = document.getElementById("Table").tBodies[0].rows;
 		for (var row = 0; row < rows.length; row++) {
-			if (rows[row].cells.length > 10 && row !== today && num !== 0)
+			if (rows[row].cells.length === days + 1 && row !== today && num !== 0)
 				rows[row].cells[num].style.backgroundColor = color;
 		}
 	};
@@ -135,7 +136,7 @@ var drawChart = function() {
 	};
 	var lastClicked;
 	var click_chart = function() {
-		var selectedItem = chart.getSelection()[0], shift = 5;
+		var selectedItem = chart.getSelection()[0], shift = 7;
 		if (lastClicked)
 			document.getElementById("Table").tBodies[0].rows[lastClicked.column + shift].cells[lastClicked.row + 1].className = "";
 		if (selectedItem) {
