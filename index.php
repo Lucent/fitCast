@@ -24,11 +24,12 @@ input[type=text]	{ width: 35px; margin: 0; font-size: 100%; }
 #Table, #Chart		{ width: 790px; }
 .Date				{ text-align: center; }
 .Spacer th			{ padding-top: 1em; padding-bottom: 0.5ex; text-align: left; }
-.NewWeek			{ border-left: thin solid #CCC; width: 49px ! important; }
+.NewWeek			{ border-left: 1px solid #CCC; width: 49px ! important; }
 .Actual td			{ background-color: #99CCFF; }
 .Measured td		{ background-color: #FF9977; }
 
 tr					{ border-bottom: thin solid #CCC; }
+tr.Date				{ border-bottom: none; }
 </style>
 <script>
 var days = <?= $days ?>;
@@ -75,7 +76,7 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 <tbody>
 
 <tr class="Date">
- <th>Date</th>
+ <th></th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
  <td<?= new_week($x) ?>><?= date("D", strtotime($x . " day")) ?><br><?= date("jS", strtotime($x . " day")) ?></td>
 <? } ?>

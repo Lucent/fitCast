@@ -100,11 +100,15 @@ var drawChart = function() {
 		},
 		vAxis: {
 			title: "Weight (lbs)",
-			titleTextStyle: { italic: false },
+			titleTextStyle: {
+				fontSize: "16",
+				italic: false,
+				bold: true
+			},
 			baselineColor: "transparent"
 		},
 		series: {
-			0: { color: actualColor },
+			0: { color: actualColor, pointSize: 3 },
 			1: { color: measuredColor, lineWidth: 0, pointSize: 7 }
 		}
 	};
