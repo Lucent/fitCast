@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-<title>FitCast - Predict your weight using calorie counting</title>
+<title>fitCast - Predict your weight using calorie counting</title>
 <style>
 body				{ font-family: sans-serif; }
 h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
@@ -12,12 +12,11 @@ fieldset			{ display: inline-block; padding: 1ex; border: medium solid green; -m
 fieldset *			{ color: green; }
 legend				{ font-weight: bold; }
 form				{ display: inline; }
-th					{ padding-right: 1em; text-align: right; letter-spacing: -1px; width: 5em; }
-th span				{ display: block; font-weight: normal; }
+th					{ padding-right: 10px; text-align: right; letter-spacing: -1px; width: 70px; }
 td					{ padding: 1ex 0; }
 input[type=text]	{ width: 50px; font-size: medium; margin: 0; border: none; padding: 0; }
 #Table				{ max-height: 10em; overflow: scroll; }
-#Chart				{ margin-left: 6em; }
+#Chart				{ height: 220px; width: 780px; }
 .NewWeek			{ border-top: thin solid black; }
 
 tr					{ border-bottom: thin solid #CCC; }
@@ -26,7 +25,7 @@ tr					{ border-bottom: thin solid #CCC; }
 </head>
 <body>
 <nav style="float: right;"><a href="faq.html">Questions</a> <a href="/?weight=200&age=29&sex=m&feet=6&inches=0&lifestyle=1.2&day-20=3000&exercise-20=&day-19=6000&exercise-19=&day-18=2000&exercise-18=&day-17=1800&exercise-17=&day-16=2000&exercise-16=&day-15=1700&exercise-15=&day-14=3000&exercise-14=&day-13=1500&exercise-13=&day-12=2500&exercise-12=&day-11=1900&exercise-11=&day-10=1700&exercise-10=&day-9=1600&exercise-9=&day-8=5&exercise-8=1200&day-7=1900&exercise-7=&day-6=5&exercise-6=2000&day-5=5&exercise-5=2000&day-4=5&exercise-4=2000&day-3=5&exercise-3=4000&day-2=5&exercise-2=3000&day-1=5&exercise-1=4000">Load sample data</a></nav>
-<h1>FitCast</h1>
+<h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
 
 <fieldset>
@@ -53,7 +52,7 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 <input type="radio" name="lifestyle" value="1.2" id="sedentary" checked><label for="sedentary">Sedentary: <?= round($bmr * $_GET["lifestyle"]) ?> cal/day</label><br>
 </fieldset>
 
-<br>
+<br><br>
 <div id="Chart"></div>
 
 <table id="Table" cellpadding="0" cellspacing="0" border="0">

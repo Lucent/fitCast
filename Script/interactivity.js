@@ -81,20 +81,28 @@ var drawChart = function() {
 
 	// Set chart options
 	var options = {
-		width: 700,
-		height: 200,
+		width: 780,
+		height: 220,
 		legend: "none",
 		pointSize: 2,
 		chartArea: {
-			left: 0,
-			top: 0,
-			width: "100%",
-			height: "100%"
+			left: 80,
+			top: 10,
+			bottom: 10,
+			right: 0,
+			width: 700,
+			height: 200
 		},
 		hAxis: {
 			gridlines: {
 				count: 15
+			},
+			viewWindow: {
+				max: 27
 			}
+		},
+		vAxis: {
+			title: "Weight (lbs)"
 		}
 	};
 
@@ -121,8 +129,8 @@ var drawChart = function() {
 		if (lastClicked)
 			document.getElementById("Table").tBodies[0].rows[3].cells[lastClicked].style.border = "";
 		if (selectedItem) {
-			document.getElementById("Table").tBodies[0].rows[3].cells[selectedItem.row].style.border = "medium solid green";
-			lastClicked = selectedItem.row;
+			document.getElementById("Table").tBodies[0].rows[3].cells[selectedItem.row + 1].style.border = "medium solid green";
+			lastClicked = selectedItem.row + 1;
 		}
 	}
 	var enter_table_row = function(el) {

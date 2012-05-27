@@ -35,7 +35,7 @@ for ($x = -$days; $x <= 0; $x++) {
 
 function output_json_table($days, $weight, $cumulative) {
 	$table = array();
-	for ($x = -$days; $x <= 0; $x++) {
+	for ($x = -$days; $x < 0; $x++) {
 		$table[] = array((int) date("j", strtotime($x." day")), $weight + $cumulative[$x] / 3500);
 	}
 	echo "<script>var data = " . json_encode($table) . ";</script>";
