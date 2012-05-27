@@ -80,7 +80,7 @@ var drawChart = function() {
 	// Set chart options
 	var topbuffer = 10, bottombuffer = 10;
 	var options = {
-		width: days * blocksize + leftmargin,
+		width: (days + 1) * blocksize + leftmargin,
 		height: verticalblocks * blocksize + topbuffer + bottombuffer,
 		legend: "none",
 		chartArea: {
@@ -88,12 +88,15 @@ var drawChart = function() {
 			top: topbuffer,
 			bottom: bottombuffer,
 			right: 0,
-			width: days * blocksize,
+			width: (days + 1) * blocksize,
 			height: verticalblocks * blocksize
 		},
 		hAxis: {
-			gridlines: { count: days + 1 },
-			viewWindow: { min: endday - days, max: endday },
+			gridlines: { count: days + 2 },
+			viewWindow: {
+				min: startday,
+				max: startday + days + 1
+			},
 			baselineColor: "#CCC"
 		},
 		vAxis: {
@@ -122,7 +125,7 @@ var drawChart = function() {
 	var color_table_row = function(num, color) {
 		var rows = document.getElementById("Table").tBodies[0].rows;
 		for (var row = 0; row < rows.length; row++) {
-			if (rows[row].cells.length === days + 1 && row !== today && num !== 0)
+			if (rows[row].cells.length === days + 2 && row !== today && num !== 0)
 				rows[row].cells[num].style.backgroundColor = color;
 		}
 	};
