@@ -25,7 +25,7 @@ tr					{ border-bottom: thin solid #CCC; }
 <script src="Script/interactivity.js"></script>
 </head>
 <body>
-<nav style="float: right;"><a href="faq.html">Questions</a> <a href="/?weight=200&age=29&sex=m&feet=6&inches=0&lifestyle=1.2&day-20=3000&exercise-20=&day-19=6000&exercise-19=&day-18=2000&exercise-18=&day-17=1800&exercise-17=&day-16=2000&exercise-16=&day-15=1700&exercise-15=&day-14=3000&exercise-14=&day-13=1500&exercise-13=&day-12=2500&exercise-12=&day-11=1900&exercise-11=&day-10=1700&exercise-10=&day-9=1600&exercise-9=&day-8=5&exercise-8=1200&day-7=1900&exercise-7=&day-6=5&exercise-6=2000&day-5=5&exercise-5=2000&day-4=5&exercise-4=2000&day-3=5&exercise-3=4000&day-2=5&exercise-2=3000&day-1=5&exercise-1=4000">Load sample data</a></nav>
+<nav style="float: right;"><a href="faq.html">Questions</a> <a href="/?weight=200&age=29&sex=m&feet=6&inches=0&lifestyle=1.2&day-14=3000&day-13=1500&day-12=2500&day-11=1900&day-10=1700&day-9=1600&day-8=5&day-7=1900&day-6=5&day-5=5&day-4=5&day-3=5&day-2=5&day-1=5&exercise-14=&exercise-13=&exercise-12=&exercise-11=&exercise-10=&exercise-9=&exercise-8=1200&exercise-7=&exercise-6=2000&exercise-5=2000&exercise-4=2000&exercise-3=4000&exercise-2=3000&exercise-1=4000&measured-14=&measured-13=199&measured-12=&measured-11=&measured-10=&measured-9=&measured-8=198&measured-7=&measured-6=&measured-5=&measured-4=&measured-3=197&measured-2=&measured-1=">Load sample data</a></nav>
 <h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
 
@@ -112,16 +112,24 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 <? } ?>
 </tr>
 
-<tr class="Weight">
-<th>Weight</th>
+<tr class="Actual">
+<th>Actual</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
 	<td><?= sprintf("%.1f", round($weight + $cumulative[$x] / 3500, 1)) ?></td>
 <? } ?>
 </tr>
 
+<tr class="Measured">
+<th>Measured</th>
+<? for ($x = -$days; $x < 0; $x++) { ?>
+	<td><input name="measured<?= $x ?>" type="text" size="4" value="<?= $measured[$x] ?>"></td>
+<? } ?>
+</tr>
+
+
 </tbody>
 </table>
-<? output_json_table($days, $weight, $cumulative); ?>
+<? output_json_table($days, $weight, $cumulative, $measured); ?>
 <input type="submit">
 </form>
 

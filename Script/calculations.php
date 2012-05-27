@@ -19,11 +19,13 @@ $day = array();
 $cumulative = array();
 $net = array();
 $exercise = array();
+$measured = array();
 
 for ($x = -$days; $x <= 0; $x++) {
 	$day[$x] = $_GET["day" . $x];
 	$exercise[$x] = $_GET["exercise" . $x];
 	$net[$x] = $day[$x] - $exercise[$x];
+	$measured[$x] = $_GET["measured" . $x];
 
 	if ($day[$x] == "") {
 		$loss[$x] = 0;
@@ -33,10 +35,11 @@ for ($x = -$days; $x <= 0; $x++) {
 	$cumulative[$x] += $loss[$x];
 }
 
-function output_json_table($days, $weight, $cumulative) {
+function output_json_table($days, $weight, $cumulative, $measured) {
 	$table = array();
+	$table[] = array("Date", "Actual", "Measured");
 	for ($x = -$days; $x < 0; $x++) {
-		$table[] = array((int) date("j", strtotime($x." day")), $weight + $cumulative[$x] / 3500);
+		$table[] = array((int) date("j", strtotime($x." day")), $weight + $cumulative[$x] / 3500, $measured[$x] == "" ? null : (int) $measured[$x]);
 	}
 	echo "<script>var data = " . json_encode($table) . ";</script>";
 }

@@ -74,25 +74,21 @@ var getMaxNumerator = function(f) {
 };
 
 var drawChart = function() {
-	var tableData = new google.visualization.DataTable();
-	tableData.addColumn("number", "Date");
-	tableData.addColumn("number", "Weight");
-	tableData.addRows(data);
+	var tableData = new google.visualization.arrayToDataTable(data);
 
 	// Set chart options
-	var buffer = 10, blocksize = 50, leftmargin = 80;
+	var buffer = 10, blocksize = 50, leftmargin = 80, verticalblocks = 4;
 	var options = {
 		width: days * blocksize + leftmargin,
-		height: 4 * blocksize + buffer + buffer,
+		height: verticalblocks * blocksize + buffer + buffer,
 		legend: "none",
-		pointSize: 2,
 		chartArea: {
 			left: leftmargin,
 			top: buffer,
 			bottom: buffer,
 			right: 0,
 			width: days * blocksize,
-			height: 4 * blocksize
+			height: verticalblocks * blocksize
 		},
 		hAxis: {
 			gridlines: { count: days + 1 },
@@ -101,14 +97,18 @@ var drawChart = function() {
 		vAxis: {
 			title: "Weight (lbs)",
 			titleTextStyle: { italic: false }
+		},
+		series: {
+			1: { lineWidth: 0, pointSize: 7 }
 		}
 	};
 
 	var chart = new google.visualization.LineChart(document.getElementById("Chart"));
-	var formatter = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
-	formatter.format(tableData, 1);
 	var formatter2 = new google.visualization.NumberFormat({prefix: 'May ', fractionDigits: 0, suffix: ", 2012"});
 	formatter2.format(tableData, 0);
+	var formatter = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
+	formatter.format(tableData, 1);
+	formatter.format(tableData, 2);
 
 	var color_table_row = function(num, color) {
 		var rows = document.getElementById("Table").tBodies[0].rows;
@@ -219,7 +219,5 @@ window.onload = function() {
 		// Change numbers to fractions
 		var frac = approximateFractions(Math.abs(todayChgVal));
 //		todayChgCell.innerHTML = (negative ? "-" : "") + frac[0] + "/" + frac[1];
-
-		// Bind chart events
 	}
 };
