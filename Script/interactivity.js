@@ -1,7 +1,5 @@
 "use strict";
 var today = 6;
-var actualColor = "#3366CC";
-var measuredColor = "#DC3912";
 
 var calc_color = function(value, start, end, min, max) {
 	var n = (value - min) / (max - min), result;

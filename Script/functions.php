@@ -7,6 +7,8 @@ function expenditure($sex, $weight, $height, $age) {
 }
 
 $days = 15; $blocksize = 50; $leftmargin = 90; $verticalblocks = 4;
+$actualColor = "#3366CC";
+$measuredColor = "#DC3912";
 
 $sex = $_GET["sex"];
 $weight = $_GET["weight"];

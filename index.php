@@ -7,7 +7,7 @@
 body				{ font-family: sans-serif; }
 h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
-h3					{ margin: 1ex 0 1ex <?= $leftmargin - 10 ?>px; text-align: center; display: block; }
+h3					{ margin: 1ex 0 1ex <?= $leftmargin ?>px; width: <?= $blocksize * $days ?>px; text-align: center; display: block; }
 h3 span				{ margin: 0 1em; font-size: x-large; }
 table				{ border-collapse: collapse; }
 fieldset			{ display: inline-block; padding: 1ex; border: medium solid green; -ms-border-radius: 1ex; }
@@ -25,14 +25,15 @@ input[type=text]	{ width: 35px; margin: 0; font-size: 100%; }
 .Date				{ text-align: center; }
 .Spacer th			{ padding-top: 1em; padding-bottom: 0.5ex; text-align: left; }
 .NewWeek			{ border-left: 1px solid #CCC; width: <?= $blocksize - 1 ?>px ! important; }
-.Actual td			{ background-color: #99CCFF; }
-.Measured td		{ background-color: #FF9977; }
+.Actual th			{ color: <?= $actualColor ?>; }
+.Measured th		{ color: <?= $measuredColor ?>; }
 
 tr					{ border-bottom: thin solid #CCC; }
 tr.Date				{ border-bottom: none; }
 </style>
 <script>
 var days = <?= $days ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>, endday = <?= 27 ?>;
+var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>";
 <? output_json_table($days, $weight, $cumulative, $measured); ?>
 </script>
 <script src="Script/interactivity.js"></script>
