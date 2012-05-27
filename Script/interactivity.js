@@ -179,7 +179,7 @@ var better_mouseover = function(sink, callback) {
 	else
 		sink.onmouseover = function (e) {
 			for (var el = e.relatedTarget; el && (el !== sink); el = el.parentNode) {};
-			if (!el) callback(e.relatedTarget);
+			if (!el) callback(e.toElement);
 		};
 };
 
@@ -189,7 +189,7 @@ var better_mouseout = function(sink, callback) {
 	else
 		sink.onmouseout = function (e) {
 			for (var el = e.relatedTarget; el && (el !== sink); el = el.parentNode) {};
-			if (!el) callback(e.relatedTarget);
+			if (!el) callback(e.fromElement);
 		};
 };
 
