@@ -21,6 +21,7 @@ input[type=text]	{ width: 50px; font-size: medium; margin: 0; border: none; padd
 
 tr					{ border-bottom: thin solid #CCC; }
 </style>
+<script>var days = <?= $days ?>;</script>
 <script src="Script/interactivity.js"></script>
 </head>
 <body>

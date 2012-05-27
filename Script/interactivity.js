@@ -80,29 +80,27 @@ var drawChart = function() {
 	tableData.addRows(data);
 
 	// Set chart options
+	var buffer = 10, blocksize = 50, leftmargin = 80;
 	var options = {
-		width: 780,
-		height: 220,
+		width: days * blocksize + leftmargin,
+		height: 4 * blocksize + buffer + buffer,
 		legend: "none",
 		pointSize: 2,
 		chartArea: {
-			left: 80,
-			top: 10,
-			bottom: 10,
+			left: leftmargin,
+			top: buffer,
+			bottom: buffer,
 			right: 0,
-			width: 700,
-			height: 200
+			width: days * blocksize,
+			height: 4 * blocksize
 		},
 		hAxis: {
-			gridlines: {
-				count: 15
-			},
-			viewWindow: {
-				max: 27
-			}
+			gridlines: { count: days + 1 },
+			viewWindow: { max: 27 }
 		},
 		vAxis: {
-			title: "Weight (lbs)"
+			title: "Weight (lbs)",
+			titleTextStyle: { italic: false }
 		}
 	};
 
