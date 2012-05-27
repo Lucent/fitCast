@@ -16,9 +16,10 @@ legend				{ font-weight: bold; }
 form				{ display: inline; }
 th					{ padding-right: 10px; text-align: right; letter-spacing: -1px; width: 70px; }
 
-input[type=text]	{ width: 35px; font-size: medium; margin: 0; }
+input[type=text]	{ width: 35px; margin: 0; font-size: 100%; }
 #Table				{ max-height: 10em; overflow: scroll; }
-#Table td			{ width: 50px; padding: 0.8ex 0; text-align: center; }
+#Table td			{ width: 50px; padding: 0.8ex 0; text-align: center; font-size: 15px; }
+#Table .Selected	{ border: 1px solid green; width: 48px; }
 #Chart				{ height: 220px; width: 780px; }
 .Date				{ text-align: center; }
 .NewWeek			{ border-left: thin solid #CCC; width: 49px ! important; }
@@ -67,16 +68,6 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 <div id="Chart"></div>
 
 <table id="Table" cellpadding="0" cellspacing="0" border="0">
-<thead>
-<!--
- <th colspan="2">Exercise <span>(cal)</span></th>
- <th></th>
- <th>Net <span>(cal)</span></th>
- <th>Today <span>(lbs)</span></th>
- <th>Change <span>(lbs)</span></th>
- <th>Weight <span>(lbs)</span></th>
--->
-</thead>
 <tbody>
 
 <tr class="Date">

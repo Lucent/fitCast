@@ -1,4 +1,5 @@
 "use strict";
+var today = 4;
 
 var calc_color = function(value, start, end, min, max) {
 	var n = (value - min) / (max - min), result;
@@ -92,11 +93,13 @@ var drawChart = function() {
 		},
 		hAxis: {
 			gridlines: { count: days + 1 },
-			viewWindow: { max: 27 }
+			viewWindow: { max: 27 },
+			baselineColor: "#CCC"
 		},
 		vAxis: {
 			title: "Weight (lbs)",
-			titleTextStyle: { italic: false }
+			titleTextStyle: { italic: false },
+			baselineColor: "transparent"
 		},
 		series: {
 			1: { lineWidth: 0, pointSize: 7 }
@@ -112,8 +115,10 @@ var drawChart = function() {
 
 	var color_table_row = function(num, color) {
 		var rows = document.getElementById("Table").tBodies[0].rows;
-		for (var x = 0; x < rows.length; x++)
-			rows[x].cells[num].style.backgroundColor = color;
+		for (var row = 0; row < rows.length; row++) {
+			if (row !== today && num !== 0)
+				rows[row].cells[num].style.backgroundColor = color;
+		}
 	};
 	var chart_hover = function(e) {
 		color_table_row(e.row + 1, "yellow")
@@ -123,12 +128,12 @@ var drawChart = function() {
 	};
 	var lastClicked;
 	var click_chart = function() {
-		var selectedItem = chart.getSelection()[0];
+		var selectedItem = chart.getSelection()[0], shift = 5;
 		if (lastClicked)
-			document.getElementById("Table").tBodies[0].rows[3].cells[lastClicked].style.border = "";
+			document.getElementById("Table").tBodies[0].rows[lastClicked.column + shift].cells[lastClicked.row + 1].className = "";
 		if (selectedItem) {
-			document.getElementById("Table").tBodies[0].rows[3].cells[selectedItem.row + 1].style.border = "medium solid green";
-			lastClicked = selectedItem.row + 1;
+			document.getElementById("Table").tBodies[0].rows[selectedItem.column + shift].cells[selectedItem.row + 1].className = "Selected";
+			lastClicked = {row: selectedItem.row, column: selectedItem.column};
 		}
 	}
 	var enter_table_row = function(el) {
@@ -197,7 +202,7 @@ window.onload = function() {
 	}));
 	load_script(chart_lib);
 
-	var cells = document.getElementById("Table").tBodies[0].rows[4].cells;
+	var cells = document.getElementById("Table").tBodies[0].rows[today].cells;
 	var goodColor = "00FF00",
 		badColor = "FF0000",
 		max = 0.3;
