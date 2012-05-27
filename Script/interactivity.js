@@ -1,3 +1,5 @@
+"use strict";
+
 var calc_color = function(value, start, end, min, max) {
 	var n = (value - min) / (max - min), result;
 	end = parseInt(end, 16);
@@ -8,14 +10,14 @@ var calc_color = function(value, start, end, min, max) {
 	return "#" + ((result >= 0x100000) ? "" : (result >= 0x010000) ? "0" : (result >= 0x001000) ? "00" : (result >= 0x000100) ? "000" : (result >= 0x000010) ? "0000" : "00000") + result.toString(16);
 };
 
-var getminmax = function(values) {
+/*var getminmax = function(values) {
 	var minmax = [Number.MAX_VALUE, Number.MIN_VALUE];
 	for (var x in valueArray) {
 		if (valueArray[x] < minmax[0] && valueArray[x] != -Infinity && !isNaN(valueArray[x]) && valueArray[x] !== "") minmax[0] = valueArray[x];
 		if (valueArray[x] > minmax[1] && valueArray[x] != -Infinity && !isNaN(valueArray[x]) && valueArray[x] !== "") minmax[1] = valueArray[x];
 	}
 	return minmax;
-};
+};*/
 
 var approximateFractions = function(d) {
 	var numerators = [0, 1];
@@ -73,44 +75,65 @@ var getMaxNumerator = function(f) {
 
 var drawChart = function() {
 	var tableData = new google.visualization.DataTable();
-	tableData.addColumn('date', 'Date');
-	tableData.addColumn('number', 'Weight');
+	tableData.addColumn("number", "Date");
+	tableData.addColumn("number", "Weight");
 	tableData.addRows(data);
 
 	// Set chart options
-	var options = {width: 600, height: 400, legend: "none", pointSize: 2, vAxis: {title: "Weight (lbs)"}, hAxis: {showTextEvery: 1}};
+	var options = {
+		width: 700,
+		height: 200,
+		legend: "none",
+		pointSize: 2,
+		chartArea: {
+			left: 0,
+			top: 0,
+			width: "100%",
+			height: "100%"
+		},
+		hAxis: {
+			gridlines: {
+				count: 15
+			}
+		}
+	};
 
-	// Instantiate and draw our chart, passing in some options.
-	var chart = new google.visualization.LineChart(document.getElementById('PredictedWeight'));
+	var chart = new google.visualization.LineChart(document.getElementById("Chart"));
 	var formatter = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
 	formatter.format(tableData, 1);
+	var formatter2 = new google.visualization.NumberFormat({prefix: 'May ', fractionDigits: 0, suffix: ", 2012"});
+	formatter2.format(tableData, 0);
 
 	var color_table_row = function(num, color) {
-		document.getElementById("Table").tBodies[0].rows[num].style.backgroundColor = color;
+		var rows = document.getElementById("Table").tBodies[0].rows;
+		for (var x = 0; x < rows.length; x++)
+			rows[x].cells[num].style.backgroundColor = color;
 	};
 	var chart_hover = function(e) {
-		color_table_row(e.row, "yellow")
+		color_table_row(e.row + 1, "yellow")
 	};
 	var chart_leave = function(e) {
-		color_table_row(e.row, "")
+		color_table_row(e.row + 1, "")
 	};
 	var lastClicked;
 	var click_chart = function() {
 		var selectedItem = chart.getSelection()[0];
 		if (lastClicked)
-			document.getElementById("Table").tBodies[0].rows[lastClicked].style.border = "";
+			document.getElementById("Table").tBodies[0].rows[3].cells[lastClicked].style.border = "";
 		if (selectedItem) {
-			document.getElementById("Table").tBodies[0].rows[selectedItem.row].style.border = "medium solid green";
+			document.getElementById("Table").tBodies[0].rows[3].cells[selectedItem.row].style.border = "medium solid green";
 			lastClicked = selectedItem.row;
 		}
 	}
-	var enter_table_row = function() {
-		chart.setSelection([{row: this.idx}]);
-		chart_hover({row: this.idx});
+	var enter_table_row = function(el) {
+		el = this || el;
+		chart.setSelection([{row: el.cellIndex - 1}]);
+		chart_hover({row: el.cellIndex - 1});
 	};
-	var leave_table_row = function() {
+	var leave_table_row = function(el) {
+		el = this || el;
 		chart.setSelection([{}]);
-		chart_leave({row: this.idx});
+		chart_leave({row: el.cellIndex - 1});
 	};
 	google.visualization.events.addListener(chart, "onmouseover", chart_hover);
 	google.visualization.events.addListener(chart, "onmouseout", chart_leave);
@@ -118,13 +141,14 @@ var drawChart = function() {
 
 	chart.draw(tableData, options);
 
-	var tbl = document.getElementById("Table").tBodies[0].rows;
-	for (var row = 0; row < tbl.length; row++) {
-		tbl[row].idx = row;
-		better_mouseover(tbl[row], enter_table_row);
-		better_mouseout(tbl[row], leave_table_row);
-
-		tbl[row].onclick = click_chart;
+	var rows = document.getElementById("Table").tBodies[0].rows;
+	for (var row = 0; row < rows.length; row++) {
+		var cells = rows[row].cells;
+		for (var cell = 0; cell < cells.length; cell++) {
+			better_mouseover(cells[cell], enter_table_row);
+			better_mouseout(cells[cell], leave_table_row);
+		}
+//		tbl[row].onclick = click_chart;
 	}
 };
 
@@ -134,7 +158,7 @@ var better_mouseover = function(sink, callback) {
 	else
 		sink.onmouseover = function (e) {
 			for (var el = e.relatedTarget; el && (el !== sink); el = el.parentNode) {};
-			if (!el) callback();
+			if (!el) callback(e.relatedTarget);
 		};
 };
 
@@ -144,7 +168,7 @@ var better_mouseout = function(sink, callback) {
 	else
 		sink.onmouseout = function (e) {
 			for (var el = e.relatedTarget; el && (el !== sink); el = el.parentNode) {};
-			if (!el) callback();
+			if (!el) callback(e.relatedTarget);
 		};
 };
 
@@ -156,7 +180,7 @@ var load_script = function(file) {
 	document.getElementsByTagName("head")[0].appendChild(s);
 };
 
-onload = function() {
+window.onload = function() {
 	var chart_lib = "http://www.google.com/jsapi?autoload=" + encodeURIComponent(JSON.stringify({
 		"modules": [{
 			"name": "visualization",
@@ -167,13 +191,13 @@ onload = function() {
 	}));
 	load_script(chart_lib);
 
-	var tbl = document.getElementById("Table").tBodies[0].rows;
+	var cells = document.getElementById("Table").tBodies[0].rows[4].cells;
 	var goodColor = "00FF00",
 		badColor = "FF0000",
 		max = 0.3;
 
-	for (var row = 0; row < tbl.length; row++) {
-		var todayChgCell = tbl[row].cells[7];
+	for (var cell = 0; cell < cells.length; cell++) {
+		var todayChgCell = cells[cell];
 		var todayChgVal = todayChgCell.innerHTML * 1;
 		var negative = todayChgVal < 0;
 
@@ -193,5 +217,3 @@ onload = function() {
 		// Bind chart events
 	}
 };
-
-var data = [];
