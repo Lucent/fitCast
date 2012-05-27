@@ -1,5 +1,7 @@
 "use strict";
-var today = 4;
+var today = 6;
+var actualColor = "#3366CC";
+var measuredColor = "#DC3912";
 
 var calc_color = function(value, start, end, min, max) {
 	var n = (value - min) / (max - min), result;
@@ -78,22 +80,22 @@ var drawChart = function() {
 	var tableData = new google.visualization.arrayToDataTable(data);
 
 	// Set chart options
-	var buffer = 10, blocksize = 50, leftmargin = 80, verticalblocks = 4;
+	var topbuffer = 10, bottombuffer = 10, blocksize = 50, leftmargin = 90, verticalblocks = 4;
 	var options = {
 		width: days * blocksize + leftmargin,
-		height: verticalblocks * blocksize + buffer + buffer,
+		height: verticalblocks * blocksize + topbuffer + bottombuffer,
 		legend: "none",
 		chartArea: {
 			left: leftmargin,
-			top: buffer,
-			bottom: buffer,
+			top: topbuffer,
+			bottom: bottombuffer,
 			right: 0,
 			width: days * blocksize,
 			height: verticalblocks * blocksize
 		},
 		hAxis: {
 			gridlines: { count: days + 1 },
-			viewWindow: { max: 27 },
+			viewWindow: { min: 13, max: 27 },
 			baselineColor: "#CCC"
 		},
 		vAxis: {
@@ -102,7 +104,8 @@ var drawChart = function() {
 			baselineColor: "transparent"
 		},
 		series: {
-			1: { lineWidth: 0, pointSize: 7 }
+			0: { color: actualColor },
+			1: { color: measuredColor, lineWidth: 0, pointSize: 7 }
 		}
 	};
 
@@ -116,7 +119,7 @@ var drawChart = function() {
 	var color_table_row = function(num, color) {
 		var rows = document.getElementById("Table").tBodies[0].rows;
 		for (var row = 0; row < rows.length; row++) {
-			if (row !== today && num !== 0)
+			if (rows[row].cells.length > 10 && row !== today && num !== 0)
 				rows[row].cells[num].style.backgroundColor = color;
 		}
 	};
@@ -138,13 +141,17 @@ var drawChart = function() {
 	}
 	var enter_table_row = function(el) {
 		el = this || el;
-		chart.setSelection([{row: el.cellIndex - 1}]);
-		chart_hover({row: el.cellIndex - 1});
+		if (el.colSpan === 1) {
+			chart.setSelection([{row: el.cellIndex - 1}]);
+			chart_hover({row: el.cellIndex - 1});
+		}
 	};
 	var leave_table_row = function(el) {
 		el = this || el;
-		chart.setSelection([{}]);
-		chart_leave({row: el.cellIndex - 1});
+		if (el.colSpan === 1) {
+			chart.setSelection([{}]);
+			chart_leave({row: el.cellIndex - 1});
+		}
 	};
 	google.visualization.events.addListener(chart, "onmouseover", chart_hover);
 	google.visualization.events.addListener(chart, "onmouseout", chart_leave);

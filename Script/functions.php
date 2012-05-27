@@ -39,7 +39,7 @@ function output_json_table($days, $weight, $cumulative, $measured) {
 	$table = array();
 	$table[] = array("Date", "Actual", "Measured");
 	for ($x = -$days; $x < 0; $x++) {
-		$table[] = array((int) date("j", strtotime($x." day")), $weight + $cumulative[$x] / 3500, $measured[$x] == "" ? null : (float) $measured[$x]);
+		$table[] = array((int) date("j", strtotime($x." day")) + 0.5, $weight + $cumulative[$x] / 3500, $measured[$x] == "" ? null : (float) $measured[$x]);
 	}
 	echo "var data = ", json_encode($table), ";";
 }

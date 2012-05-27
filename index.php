@@ -1,4 +1,4 @@
-<? include "Script/calculations.php"; ?>
+<? include "Script/functions.php"; ?>
 <!doctype html>
 <html>
 <head>
@@ -14,15 +14,19 @@ fieldset			{ display: inline-block; padding: 1ex; border: medium solid green; -m
 fieldset *			{ color: green; }
 legend				{ font-weight: bold; }
 form				{ display: inline; }
-th					{ padding-right: 10px; text-align: right; letter-spacing: -1px; width: 70px; }
+th:first-child		{ padding-right: 10px; text-align: right; letter-spacing: -1px; width: 80px; }
 
 input[type=text]	{ width: 35px; margin: 0; font-size: 100%; }
 #Table				{ max-height: 10em; overflow: scroll; }
 #Table td			{ width: 50px; padding: 0.8ex 0; text-align: center; font-size: 15px; }
 #Table .Selected	{ border: 1px solid green; width: 48px; }
-#Chart				{ height: 220px; width: 780px; }
+#Chart				{ height: 215px; }
+#Table, #Chart		{ width: 790px; }
 .Date				{ text-align: center; }
+.Spacer th			{ padding-top: 1em; padding-bottom: 0.5ex; text-align: left; }
 .NewWeek			{ border-left: thin solid #CCC; width: 49px ! important; }
+.Actual td			{ background-color: #99CCFF; }
+.Measured td		{ background-color: #FF9977; }
 
 tr					{ border-bottom: thin solid #CCC; }
 </style>
@@ -77,6 +81,8 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 <? } ?>
 </tr>
 
+<tr class="Spacer"><td></td><th colspan="14">Calories</th></tr>
+
 <tr class="Food">
  <th>Food</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
@@ -98,6 +104,8 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 <? } ?>
 </tr>
 
+<tr class="Spacer"><td></td><th colspan="14">Weight (lbs)</th></tr>
+
 <tr class="Today">
  <th>Today</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
@@ -105,8 +113,8 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 <? } ?>
 </tr>
 
-<tr class="Change">
- <th>Change</th>
+<tr class="Cumulative">
+ <th>Cumulative</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
  <td<?= new_week($x) ?>><?= sprintf("%.1f", round($cumulative[$x] / 3500, 1)) ?></td>
 <? } ?>
