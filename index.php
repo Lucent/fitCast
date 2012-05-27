@@ -7,21 +7,28 @@
 body				{ font-family: sans-serif; }
 h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
+h3					{ margin: 1ex 0 1ex 80px; width: 700px; text-align: center; display: block; }
+h3 span				{ margin: 0 1em; font-size: x-large; }
 table				{ border-collapse: collapse; }
 fieldset			{ display: inline-block; padding: 1ex; border: medium solid green; -ms-border-radius: 1ex; }
 fieldset *			{ color: green; }
 legend				{ font-weight: bold; }
 form				{ display: inline; }
 th					{ padding-right: 10px; text-align: right; letter-spacing: -1px; width: 70px; }
-td					{ padding: 1ex 0; }
-input[type=text]	{ width: 50px; font-size: medium; margin: 0; border: none; padding: 0; }
+
+input[type=text]	{ width: 35px; font-size: medium; margin: 0; }
 #Table				{ max-height: 10em; overflow: scroll; }
+#Table td			{ width: 50px; padding: 0.8ex 0; text-align: center; }
 #Chart				{ height: 220px; width: 780px; }
-.NewWeek			{ border-top: thin solid black; }
+.Date				{ text-align: center; }
+.NewWeek			{ border-left: thin solid #CCC; width: 49px ! important; }
 
 tr					{ border-bottom: thin solid #CCC; }
 </style>
-<script>var days = <?= $days ?>;</script>
+<script>
+var days = <?= $days ?>;
+<? output_json_table($days, $weight, $cumulative, $measured); ?>
+</script>
 <script src="Script/interactivity.js"></script>
 </head>
 <body>
@@ -54,6 +61,9 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 </fieldset>
 
 <br><br>
+
+<h3><span>⇦</span> <?= date("F Y") ?> <span>⇨</span></h2>
+
 <div id="Chart"></div>
 
 <table id="Table" cellpadding="0" cellspacing="0" border="0">
@@ -68,68 +78,66 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 -->
 </thead>
 <tbody>
-<!-- <tr class="<?= $x % 2 ? "even" : "odd" ?> <?= date("D", strtotime($x . " day")) == "Sun" ? "NewWeek" : "" ?>"> -->
 
-<tr class="Day">
-<th>Date</th>
+<tr class="Date">
+ <th>Date</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
-	<td><?= date("D", strtotime($x . " day")) ?><br><?= date("jS", strtotime($x . " day")) ?></td>
+ <td<?= new_week($x) ?>><?= date("D", strtotime($x . " day")) ?><br><?= date("jS", strtotime($x . " day")) ?></td>
 <? } ?>
 </tr>
 
 <tr class="Food">
-<th>Food</th>
+ <th>Food</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
-	<td><input name="day<?= $x ?>" type="text" size="4" value="<?= $day[$x] ?>"></td>
+ <td<?= new_week($x) ?>><input name="day<?= $x ?>" type="text" size="4" value="<?= $day[$x] ?>"></td>
 <? } ?>
 </tr>
 
 <tr class="Exercise">
-<th>Exercise</th>
+ <th>Exercise</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
-	<td><input name="exercise<?= $x ?>" type="text" size="4" value="<?= $exercise[$x] ?>"></td>
+ <td<?= new_week($x) ?>><input name="exercise<?= $x ?>" type="text" size="4" value="<?= $exercise[$x] ?>"></td>
 <? } ?>
 </tr>
 
 <tr class="Net">
-<th>Net</th>
+ <th>Net</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
-	<td id="net<?= $x ?>"><?= $net[$x] ?></td>
+ <td<?= new_week($x) ?> id="net<?= $x ?>"><?= $net[$x] ?></td>
 <? } ?>
 </tr>
 
 <tr class="Today">
-<th>Today</th>
+ <th>Today</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
-	<td><?= sprintf("%.2f", round($loss[$x] / 3500, 2)) ?></td>
+ <td<?= new_week($x) ?>><?= sprintf("%.2f", round($loss[$x] / 3500, 2)) ?></td>
 <? } ?>
 </tr>
 
 <tr class="Change">
-<th>Change</th>
+ <th>Change</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
-	<td><?= sprintf("%.1f", round($cumulative[$x] / 3500, 1)) ?></td>
+ <td<?= new_week($x) ?>><?= sprintf("%.1f", round($cumulative[$x] / 3500, 1)) ?></td>
 <? } ?>
 </tr>
 
 <tr class="Actual">
-<th>Actual</th>
+ <th>Actual</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
-	<td><?= sprintf("%.1f", round($weight + $cumulative[$x] / 3500, 1)) ?></td>
+ <td<?= new_week($x) ?>><?= sprintf("%.1f", round($weight + $cumulative[$x] / 3500, 1)) ?></td>
 <? } ?>
 </tr>
 
 <tr class="Measured">
-<th>Measured</th>
+ <th>Measured</th>
 <? for ($x = -$days; $x < 0; $x++) { ?>
-	<td><input name="measured<?= $x ?>" type="text" size="4" value="<?= $measured[$x] ?>"></td>
+ <td<?= new_week($x) ?>><input name="measured<?= $x ?>" type="text" size="4" value="<?= $measured[$x] ?>"></td>
 <? } ?>
 </tr>
 
 
 </tbody>
 </table>
-<? output_json_table($days, $weight, $cumulative, $measured); ?>
 <input type="submit">
 </form>
 
