@@ -47,7 +47,7 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <script src="Script/interactivity.js"></script>
 </head>
 <body>
-<nav style="float: right;"><a href="faq.html">Questions</a> <a href="/?weight=200&age=29&sex=m&feet=6&inches=0&lifestyle=1.2&food0=2000&food1=1200&food2=1800&food3=1500&food4=1600&food5=2120&food6=1000&food7=1500&food8=3000&food9=3000&food10=2000&exercise0=&exercise1=&exercise2=&exercise3=&exercise4=&exercise5=&exercise6=&exercise7=&exercise8=&exercise9=&exercise10=&measured0=&measured1=&measured2=&measured3=&measured4=&measured5=&measured6=&measured7=&measured8=&measured9=&measured10=&start=2012-05-10&end=2012-05-20">Load sample data</a></nav>
+<nav style="float: right;"><a href="faq.html">Questions</a> <a href="/?weight=200&age=29&sex=m&feet=6&inches=0&lifestyle=1.2&food0=1200&food1=1500&food2=1800&food3=2000&food4=2100&food5=2250&food6=1900&food7=3000&food8=2500&food9=1500&food10=1400&exercise0=50&exercise1=100&exercise2=200&exercise3=100&exercise4=50&exercise5=&exercise6=&exercise7=&exercise8=200&exercise9=300&exercise10=&measured0=200&measured1=&measured2=&measured3=&measured4=&measured5=199&measured6=&measured7=&measured8=&measured9=&measured10=198&start=2012-05-25&end=2012-06-04">Load sample data</a></nav>
 <h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
 
@@ -83,11 +83,11 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
   <td width="<?= $start * $blocksize ?>">
    <h3>
 <? if (array_shift(array_keys($months)) == $month) { ?>
-<span class="First">⇦</span>
-<? } ?>
-    <?= $month ?>
-<? if (array_pop(array_keys($months)) == $month) { ?>
-<span class="Last">⇨</span>
+    <span class="First">⇦</span>
+<? }
+    echo "    ", $month, "\n";
+if (array_pop(array_keys($months)) == $month) { ?>
+    <span class="Last">⇨</span>
 <? } ?>
    </h3>
   </td>
