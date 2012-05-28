@@ -7,8 +7,14 @@
 body				{ font-family: sans-serif; }
 h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
-h3					{ margin: 1ex 0 1ex <?= $leftmargin ?>px; width: <?= ($days + 1) * $blocksize ?>px; text-align: center; display: block; }
-h3 span				{ margin: 0 1em; font-size: x-large; }
+
+h3					{ margin: 1ex 0 0; }
+.Month				{ margin-left: <?= $leftmargin ?>px; width: <?= ($days + 1) * $blocksize ?>px; border-style: hidden; }
+.Month td			{ border: 1px solid black; border: 1px solid black; text-align: center; }
+h3 span				{ font-size: xx-large; line-height: 0.7; }
+.First				{ float: left; }
+.Last				{ float: right; }
+
 table				{ border-collapse: collapse; }
 fieldset			{ display: inline-block; padding: 1ex; border: medium solid green; -ms-border-radius: 1ex; }
 fieldset *			{ color: green; }
@@ -71,7 +77,23 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 
 <br><br>
 
-<h3><span>⇦</span> <?= date("F Y") ?> <span>⇨</span></h3>
+<table class="Month" cellpadding="0" cellspacing="0" border="0">
+ <tr>
+<? foreach ($months as $month => $start) { ?>
+  <td width="<?= $start * $blocksize ?>">
+   <h3>
+<? if (array_shift(array_keys($months)) == $month) { ?>
+<span class="First">⇦</span>
+<? } ?>
+    <?= $month ?>
+<? if (array_pop(array_keys($months)) == $month) { ?>
+<span class="Last">⇨</span>
+<? } ?>
+   </h3>
+  </td>
+<? } ?>
+ </tr>
+</table>
 
 <div id="Chart"></div>
 

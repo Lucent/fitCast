@@ -28,8 +28,14 @@ $cumulative = array();
 $net = array();
 $exercise = array();
 $measured = array();
+$months = array();
 
 for ($day = 0; $day <= $days; $day++) {
+	// find distinct months
+	$temp = clone $date_start;
+	$today = $temp->add(new DateInterval("P".$day."D"))->format("F Y");
+	$months[$today]++;
+
 	$food[$day] = $_GET["food" . $day];
 	$exercise[$day] = $_GET["exercise" . $day];
 	$net[$day] = $food[$day] - $exercise[$day];
