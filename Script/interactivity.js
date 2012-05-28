@@ -92,7 +92,9 @@ var drawChart = function() {
 			height: verticalblocks * blocksize
 		},
 		hAxis: {
-			gridlines: { count: days + 2 },
+			gridlines: {
+				count: days + 2
+			},
 			viewWindow: {
 				min: startday,
 				max: startday + days + 1
@@ -100,12 +102,17 @@ var drawChart = function() {
 			baselineColor: "#CCC"
 		},
 		vAxis: {
-			gridlines: { count: verticalblocks + 1 },
+			gridlines: {
+				count: verticalblocks + 1
+			},
 			title: "Weight (lbs)",
 			titleTextStyle: {
 				fontSize: "16",
 				italic: false,
 				bold: true
+			},
+			textStyle: {
+				fontSize: 14
 			},
 			baselineColor: "transparent"
 		},
