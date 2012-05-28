@@ -83,6 +83,7 @@ var drawChart = function() {
 		width: (days + 1) * blocksize + leftmargin,
 		height: verticalblocks * blocksize + topbuffer + bottombuffer,
 		legend: "none",
+		focusTarget: "category",
 		chartArea: {
 			left: leftmargin,
 			top: topbuffer,
