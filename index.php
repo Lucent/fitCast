@@ -9,8 +9,8 @@ h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
 
 h3					{ margin: 1ex 0 0; }
-.Month				{ margin-left: <?= $leftmargin ?>px; width: <?= ($days + 1) * $blocksize ?>px; border-style: hidden; }
-.Month td			{ border: 1px solid black; border: 1px solid black; text-align: center; }
+.Month, .Month td	{ border-style: hidden; }
+.Month th			{ border: 1px solid black; border: 1px solid black; text-align: center; }
 h3 span				{ font-size: xx-large; line-height: 0.7; }
 .First				{ float: left; }
 .Last				{ float: right; }
@@ -77,10 +77,13 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 
 <br><br>
 
-<table class="Month" cellpadding="0" cellspacing="0" border="0">
- <tr>
+<table id="Table" cellpadding="0" cellspacing="0" border="0">
+<tbody>
+
+ <tr class="Month">
+  <td></td>
 <? foreach ($months as $month => $start) { ?>
-  <td width="<?= $start * $blocksize ?>">
+  <th colspan="<?= $start ?>">
    <h3>
 <? if (array_shift(array_keys($months)) == $month) { ?>
     <span class="First">⇦</span>
@@ -90,15 +93,13 @@ if (array_pop(array_keys($months)) == $month) { ?>
     <span class="Last">⇨</span>
 <? } ?>
    </h3>
-  </td>
+  </th>
 <? } ?>
  </tr>
-</table>
 
+<tr><td colspan="<?= $days + 2 ?>">
 <div id="Chart"></div>
-
-<table id="Table" cellpadding="0" cellspacing="0" border="0">
-<tbody>
+</td></tr>
 
 <tr class="Date">
  <th></th>
