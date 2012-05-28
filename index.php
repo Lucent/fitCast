@@ -71,7 +71,7 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 
 <br><br>
 
-<h3><span>⇦</span> <?= date("F Y") ?> <span>⇨</span></h2>
+<h3><span>⇦</span> <?= date("F Y") ?> <span>⇨</span></h3>
 
 <div id="Chart"></div>
 

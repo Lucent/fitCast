@@ -40,14 +40,18 @@ for ($day = 0; $day <= $days; $day++) {
 	} else {
 		$loss[$day] = $food[$day] - expenditure($sex, $weight + $cumulative[$day] / 3500, $height, $age) * $lifestyle - $exercise[$day];
 	}
-	$cumulative[$day] += $loss[$day];
+	$cumulative[$day] += $cumulative[$day - 1] + $loss[$day];
 }
 
 function output_json_table($date_start_int, $days, $weight, $cumulative, $measured) {
 	$table = array();
 	$table[] = array("Date", "Actual", "Measured");
 	for ($day = 0; $day <= $days; $day++) {
-		$table[] = array($date_start_int + $day + 0.5, $weight + $cumulative[$day] / 3500, $measured[$day] == "" ? null : (float) $measured[$day]);
+		$table[] = array(
+			$date_start_int + $day + 0.5,
+			$weight + $cumulative[$day] / 3500,
+			$measured[$day] == "" ? null : (float) $measured[$day]
+		);
 	}
 	echo "var data = ", json_encode($table), ";";
 }
