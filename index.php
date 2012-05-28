@@ -22,9 +22,9 @@ legend				{ font-weight: bold; }
 form				{ display: inline; }
 th:first-child		{ padding-right: 10px; text-align: right; letter-spacing: -1px; width: <?= $leftmargin - 10 ?>px; }
 
-input[type=text]	{ width: 35px; margin: 0; font-size: 100%; }
+input[type=text]	{ width: 42px; margin: 0; font-size: 100%; text-align: right; }
 #Table				{ max-height: 10em; overflow: scroll; }
-#Table td			{ width: <?= $blocksize ?>px; padding: 0.8ex 0; text-align: center; font-size: 15px; }
+#Table td			{ width: <?= $blocksize ?>px; padding: 0.8ex 0; text-align: center; font-size: 18px; }
 #Table .Selected	{ border: 1px solid green; width: <?= $blocksize - 2 ?>px; }
 #Chart				{ height: <?= $blocksize * $verticalblocks + 10 + 10 ?>px; }
 #Table, #Chart		{ width: <?= ($days + 1) * $blocksize + $leftmargin ?>px; }

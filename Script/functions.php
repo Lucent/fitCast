@@ -11,7 +11,7 @@ $date_start_int = $date_start->format("j");
 $date_end = new DateTime($_GET["end"]);
 $days = date_diff($date_start, $date_end)->format("%a");
 
-$blocksize = 50; $leftmargin = 90; $verticalblocks = 4;
+$blocksize = 60; $leftmargin = 90; $verticalblocks = 4;
 $actualColor = "#3366CC";
 $measuredColor = "#DC3912";
 
