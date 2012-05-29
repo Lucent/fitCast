@@ -9,7 +9,7 @@ h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
 
 h3					{ margin: 1ex 0; font-weight: normal; font-size: 1.5em; }
-.Month, .Month td, .Chart	{ border-style: hidden; }
+.Month, .Month td, .Chart, #Table	{ border-style: hidden; }
 .Month th			{ border: 1px solid black; border: 1px solid black; text-align: center; }
 h3 span				{ font-size: xx-large; line-height: 0.7; }
 .First				{ float: left; }
@@ -30,8 +30,6 @@ input[type=text]	{ width: 42px; margin: 0; font-size: 100%; text-align: right; }
 #Table, #Chart		{ width: <?= ($days + 1) * $blocksize + $leftmargin ?>px; }
 .Date				{ text-align: center; border-style: hidden; }
 .Date th, .Month th	{ font-weight: normal; }
-.Spacer				{ border-top-style: hidden; }
-.Spacer th			{ padding-top: 1ex; padding-bottom: 0.5ex; text-align: left; font-size: 1.3em; }
 .NewWeek			{ border-left: 1px solid #CCC; width: <?= $blocksize - 1 ?>px ! important; }
 .Date .NewWeek		{ border-color: black; }
 .Actual th			{ color: <?= $actualColor ?>; }
@@ -149,7 +147,7 @@ $date_start_ref = clone $date_start; ?>
 <tr class="Measured">
  <th>Measured</th>
 <? for ($day = 0; $day <= $days; $day++) { ?>
- <td<?= new_week($day, $date_start) ?>><input name="measured<?= $day ?>" type="text" size="4" value="<?= $measured[$day] ?>"></td>
+ <td><input name="measured<?= $day ?>" type="text" size="4" value="<?= $measured[$day] ?>"></td>
 <? } ?>
 </tr>
 
