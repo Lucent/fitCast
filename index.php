@@ -123,7 +123,7 @@ $date_start_ref = clone $date_start; ?>
 <tr class="Net">
  <th>Net</th>
 <? for ($day = 0; $day <= $days; $day++) { ?>
- <td id="net<?= $day ?>"><?= $net[$day] ?></td>
+ <td id="net<?= $day ?>"><?= round($net[$day]) ?></td>
 <? } ?>
 </tr>
 
@@ -136,13 +136,6 @@ $date_start_ref = clone $date_start; ?>
  <th>Change</th>
 <? for ($day = 0; $day <= $days; $day++) { ?>
  <td><?= sprintf("%.2f", round($loss[$day] / 3500, 2)) ?></td>
-<? } ?>
-</tr>
-
-<tr class="Cumulative">
- <th>Cumulative</th>
-<? for ($day = 0; $day <= $days; $day++) { ?>
- <td><?= sprintf("%.1f", round($cumulative[$day] / 3500, 1)) ?></td>
 <? } ?>
 </tr>
 
