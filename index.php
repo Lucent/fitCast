@@ -8,8 +8,8 @@ body				{ font-family: sans-serif; }
 h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
 
-h3					{ margin: 1ex 0 0; }
-.Month, .Month td	{ border-style: hidden; }
+h3					{ margin: 1ex 0; font-weight: normal; font-size: 1.5em; }
+.Month, .Month td, .Chart	{ border-style: hidden; }
 .Month th			{ border: 1px solid black; border: 1px solid black; text-align: center; }
 h3 span				{ font-size: xx-large; line-height: 0.7; }
 .First				{ float: left; }
@@ -25,18 +25,19 @@ th:first-child		{ padding-right: 10px; text-align: right; letter-spacing: -1px; 
 input[type=text]	{ width: 42px; margin: 0; font-size: 100%; text-align: right; }
 #Table				{ max-height: 10em; overflow: scroll; }
 #Table td			{ width: <?= $blocksize ?>px; padding: 0.8ex 0; text-align: center; font-size: 18px; }
-#Table .Selected	{ border: 1px solid green; width: <?= $blocksize - 2 ?>px; }
 #Chart				{ height: <?= $blocksize * $verticalblocks + 10 + 10 ?>px; }
+.Chart				{ padding: 0; }
 #Table, #Chart		{ width: <?= ($days + 1) * $blocksize + $leftmargin ?>px; }
-.Date				{ text-align: center; }
-.Spacer th			{ padding-top: 1em; padding-bottom: 0.5ex; text-align: left; }
+.Date				{ text-align: center; border-style: hidden; }
+.Date th, .Month th	{ font-weight: normal; }
+.Spacer				{ border-top-style: hidden; }
+.Spacer th			{ padding-top: 1ex; padding-bottom: 0.5ex; text-align: left; font-size: 1.3em; }
 .NewWeek			{ border-left: 1px solid #CCC; width: <?= $blocksize - 1 ?>px ! important; }
 .Date .NewWeek		{ border-color: black; }
 .Actual th			{ color: <?= $actualColor ?>; }
 .Measured th		{ color: <?= $measuredColor ?>; }
 
 tr					{ border-bottom: thin solid #CCC; }
-tr.Date				{ border-bottom: none; }
 </style>
 <script>
 var startday = <?= $date_start_int ?>;
@@ -97,19 +98,13 @@ if (array_pop(array_keys($months)) == $month) { ?>
 <? } ?>
  </tr>
 
-<tr><td colspan="<?= $days + 2 ?>">
-<div id="Chart"></div>
-</td></tr>
-
 <tr class="Date">
- <th></th>
+ <td></td>
 <? for ($day = 0; $day <= $days; $day++) {
 $date_start_ref = clone $date_start; ?>
- <td<?= new_week($day, $date_start) ?>><?= $date_start_ref->add(new DateInterval("P".$day."D"))->format("D<\b\\r>jS") ?></td>
+ <th<?= new_week($day, $date_start) ?>><?= $date_start_ref->add(new DateInterval("P".$day."D"))->format("D<\b\\r>jS") ?></th>
 <? } ?>
 </tr>
-
-<tr class="Spacer"><td></td><th colspan="14">Calories</th></tr>
 
 <tr class="Food">
  <th>Food</th>
@@ -132,7 +127,10 @@ $date_start_ref = clone $date_start; ?>
 <? } ?>
 </tr>
 
-<tr class="Spacer"><td></td><th colspan="14">Weight (lbs)</th></tr>
+
+<tr><td colspan="<?= $days + 2 ?>" class="Chart">
+<div id="Chart"></div>
+</td></tr>
 
 <tr class="Change">
  <th>Change</th>

@@ -1,5 +1,5 @@
 "use strict";
-var today = 6;
+var today = 6;//document.getElementById("Change").cells[0].rowIndex;
 
 var calc_color = function(value, start, end, min, max) {
 	var n = (value - min) / (max - min), result;
@@ -143,16 +143,6 @@ var drawChart = function() {
 	var chart_leave = function(e) {
 		color_table_row(e.row + 1, "")
 	};
-	var lastClicked;
-	var click_chart = function() {
-		var selectedItem = chart.getSelection()[0], shift = 7;
-		if (lastClicked)
-			document.getElementById("Table").tBodies[0].rows[lastClicked.column + shift].cells[lastClicked.row + 1].className = "";
-		if (selectedItem) {
-			document.getElementById("Table").tBodies[0].rows[selectedItem.column + shift].cells[selectedItem.row + 1].className = "Selected";
-			lastClicked = {row: selectedItem.row, column: selectedItem.column};
-		}
-	}
 	var enter_table_row = function(el) {
 		el = this || el;
 		if (el.colSpan === 1) {
@@ -169,7 +159,6 @@ var drawChart = function() {
 	};
 	google.visualization.events.addListener(chart, "onmouseover", chart_hover);
 	google.visualization.events.addListener(chart, "onmouseout", chart_leave);
-	google.visualization.events.addListener(chart, "select", click_chart);
 
 	chart.draw(tableData, options);
 
