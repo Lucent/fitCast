@@ -29,13 +29,14 @@ input[type=text]	{ width: 42px; margin: 0; font-size: 100%; text-align: right; }
 .Chart				{ padding: 0; }
 #Table, #Chart		{ width: <?= ($days + 1) * $blocksize + $leftmargin ?>px; }
 .Date				{ text-align: center; border-style: hidden; }
+th:first-child		{ -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#eaeaea',gradientType=1)"; background: -webkit-linear-gradient(left, #FFFFFF 0%, #EAEAEA 100%); border-right: 1px solid #CACACA; }
 .Date th, .Month th	{ font-weight: normal; }
-.NewWeek			{ border-left: 1px solid #CCC; width: <?= $blocksize - 1 ?>px ! important; }
+.NewWeek			{ border-left: 1px solid #CACACA; width: <?= $blocksize - 1 ?>px ! important; }
 .Date .NewWeek		{ border-color: black; }
 .Actual th			{ color: <?= $actualColor ?>; }
 .Measured th		{ color: <?= $measuredColor ?>; }
 
-tr					{ border-bottom: thin solid #CCC; }
+tr					{ border-bottom: thin solid #CACACA; }
 </style>
 <script>
 var startday = <?= $date_start_int ?>;

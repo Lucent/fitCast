@@ -94,6 +94,7 @@ var drawChart = function() {
 		},
 		hAxis: {
 			gridlines: {
+				color: "#CACACA",
 				count: days + 2
 			},
 			viewWindow: {
@@ -104,6 +105,7 @@ var drawChart = function() {
 		},
 		vAxis: {
 			gridlines: {
+				color: "#CACACA",
 				count: verticalblocks + 1
 			},
 			title: "Weight (lbs)",
