@@ -1,4 +1,5 @@
-<? include "Script/functions.php"; ?>
+<?
+include "Script/functions.php"; ?>
 <!doctype html>
 <html>
 <head>
@@ -8,10 +9,10 @@ body				{ font-family: sans-serif; }
 h1					{ font-family: Trebuchet MS, Verdana, sans-serif; font-weight: normal; }
 h2					{ font-size: medium; }
 
-h3					{ margin: 1ex 0; font-weight: normal; font-size: 1.5em; }
+h3					{ margin: 1ex 0; font-weight: normal; font-size: 1.5em; display: inline; }
 .Month, .Month td, .Chart, #Table	{ border-style: hidden; }
 .Month th			{ border: 1px solid black; border: 1px solid black; text-align: center; }
-h3 span				{ font-size: xx-large; line-height: 0.7; }
+.Month span			{ font-size: xx-large; }
 .First				{ float: left; }
 .Last				{ float: right; }
 
@@ -36,7 +37,7 @@ th:first-child		{ -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startC
 .Actual th			{ color: <?= $actualColor ?>; }
 .Measured th		{ color: <?= $measuredColor ?>; }
 
-tr					{ border-bottom: thin solid #CACACA; }
+tr					{ border-bottom: 1px solid #CACACA; }
 </style>
 <script>
 var startday = <?= $date_start_int ?>;
@@ -51,6 +52,11 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
 
+<?
+if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
+?>
+Welcome back, <?= $_SESSION["username"] ?>
+<? } else { ?>
 <fieldset>
 <legend>Log in</legend>
 <form name="login" action="login.php" method="post">
@@ -59,8 +65,7 @@ Password: <input type="password" name="password"><br>
 <input type="submit" value="Login">
 </form>
 </fieldset>
-
-<form method="get">
+<? } ?>
 
 <fieldset>
 <legend>Measurements</legend>
@@ -77,6 +82,7 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 
 <br><br>
 
+<form method="post" action="Script/storevalues.php">
 <table id="Table" cellpadding="0" cellspacing="0" border="0">
 <tbody>
 
@@ -84,15 +90,13 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
   <td></td>
 <? foreach ($months as $month => $start) { ?>
   <th colspan="<?= $start ?>">
-   <h3>
 <? if (array_shift(array_keys($months)) == $month) { ?>
-    <span class="First">⇦</span>
-<? }
-    echo "    ", $month, "\n";
-if (array_pop(array_keys($months)) == $month) { ?>
-    <span class="Last">⇨</span>
+   <span class="First">⇦</span>
 <? } ?>
-   </h3>
+   <h3><?= $month ?></h3>
+<? if (array_pop(array_keys($months)) == $month) { ?>
+   <span class="Last">⇨</span>
+<? } ?>
   </th>
 <? } ?>
  </tr>
@@ -107,15 +111,19 @@ $date_start_ref = clone $date_start; ?>
 
 <tr class="Food">
  <th>Food</th>
-<? for ($day = 0; $day <= $days; $day++) { ?>
- <td><input name="food<?= $day ?>" type="text" size="4" value="<?= $food[$day] ?>"></td>
+<? for ($day = 0; $day <= $days; $day++) {
+$date_start_ref = clone $date_start;
+$thisdate = $date_start_ref->add(new DateInterval("P".$day."D"))->format("Y-m-d");
+?>
+ <td><input name="food:<?= $thisdate ?>" type="text" size="4" value="<?= $food[$thisdate] ?>"></td>
 <? } ?>
 </tr>
 
 <tr class="Exercise">
  <th>Exercise</th>
-<? for ($day = 0; $day <= $days; $day++) { ?>
- <td><input name="exercise<?= $day ?>" type="text" size="4" value="<?= $exercise[$day] ?>"></td>
+<? for ($day = 0; $day <= $days; $day++) {
+$date_start_ref = clone $date_start; ?>
+ <td><input name="exercise:<?= $date_start_ref->add(new DateInterval("P".$day."D"))->format("Y-m-d") ?>" type="text" size="4" value="<?= $exercise[$day] ?>"></td>
 <? } ?>
 </tr>
 
@@ -147,13 +155,11 @@ $date_start_ref = clone $date_start; ?>
 
 <tr class="Measured">
  <th>Measured</th>
-<? for ($day = 0; $day <= $days; $day++) { ?>
- <td><input name="measured<?= $day ?>" type="text" size="4" value="<?= $measured[$day] ?>"></td>
+<? for ($day = 0; $day <= $days; $day++) {
+$date_start_ref = clone $date_start; ?>
+ <td><input name="measured:<?= $date_start_ref->add(new DateInterval("P".$day."D"))->format("Y-m-d") ?>" type="text" size="4" value="<?= $measured[$day] ?>"></td>
 <? } ?>
 </tr>
-
-<input type="hidden" name="start" value="<?= $_GET["start"] ?>">
-<input type="hidden" name="end" value="<?= $_GET["end"] ?>">
 
 </tbody>
 </table>

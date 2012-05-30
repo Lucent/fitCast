@@ -1,35 +1,31 @@
 <?
-function validateUser() {
+function validateUser($id, $username) {
 	session_regenerate_id();
 	$_SESSION["valid"] = 1;
-	$_SESSION["userid"] = $username;
+	$_SESSION["username"] = $username;
+	$_SESSION["userid"] = $id;
 }
 
 session_start();
 $username = $_POST["username"];
 $password = $_POST["password"];
 
-$dbhost = "localhost";
-$dbname = "weightcast";
-$dbuser = "weightcast";
-$dbpass = "looseint";
-$conn = mysql_connect($dbhost, $dbuser, $dbpass);
-mysql_select_db($dbname, $conn);
+include "Script/database.php";
 
-$username = mysql_real_escape_string($username);
-$query = "SELECT password, salt FROM users WHERE username = '$username';";
-$result = mysql_query($query);
-if (mysql_num_rows($result) < 1) {
+$username = mysqli_real_escape_string($conn, $username);
+$query = "SELECT id, password, salt FROM users WHERE username = '$username';";
+$result = mysqli_query($conn, $query);
+if (mysqli_num_rows($result) < 1) {
 	echo "No such user";
 	die();
 }
-$userData = mysql_fetch_array($result, MYSQL_ASSOC);
+$userData = mysqli_fetch_array($result, MYSQL_ASSOC);
 $hash = hash("sha256", $userData["salt"] . hash("sha256", $password));
 if ($hash != $userData["password"]) {
 	echo "Bad password";
 	die();
 }
-validateUser();
+validateUser($userData["id"], $username);
 echo "Succesfully logged in.";
 session_start();
 

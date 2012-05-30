@@ -1,4 +1,5 @@
 <?
+session_start();
 function expenditure($sex, $weight, $height, $age) {
 	if ($sex == "m")
 		return 66 + 6.23 * $weight + 12.7 * $height - 6.76 * $age;
@@ -10,6 +11,21 @@ $date_start = new DateTime($_GET["start"]);
 $date_start_int = $date_start->format("j");
 $date_end = new DateTime($_GET["end"]);
 $days = date_diff($date_start, $date_end)->format("%a");
+
+$food = array();
+$exercise = array();
+$measured = array();
+
+include "Script/database.php";
+if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
+	$query = "SELECT date, food, exercise, net FROM calories WHERE id=" . $_SESSION['userid'] . " AND date >= '" . $date_start->format("Y-m-d") . "' AND date <= '" . $date_end->format("Y-m-d"). "'";
+	$result = mysqli_query($conn, $query);
+	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+		if (array_key_exists("food", $row))
+			$food[$row["date"]] = $row["food"];
+	}
+	echo $conn->error;
+}
 
 $blocksize = 60; $leftmargin = 90; $verticalblocks = 4;
 $actualColor = "#3366CC";
@@ -23,28 +39,21 @@ $lifestyle = $_GET["lifestyle"];
 
 $bmr = expenditure($sex, $weight, $height, $age);
 $loss = array();
-$food = array();
-$cumulative = array();
 $net = array();
-$exercise = array();
-$measured = array();
 $months = array();
 
 for ($day = 0; $day <= $days; $day++) {
 	// find distinct months
 	$temp = clone $date_start;
-	$today = $temp->add(new DateInterval("P".$day."D"))->format("F Y");
-	$months[$today]++;
+	$today = $temp->add(new DateInterval("P".$day."D"));
+	$months[$today->format("F Y")]++;
 
-	$food[$day] = $_GET["food" . $day];
-	$exercise[$day] = $_GET["exercise" . $day];
-	$net[$day] = $food[$day] - $exercise[$day];
-	$measured[$day] = $_GET["measured" . $day];
+	$net[$today->format("Y-m-d")] = $food[$today->format("Y-m-d")] - $exercise[$today->format("Y-m-d")];
 
-	if ($food[$day] == "") {
+	if ($food[$today->format("Y-m-d")] == "") {
 		$loss[$day] = 0;
 	} else {
-		$loss[$day] = $food[$day] - expenditure($sex, $weight + $cumulative[$day] / 3500, $height, $age) * $lifestyle - $exercise[$day];
+		$loss[$day] = $food[$today->format("Y-m-d")] - expenditure($sex, $weight + $cumulative[$day] / 3500, $height, $age) * $lifestyle - $exercise[$day];
 	}
 	$cumulative[$day] += $cumulative[$day - 1] + $loss[$day];
 }

@@ -18,13 +18,9 @@ $hash = hash("sha256", $password);
 $salt = createSalt();
 $hash = hash("sha256", $salt . $hash);
 
-$dbhost = "localhost";
-$dbname = "weightcast";
-$dbuser = "weightcast";
-$dbpass = "looseint";
-$conn = mysql_connect($dbhost, $dbuser, $dbpass);
-mysql_select_db($dbname, $conn);
-$username = mysql_real_escape_string($username);
+include "Script/database.php";
+
+$username = mysqli_real_escape_string($username);
 $query = "INSERT INTO users (username, password, salt) VALUES ('$username', '$hash', '$salt');";
-mysql_query($query);
-mysql_close();
+mysqli_query($query);
+mysqli_close();
