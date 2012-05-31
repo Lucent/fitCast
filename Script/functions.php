@@ -33,16 +33,18 @@ if ($metabolism === FALSE) { ?>
 
 $loss = array();
 $net = array();
+$measured = array();
 $months = array();
 $cumulative = array();
 
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	$conn = database_connect();
-	$query = "SELECT date, food, exercise, net FROM calories WHERE id=" . $_SESSION['id'] . " AND date >= '" . $date_start->format("Y-m-d") . "' AND date <= '" . $date_end->format("Y-m-d"). "'";
+	$query = "SELECT date, food, exercise, net, measured FROM calories WHERE id=" . $_SESSION['id'] . " AND date >= '" . $date_start->format("Y-m-d") . "' AND date <= '" . $date_end->format("Y-m-d"). "'";
 	$result = mysqli_query($conn, $query);
 	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 		$food[$row["date"]] = $row["food"];
 		$exercise[$row["date"]] = $row["exercise"];
+		$measured[$row["date"]] = $row["measured"];
 	}
 	mysqli_close($conn);
 }
