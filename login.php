@@ -1,32 +1,38 @@
 <?
-function validateUser($id, $username) {
-	session_regenerate_id();
-	$_SESSION["valid"] = 1;
-	$_SESSION["username"] = $username;
-	$_SESSION["userid"] = $id;
-}
+include "Script/functions.php";
 
-session_start();
-$username = $_POST["username"];
-$password = $_POST["password"];
-
-include "Script/database.php";
-
-$username = mysqli_real_escape_string($conn, $username);
-$query = "SELECT id, password, salt FROM users WHERE username = '$username';";
-$result = mysqli_query($conn, $query);
-if (mysqli_num_rows($result) < 1) {
-	echo "No such user";
-	die();
-}
-$userData = mysqli_fetch_array($result, MYSQL_ASSOC);
-$hash = hash("sha256", $userData["salt"] . hash("sha256", $password));
-if ($hash != $userData["password"]) {
-	echo "Bad password";
-	die();
-}
-validateUser($userData["id"], $username);
-echo "Succesfully logged in.";
-session_start();
-
-?>
+if (!empty($_POST)) {
+	$userdata = login($_POST["username"], $_POST["password"]);
+	if (is_array($userdata)) {
+		set_session_vars($userdata);
+	?>
+Login accepted, <?= $userdata["username"] ?>.
+	<? } elseif ($userdata === "NOUSER") { ?>
+<form method="post">
+<fieldset>
+That username doesn't exist. Want to register it?
+ <legend>Register</legend>
+ Username: <input type="text" name="username" maxlength="30" value="<?= $_POST["username"] ?>"><br>
+ Password: <input type="password" name="password" value="<?= $_POST["password"] ?>"><br>
+ <input type="submit" name="Submit" value="Register">
+</form>
+	<? } elseif ($userdata === "BADPASS") { ?>
+<form method="post">
+<fieldset>
+"<?= $_POST["username"] ?>" exists. Did you forget your password?
+ <legend>Retry Log in</legend>
+ Username: <input type="text" name="username" maxlength="30" value="<?= $_POST["username"] ?>"><br>
+ Password: <input type="password" name="password"><br>
+ <input type="submit" name="Submit" value="Log in">
+</form>
+	<? }
+} else { ?>
+<form method="post">
+<fieldset>
+ <legend>Log in or Register</legend>
+ Username: <input type="text" name="username" maxlength="30"><br>
+ Password: <input type="password" name="password"><br>
+ <input type="submit" name="Submit" value="Log in">
+ <input type="submit" name="Submit" value="Register">
+</form>
+<? } ?>

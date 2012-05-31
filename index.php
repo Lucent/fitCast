@@ -1,5 +1,4 @@
-<?
-include "Script/functions.php"; ?>
+<?  include "Script/functions.php"; ?>
 <!doctype html>
 <html>
 <head>
@@ -40,10 +39,10 @@ th:first-child		{ -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startC
 tr					{ border-bottom: 1px solid #CACACA; }
 </style>
 <script>
-var startday = <?= $date_start_int ?>;
+var startday = <?= $date_start->format("j"); ?>;
 var days = <?= $days ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>;
 var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>";
-<? output_json_table($date_start_int, $days, $weight, $cumulative, $measured); ?>
+<? output_json_table($date_start, $days, $metabolism, $cumulative, $measured); ?>
 </script>
 <script src="Script/interactivity.js"></script>
 </head>
@@ -52,33 +51,7 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
 
-<?
-if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
-?>
-Welcome back, <?= $_SESSION["username"] ?>
-<? } else { ?>
-<fieldset>
-<legend>Log in</legend>
-<form name="login" action="login.php" method="post">
-Username: <input type="text" name="username"><br>
-Password: <input type="password" name="password"><br>
-<input type="submit" value="Login">
-</form>
-</fieldset>
-<? } ?>
 
-<fieldset>
-<legend>Measurements</legend>
-Weight: <input name="weight" type='text' value="<?= $_GET["weight"] ?>"> lbs<br>
-Age: <input name="age" type='text' value="<?= $_GET["age"] ?>"> years<br>
-Sex: <input type="radio" name="sex" value="m" id="male" <?= ($_GET["sex"] == "m" ? "checked" : "") ?>><label for="male">male</label> <input type="radio" name="sex" value="f" id="female" <?= ($_GET["sex"] == "f" ? "checked" : "") ?>><label for="female">female</label><br>
-Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?= $x ?> <?= ($_GET["feet"] == $x ? "selected" : "") ?>><?= $x ?></option><? } ?></select> ft <select name="inches"><? for ($x = 0; $x < 12; $x++) { ?><option value=<?= $x ?> <?= ($_GET["inches"] == $x ? "selected" : "") ?>><?= $x ?></option><? } ?></select> in<br>
-</fieldset>
-
-<fieldset>
-<legend>Lifestyle (BMR=<?= round($bmr) ?>)</legend>
-<input type="radio" name="lifestyle" value="1.2" id="sedentary" checked><label for="sedentary">Sedentary: <?= round($bmr * $_GET["lifestyle"]) ?> cal/day</label><br>
-</fieldset>
 
 <br><br>
 
@@ -103,61 +76,62 @@ Height: <select name="feet"><? for ($x = 4; $x <= 6; $x++) { ?><option value=<?=
 
 <tr class="Date">
  <td></td>
-<? for ($day = 0; $day <= $days; $day++) {
-$date_start_ref = clone $date_start; ?>
- <th<?= new_week($day, $date_start) ?>><?= $date_start_ref->add(new DateInterval("P".$day."D"))->format("D<\b\\r>jS") ?></th>
+<? for ($day = 0; $day <= $days; $day++) { ?>
+ <th<?= new_week($day, $date_start) ?>><?= add_days($date_start, $day)->format("D<\b\\r>jS") ?></th>
 <? } ?>
 </tr>
 
 <tr class="Food">
  <th>Food</th>
 <? for ($day = 0; $day <= $days; $day++) {
-$date_start_ref = clone $date_start;
-$thisdate = $date_start_ref->add(new DateInterval("P".$day."D"))->format("Y-m-d");
-?>
- <td><input name="food:<?= $thisdate ?>" type="text" size="4" value="<?= $food[$thisdate] ?>"></td>
+$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+ <td><input name="food:<?= $YMD ?>" type="text" size="4" value="<?= isset($food[$YMD]) ? $food[$YMD] : "" ?>"></td>
 <? } ?>
 </tr>
 
 <tr class="Exercise">
  <th>Exercise</th>
 <? for ($day = 0; $day <= $days; $day++) {
-$date_start_ref = clone $date_start; ?>
- <td><input name="exercise:<?= $date_start_ref->add(new DateInterval("P".$day."D"))->format("Y-m-d") ?>" type="text" size="4" value="<?= $exercise[$day] ?>"></td>
+$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+ <td><input name="exercise:<?= $YMD ?>" type="text" size="4" value="<?= isset($exercise[$YMD]) ? $exercise[$YMD] : "" ?>"></td>
 <? } ?>
 </tr>
 
 <tr class="Net">
  <th>Net</th>
-<? for ($day = 0; $day <= $days; $day++) { ?>
- <td id="net<?= $day ?>"><?= round($net[$day]) ?></td>
+<? for ($day = 0; $day <= $days; $day++) {
+$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+ <td><?= round($net[$YMD]) ?></td>
 <? } ?>
 </tr>
 
-
-<tr><td colspan="<?= $days + 2 ?>" class="Chart">
-<div id="Chart"></div>
-</td></tr>
+<tr>
+ <td colspan="<?= $days + 2 ?>" class="Chart">
+  <div id="Chart"></div>
+ </td>
+</tr>
 
 <tr class="Change">
  <th>Change</th>
-<? for ($day = 0; $day <= $days; $day++) { ?>
- <td><?= sprintf("%.2f", round($loss[$day] / 3500, 2)) ?></td>
+<? for ($day = 0; $day <= $days; $day++) {
+$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+ <td><?= sprintf("%.2f", round($loss[$YMD] / 3500, 2)) ?></td>
 <? } ?>
 </tr>
 
 <tr class="Actual">
  <th>Actual</th>
-<? for ($day = 0; $day <= $days; $day++) { ?>
- <td><?= sprintf("%.1f", round($weight + $cumulative[$day] / 3500, 1)) ?></td>
+<? for ($day = 0; $day <= $days; $day++) {
+$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+ <td><?= sprintf("%.1f", round($metabolism["weight"] + $cumulative[$YMD] / 3500, 1)) ?></td>
 <? } ?>
 </tr>
 
 <tr class="Measured">
  <th>Measured</th>
 <? for ($day = 0; $day <= $days; $day++) {
-$date_start_ref = clone $date_start; ?>
- <td><input name="measured:<?= $date_start_ref->add(new DateInterval("P".$day."D"))->format("Y-m-d") ?>" type="text" size="4" value="<?= $measured[$day] ?>"></td>
+$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+ <td><input name="measured:<?= $YMD ?>" type="text" size="4" value="<?= isset($measured[$YMD]) ? $measured[$YMD] : "" ?>"></td>
 <? } ?>
 </tr>
 
