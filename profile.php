@@ -1,15 +1,16 @@
 <? include "Script/functions.php"; ?>
 <?
 if (!empty($_POST) && $_SESSION["valid"] === 1) {
-	$id = $_SESSION["id"];
-	$weight = mysqli_real_escape_string($_POST["weight"]);
-	$age = mysqli_real_escape_string($_POST["age"]);
-	$sex = mysqli_real_escape_string($_POST["sex"]);
-	$height = mysqli_real_escape_string($_POST["feet"] * 12 + $_GET["inches"]);
-
 	$conn = database_connect();
-	$query = "INSERT INTO metabolism (id, weight, age, sex, height) VALUES ($id, '$weight', '$age', '$sex', '$height');";
+	$id = $_SESSION["id"];
+	$weight = mysqli_real_escape_string($conn, $_POST["weight"]);
+	$age = mysqli_real_escape_string($conn, $_POST["age"]);
+	$sex = mysqli_real_escape_string($conn, $_POST["sex"]);
+	$height = mysqli_real_escape_string($conn, $_POST["feet"] * 12 + $_POST["inches"]);
+
+	$query = "INSERT INTO metabolism (id, startweight, age, sex, height) VALUES ($id, '$weight', '$age', '$sex', '$height');";
 	mysqli_query($conn, $query);
+//	echo $conn->error;
 	mysqli_close($conn);
 }
 ?>

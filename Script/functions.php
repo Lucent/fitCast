@@ -25,7 +25,11 @@ $exercise = array();
 $measured = array();
 
 $metabolism = get_metabolism($_SESSION["id"]);
-$bmr = expenditure($metabolism["sex"], $metabolism["weight"], $metabolism["height"], $metabolism["age"]);
+if ($metabolism === FALSE) { ?>
+	User profile incomplete. Cannot calculate weight. <a href="profile.php">Enter information.</a>
+<? } else {
+	$bmr = expenditure($metabolism["sex"], $metabolism["startweight"], $metabolism["height"], $metabolism["age"]);
+}
 
 $loss = array();
 $net = array();
@@ -40,7 +44,6 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 		$food[$row["date"]] = $row["food"];
 		$exercise[$row["date"]] = $row["exercise"];
 	}
-	print_r($food);
 	mysqli_close($conn);
 }
 
@@ -56,7 +59,7 @@ for ($day = 0; $day <= $days; $day++) {
 	if ($food[$YMD] == "") {
 		$loss[$YMD] = 0;
 	} else {
-		$loss[$YMD] = $net[$YMD] - expenditure($metabolism["sex"], $metabolism["weight"] + $cumulative[$YMD] / 3500, $metabolism["height"], $metabolism["age"]) * $metabolism["lifestyle"];
+		$loss[$YMD] = $net[$YMD] - expenditure($metabolism["sex"], $metabolism["startweight"] + $cumulative[$YMD] / 3500, $metabolism["height"], $metabolism["age"]) * $metabolism["lifestyle"];
 	}
 	$cumulative[$YMD] += $cumulative[sub_days($today, 1)->format("Y-m-d")] + $loss[$YMD];
 }
@@ -120,8 +123,12 @@ function register($user, $pass, $email) {
 
 function get_metabolism($id) {
 	$conn = database_connect();
-	$query = "SELECT sex, age, height, startweight FROM metabolism WHERE id = $id;";
+	$query = "SELECT * FROM metabolism WHERE id = $id;";
 	$result = mysqli_query($conn, $query);
+	echo $conn->error;
+	if (mysqli_num_rows($result) < 1) {
+		return FALSE;
+	}
 	$userData = mysqli_fetch_array($result, MYSQL_ASSOC);
 	mysqli_close($conn);
 	return $userData;
@@ -151,7 +158,7 @@ function output_json_table($date_start, $days, $metabolism, $cumulative, $measur
 
 		$table[] = array(
 			$date_start_int + $day + 0.5,
-			$metabolism["weight"] + $cumulative[$YMD] / 3500,
+			$metabolism["startweight"] + $cumulative[$YMD] / 3500,
 			isset($measured[$YMD]) ? (float) $measured[$YMD] : null
 		);
 	}
