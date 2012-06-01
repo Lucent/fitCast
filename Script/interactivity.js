@@ -208,8 +208,9 @@ var recalculate_net = function(col) {
 	var food_val = Number(table[food].cells[col+1].firstChild.value);
 	var exercise_val = Number(table[exercise].cells[col+1].firstChild.value);
 	var net_val = food_val - exercise_val;
-	var change_val = (net_val - 2150) / 3500;
 	var actual_yesterday_val = Number(table[actual].cells[col].getAttribute("noround"));
+	var bmr = expenditure(metabolism["sex"], actual_yesterday_val, Number(metabolism["height"]), Number(metabolism["age"]), Number(metabolism["lifestyle"]));
+	var change_val = (net_val - bmr) / 3500;
 	var actual_val = actual_yesterday_val + change_val;
 
 	table[net].cells[col+1].innerHTML = net_val;
@@ -222,6 +223,15 @@ var recalculate_net = function(col) {
 	if (col+2 < table[food].cells.length) {
 		table[food].cells[col+2].firstChild.onchange({srcElement: table[food].cells[col+2].firstChild});
 	}
+}
+
+var expenditure = function(sex, weight, height, age, lifestyle) {
+    switch (sex) {
+        case "male":
+            return (66 + 6.23 * weight + 12.7 * height - 6.76 * age) * lifestyle;
+        case "female":
+            return (655 + 4.35 * weight + 4.7 * height - 4.7 * age) * lifestyle;
+    }
 }
 
 var better_mouseover = function(sink, callback) {

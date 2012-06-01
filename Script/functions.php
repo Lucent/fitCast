@@ -70,7 +70,7 @@ $actual[$first_measured->format("Y-m-d")] = (float) $measured[$first_measured->f
 for ($day = add_days($first_measured, 1); $day <= new DateTime(array_pop(array_keys($food))); $day = add_days($day, 1)) {
 	$today = $day->format("Y-m-d");
 	$yesterday = sub_days($day, 1)->format("Y-m-d");
-	$bmr = expenditure($metabolism["sex"], $actual[$yesterday], $metabolism["height"], $metabolism["age"]);
+	$bmr = expenditure($metabolism["sex"], $actual[$yesterday], $metabolism["height"], $metabolism["age"], $metabolism["lifestyle"]);
 
 	$change[$today] = ($net[$today] - $bmr) / 3500;
 	$actual[$today] = $actual[$yesterday] + $change[$today];
@@ -87,12 +87,12 @@ function sub_days($date, $days) {
 	return $temp;
 }
 
-function expenditure($sex, $weight, $height, $age) {
+function expenditure($sex, $weight, $height, $age, $lifestyle) {
 	switch ($sex) {
 		case "male":
-			return 66 + 6.23 * $weight + 12.7 * $height - 6.76 * $age;
+			return (66 + 6.23 * $weight + 12.7 * $height - 6.76 * $age) * $lifestyle;
 		case "female":
-			return 655 + 4.35 * $weight + 4.7 * $height - 4.7 * $age;
+			return (655 + 4.35 * $weight + 4.7 * $height - 4.7 * $age) * $lifestyle;
 	}
 }
 
