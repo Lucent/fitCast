@@ -121,7 +121,7 @@ $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
  <th>Actual</th>
 <? for ($day = 0; $day <= $days; $day++) {
 $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
- <td><?= sprintf("%.1f", round($actual[$YMD], 1)) ?></td>
+ <td noround="<?= $actual[$YMD] ?>"><?= sprintf("%.1f", round($actual[$YMD], 1)) ?></td>
 <? } ?>
 </tr>
 

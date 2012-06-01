@@ -209,12 +209,13 @@ var recalculate_net = function(col) {
 	var exercise_val = Number(table[exercise].cells[col+1].firstChild.value);
 	var net_val = food_val - exercise_val;
 	var change_val = (net_val - 2150) / 3500;
-	var actual_yesterday_val = Number(table[actual].cells[col].innerHTML); // needs to be embedded in html in full resolution
+	var actual_yesterday_val = Number(table[actual].cells[col].getAttribute("noround"));
 	var actual_val = actual_yesterday_val + change_val;
 
 	table[net].cells[col+1].innerHTML = net_val;
 	table[change].cells[col+1].innerHTML = change_val.toFixed(2);
 	table[actual].cells[col+1].innerHTML = actual_val.toFixed(1);
+	table[actual].cells[col+1].setAttribute("noround", actual_val);
 
 	tableData.setValue(col, 1, actual_val);
 
