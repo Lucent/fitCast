@@ -47,13 +47,9 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <script src="Script/interactivity.js"></script>
 </head>
 <body>
-<nav style="float: right;"><a href="faq.html">Questions</a> <a href="/?weight=200&age=29&sex=m&feet=6&inches=0&lifestyle=1.2&food0=1200&food1=1500&food2=1800&food3=2000&food4=2100&food5=2250&food6=1900&food7=3000&food8=2500&food9=1500&food10=1400&exercise0=50&exercise1=100&exercise2=200&exercise3=100&exercise4=50&exercise5=&exercise6=&exercise7=&exercise8=200&exercise9=300&exercise10=&measured0=200&measured1=&measured2=&measured3=&measured4=&measured5=199&measured6=&measured7=&measured8=&measured9=&measured10=198&start=2012-05-25&end=2012-06-04">Load sample data</a></nav>
+<nav><a href="faq.html">Questions</a></nav>
 <h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
-
-
-
-<br><br>
 
 <form method="post" action="Script/storevalues.php">
 <table id="Table" cellpadding="0" cellspacing="0" border="0">
