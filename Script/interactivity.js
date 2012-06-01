@@ -195,11 +195,13 @@ var update_chart = function(e) {
 	var row = el.parentNode.parentNode.rowIndex;
 
 	if (row === food || row === exercise) {
-		recalculate_net(col);
-	} else {
+		var cells = document.getElementById("Table").rows[food].cells.length;
+		for (var x = col; x < cells - 1; x++)
+			recalculate_net(x);
+	} else
 		tableData.setValue(col, map[row], Number(el.value) || null);
-	}
 
+	draw_change_colors();
 	chart.draw(tableData, options);
 };
 
@@ -219,9 +221,6 @@ var recalculate_net = function(col) {
 	table[actual].cells[col+1].setAttribute("noround", actual_val);
 
 	tableData.setValue(col, 1, actual_val);
-
-	if (col+2 < table[food].cells.length)
-		table[food].cells[col+2].firstChild.onchange({srcElement: table[food].cells[col+2].firstChild});
 }
 
 var expenditure = function(sex, weight, height, age, lifestyle) {
@@ -261,24 +260,7 @@ var load_script = function(file) {
 	document.getElementsByTagName("head")[0].appendChild(s);
 };
 
-window.onload = function() { // make this ondomready
-	food = document.getElementById("Food").rowIndex;
-	exercise = document.getElementById("Exercise").rowIndex;
-	net = document.getElementById("Net").rowIndex;
-	change = document.getElementById("Change").rowIndex;
-	actual = document.getElementById("Actual").rowIndex;
-	measured = document.getElementById("Measured").rowIndex;
-
-	var chart_lib = "http://www.google.com/jsapi?autoload=" + encodeURIComponent(JSON.stringify({
-		"modules": [{
-			"name": "visualization",
-			"version": "1",
-			"packages": ["corechart"],
-			"callback": "drawChart"
-		}]
-	}));
-	load_script(chart_lib);
-
+var draw_change_colors = function() {
 	var cells = document.getElementById("Table").tBodies[0].rows[change].cells;
 	var goodColor = "00FF00",
 		badColor = "FF0000",
@@ -302,4 +284,25 @@ window.onload = function() { // make this ondomready
 		var frac = approximateFractions(Math.abs(todayChgVal));
 //		todayChgCell.innerHTML = (negative ? "-" : "") + frac[0] + "/" + frac[1];
 	}
+};
+
+window.onload = function() { // make this ondomready
+	food = document.getElementById("Food").rowIndex;
+	exercise = document.getElementById("Exercise").rowIndex;
+	net = document.getElementById("Net").rowIndex;
+	change = document.getElementById("Change").rowIndex;
+	actual = document.getElementById("Actual").rowIndex;
+	measured = document.getElementById("Measured").rowIndex;
+
+	var chart_lib = "http://www.google.com/jsapi?autoload=" + encodeURIComponent(JSON.stringify({
+		"modules": [{
+			"name": "visualization",
+			"version": "1",
+			"packages": ["corechart"],
+			"callback": "drawChart"
+		}]
+	}));
+	load_script(chart_lib);
+
+	draw_change_colors();
 };
