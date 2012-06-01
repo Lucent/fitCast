@@ -28,6 +28,7 @@ CREATE TABLE `calories` (
   `food` smallint(6) unsigned DEFAULT NULL,
   `exercise` smallint(6) unsigned DEFAULT NULL,
   `net` smallint(6) DEFAULT NULL,
+  `measured` float unsigned DEFAULT NULL,
   UNIQUE KEY `id` (`id`,`date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -38,10 +39,17 @@ CREATE TABLE `calories` (
 
 LOCK TABLES `calories` WRITE;
 /*!40000 ALTER TABLE `calories` DISABLE KEYS */;
-INSERT INTO `calories` VALUES (1,'2012-05-25',300,NULL,NULL);
-INSERT INTO `calories` VALUES (1,'2012-05-26',400,500,NULL);
-INSERT INTO `calories` VALUES (1,'2012-05-28',400,NULL,NULL);
-INSERT INTO `calories` VALUES (1,'2012-05-29',500,NULL,NULL);
+INSERT INTO `calories` VALUES (1,'2012-05-25',1400,500,NULL,295);
+INSERT INTO `calories` VALUES (1,'2012-05-26',1500,600,NULL,NULL);
+INSERT INTO `calories` VALUES (1,'2012-05-28',1700,800,NULL,NULL);
+INSERT INTO `calories` VALUES (1,'2012-05-29',1800,900,NULL,NULL);
+INSERT INTO `calories` VALUES (1,'2012-05-21',1000,100,NULL,220);
+INSERT INTO `calories` VALUES (1,'2012-05-22',1100,200,NULL,NULL);
+INSERT INTO `calories` VALUES (1,'2012-05-23',1200,300,NULL,NULL);
+INSERT INTO `calories` VALUES (1,'2012-05-24',1300,400,NULL,NULL);
+INSERT INTO `calories` VALUES (1,'2012-05-27',1600,700,NULL,NULL);
+INSERT INTO `calories` VALUES (1,'2012-05-30',1900,1000,NULL,NULL);
+INSERT INTO `calories` VALUES (1,'2012-05-31',2000,1100,NULL,NULL);
 /*!40000 ALTER TABLE `calories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,6 +66,7 @@ CREATE TABLE `metabolism` (
   `age` tinyint(3) unsigned NOT NULL,
   `height` tinyint(3) unsigned NOT NULL,
   `startweight` smallint(5) unsigned NOT NULL,
+  `lifestyle` float NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -68,6 +77,7 @@ CREATE TABLE `metabolism` (
 
 LOCK TABLES `metabolism` WRITE;
 /*!40000 ALTER TABLE `metabolism` DISABLE KEYS */;
+INSERT INTO `metabolism` VALUES (1,'male',29,72,295,1.2);
 /*!40000 ALTER TABLE `metabolism` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -108,4 +118,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-05-31  1:36:39
+-- Dump completed on 2012-05-31 21:50:13
