@@ -66,14 +66,19 @@ for ($day = 0; $day <= count($food); $day++) {
 	$net[$YMD] = $food[$YMD] - $exercise[$YMD];
 }
 
-$actual[$first_measured->format("Y-m-d")] = (float) $measured[$first_measured->format("Y-m-d")];
-for ($day = add_days($first_measured, 1); $day <= new DateTime(array_pop(array_keys($food))); $day = add_days($day, 1)) {
-	$today = $day->format("Y-m-d");
-	$yesterday = sub_days($day, 1)->format("Y-m-d");
-	$bmr = expenditure($metabolism["sex"], $actual[$yesterday], $metabolism["height"], $metabolism["age"], $metabolism["lifestyle"]);
+if ($first_measured) {
+	$actual[$first_measured->format("Y-m-d")] = (float) $measured[$first_measured->format("Y-m-d")];
+	for ($day = add_days($first_measured, 1); $day <= new DateTime(array_pop(array_keys($food))); $day = add_days($day, 1)) {
+		$today = $day->format("Y-m-d");
+		$yesterday = sub_days($day, 1)->format("Y-m-d");
+		$bmr = expenditure($metabolism["sex"], $actual[$yesterday], $metabolism["height"], $metabolism["age"], $metabolism["lifestyle"]);
 
-	$change[$today] = ($net[$today] - $bmr) / 3500;
-	$actual[$today] = $actual[$yesterday] + $change[$today];
+		if ($net[$today] == 0)
+			$change[$today] = 0;
+		else
+			$change[$today] = ($net[$today] - $bmr) / 3500;
+		$actual[$today] = $actual[$yesterday] + $change[$today];
+	}
 }
 
 function add_days($date, $days) {
