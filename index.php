@@ -117,7 +117,7 @@ $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
 <? } ?>
 </tr>
 
-<tr class="Actual">
+<tr class="Actual" id="Actual">
  <th>Actual</th>
 <? for ($day = 0; $day <= $days; $day++) {
 $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>

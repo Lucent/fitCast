@@ -1,5 +1,5 @@
 "use strict";
-var today, food, exercise, net, measured;
+var food, exercise, net, change, actual, measured;
 var tableData, chart;
 
 var calc_color = function(value, start, end, min, max) {
@@ -140,7 +140,7 @@ var drawChart = function() {
 	var color_table_row = function(num, color) {
 		var rows = document.getElementById("Table").tBodies[0].rows;
 		for (var row = 0; row < rows.length; row++) {
-			if (rows[row].cells.length === days + 2 && row !== today && num !== 0)
+			if (rows[row].cells.length === days + 2 && row !== change && num !== 0)
 				rows[row].cells[num].style.backgroundColor = color;
 		}
 	};
@@ -205,8 +205,22 @@ var update_chart = function(e) {
 
 var recalculate_net = function(col) {
 	var table = document.getElementById("Table").rows;
-	table[net].cells[col+1].innerHTML = Number(table[food].cells[col+1].firstChild.value) - Number(table[exercise].cells[col+1].firstChild.value);
-	tableData.setValue(col, 1, 220);
+	var food_val = Number(table[food].cells[col+1].firstChild.value);
+	var exercise_val = Number(table[exercise].cells[col+1].firstChild.value);
+	var net_val = food_val - exercise_val;
+	var change_val = (net_val - 2150) / 3500;
+	var actual_yesterday_val = Number(table[actual].cells[col].innerHTML); // needs to be embedded in html in full resolution
+	var actual_val = actual_yesterday_val + change_val;
+
+	table[net].cells[col+1].innerHTML = net_val;
+	table[change].cells[col+1].innerHTML = change_val.toFixed(2);
+	table[actual].cells[col+1].innerHTML = actual_val.toFixed(1);
+
+	tableData.setValue(col, 1, actual_val);
+
+	if (col+2 < table[food].cells.length) {
+		table[food].cells[col+2].firstChild.onchange({srcElement: table[food].cells[col+2].firstChild});
+	}
 }
 
 var better_mouseover = function(sink, callback) {
@@ -238,10 +252,11 @@ var load_script = function(file) {
 };
 
 window.onload = function() { // make this ondomready
-	today = document.getElementById("Change").rowIndex;
 	food = document.getElementById("Food").rowIndex;
 	exercise = document.getElementById("Exercise").rowIndex;
 	net = document.getElementById("Net").rowIndex;
+	change = document.getElementById("Change").rowIndex;
+	actual = document.getElementById("Actual").rowIndex;
 	measured = document.getElementById("Measured").rowIndex;
 
 	var chart_lib = "http://www.google.com/jsapi?autoload=" + encodeURIComponent(JSON.stringify({
@@ -254,7 +269,7 @@ window.onload = function() { // make this ondomready
 	}));
 	load_script(chart_lib);
 
-	var cells = document.getElementById("Table").tBodies[0].rows[today].cells;
+	var cells = document.getElementById("Table").tBodies[0].rows[change].cells;
 	var goodColor = "00FF00",
 		badColor = "FF0000",
 		max = 0.3;
