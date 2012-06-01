@@ -182,7 +182,14 @@ var drawChart = function() {
 	var inputs = document.getElementById("Table").getElementsByTagName("input");
 	for (var cell = 0; cell < inputs.length; cell++) {
 		inputs[cell].onchange = update_chart;
+		inputs[cell].onkeypress = number_typed;
 	}
+};
+
+var number_typed = function(e) {
+	var ZERO = 48, NINE = 57, DOT = 46;
+	var code = e ? e.which : event.keyCode;
+	return (code < 31 || (code >= ZERO && code <= NINE) || code === DOT);
 };
 
 var update_chart = function(e) {
