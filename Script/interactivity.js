@@ -223,11 +223,13 @@ var recalculate_net = function(col) {
 	var actual_val = actual_yesterday_val + change_val;
 
 	table[net].cells[col+1].innerHTML = net_val;
-	table[change].cells[col+1].innerHTML = change_val.toFixed(2);
-	table[actual].cells[col+1].innerHTML = actual_val.toFixed(1);
-	table[actual].cells[col+1].setAttribute("noround", actual_val);
+	if (col !== 0) {
+		table[change].cells[col+1].innerHTML = change_val.toFixed(2);
+		table[actual].cells[col+1].innerHTML = actual_val.toFixed(1);
+		table[actual].cells[col+1].setAttribute("noround", actual_val);
 
-	tableData.setValue(col, 1, actual_val);
+		tableData.setValue(col, 1, actual_val);
+	}
 }
 
 var expenditure = function(sex, weight, height, age, lifestyle) {
