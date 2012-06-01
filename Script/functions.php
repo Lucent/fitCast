@@ -24,8 +24,9 @@ $food = array();
 $exercise = array();
 $measured = array();
 
-$metabolism = get_metabolism($_SESSION["id"]);
-if ($metabolism === FALSE) { ?>
+if (!isset($_SESSION["id"])) { ?>
+Not logged in. Can't fetch metabolism information.
+<? } elseif ($metabolism = get_metabolism($_SESSION["id"]) === FALSE) { ?>
 	User profile incomplete. Cannot calculate weight. <a href="profile.php">Enter information.</a>
 <? } else {
 	$bmr = expenditure($metabolism["sex"], $metabolism["startweight"], $metabolism["height"], $metabolism["age"]);
