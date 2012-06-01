@@ -197,7 +197,7 @@ var update_chart = function(e) {
 	if (row === food || row === exercise) {
 		recalculate_net(col);
 	} else {
-		tableData.setValue(col, map[row], Number(el.value));
+		tableData.setValue(col, map[row], Number(el.value) || null);
 	}
 
 	chart.draw(tableData, options);
@@ -220,9 +220,8 @@ var recalculate_net = function(col) {
 
 	tableData.setValue(col, 1, actual_val);
 
-	if (col+2 < table[food].cells.length) {
+	if (col+2 < table[food].cells.length)
 		table[food].cells[col+2].firstChild.onchange({srcElement: table[food].cells[col+2].firstChild});
-	}
 }
 
 var expenditure = function(sex, weight, height, age, lifestyle) {

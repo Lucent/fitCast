@@ -39,6 +39,7 @@ th:first-child		{ -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startC
 tr					{ border-bottom: 1px solid #CACACA; }
 </style>
 <script>
+var metabolism = <?= json_encode($metabolism) ?>;
 var startday = <?= $date_start->format("j"); ?>;
 var days = <?= $days ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>;
 var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>";
