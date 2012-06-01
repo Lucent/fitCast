@@ -7,7 +7,7 @@ if (!empty($_POST) && $_SESSION["valid"] === 1) {
 	$sex = mysqli_real_escape_string($conn, $_POST["sex"]);
 	$height = mysqli_real_escape_string($conn, $_POST["feet"] * 12 + $_POST["inches"]);
 
-	$query = "INSERT INTO metabolism (id, age, sex, height) VALUES ($id, '$age', '$sex', '$height');";
+	$query = "INSERT INTO metabolism (id, age, sex, height, lifestyle) VALUES ($id, $age, '$sex', $height, 1.2);";
 	mysqli_query($conn, $query);
 //	echo $conn->error;
 	mysqli_close($conn);

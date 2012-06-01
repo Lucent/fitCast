@@ -2,7 +2,13 @@
 include "Script/functions.php";
 
 if (!empty($_POST)) {
-	$userdata = login($_POST["username"], $_POST["password"]);
+	switch ($_POST["Submit"]) {
+		case "Log in":
+			$userdata = login($_POST["username"], $_POST["password"]);
+			break;
+		case "Register":
+			$userdata = register($_POST["username"], $_POST["password"]);
+	}
 	if (is_array($userdata)) {
 		set_session_vars($userdata);
 	?>

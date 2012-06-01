@@ -25,8 +25,8 @@ $exercise = array();
 $measured = array();
 
 if (!isset($_SESSION["id"])) { ?>
-Not logged in. Can't fetch metabolism information.
-<? } else {
+Not <a href="login.php">logged in</a>. Can't fetch metabolism information.
+<?} else {
 	$metabolism = get_metabolism($_SESSION["id"]);
 	if ($metabolism === FALSE) { ?>
 	User profile incomplete. Cannot calculate weight. <a href="profile.php">Enter information.</a>
@@ -125,8 +125,8 @@ function login($username, $password) {
 	return $userdata;
 }
 
-function register($user, $pass, $email) {
-	if ($user == "" || $pass == "") return FALSE;
+function register($username, $password, $email = "") {
+	if ($username == "" || $password == "") return FALSE;
 	$hash = hash("sha256", $password);
 	$salt = createSalt();
 	$hash = hash("sha256", $salt . $hash);
@@ -135,6 +135,7 @@ function register($user, $pass, $email) {
 	$user = mysqli_real_escape_string($user);
 	$query = "INSERT INTO users (username, password, salt) VALUES ('$username', '$hash', '$salt');";
 	mysqli_query($conn, $query);
+	echo $conn->error;
 	mysqli_close($conn);
 }
 
