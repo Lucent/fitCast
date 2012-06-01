@@ -60,11 +60,13 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <? foreach ($months as $month => $start) { ?>
   <th colspan="<?= $start ?>">
 <? if (array_shift(array_keys($months)) == $month) { ?>
-   <span class="First">⇦</span>
-<? } ?>
+   <span class="First"><a href="/?start=<?= sub_days($date_start, 10)->format("Y-m-d") ?>&end=<?= sub_days($date_end, 10)->format("Y-m-d") ?>">⇦</a></span>
+<? }
+if ($start > 3) { ?>
    <h3><?= $month ?></h3>
-<? if (array_pop(array_keys($months)) == $month) { ?>
-   <span class="Last">⇨</span>
+<? }
+if (array_pop(array_keys($months)) == $month) { ?>
+   <span class="Last"><a href="/?start=<?= add_days($date_start, 10)->format("Y-m-d") ?>&end=<?= add_days($date_end, 10)->format("Y-m-d") ?>">⇨</a></span>
 <? } ?>
   </th>
 <? } ?>

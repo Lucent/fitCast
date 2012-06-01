@@ -13,7 +13,7 @@ if (!isset($_GET["start"])) {
 } else {
 	$date_start = new DateTime($_GET["start"]);
 }
-if (!isset($_GET["start"])) {
+if (!isset($_GET["end"])) {
 	$date_end = new DateTime();
 } else {
 	$date_end = new DateTime($_GET["end"]);
