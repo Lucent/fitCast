@@ -1,5 +1,6 @@
 "use strict";
-var today = 6;//document.getElementById("Change").cells[0].rowIndex;
+var today, food, exercise, net, measured;
+var tableData, chart;
 
 var calc_color = function(value, start, end, min, max) {
 	var n = (value - min) / (max - min), result;
@@ -19,6 +20,57 @@ var calc_color = function(value, start, end, min, max) {
 	}
 	return minmax;
 };*/
+
+var topbuffer = 10, bottombuffer = 10;
+var options = {
+	animation: {
+		duration: 500,
+		easing: "inAndOut"
+	},
+	width: (days + 1) * blocksize + leftmargin,
+	height: verticalblocks * blocksize + topbuffer + bottombuffer,
+	legend: "none",
+	focusTarget: "category",
+	chartArea: {
+		left: leftmargin,
+		top: topbuffer,
+		bottom: bottombuffer,
+		right: 0,
+		width: (days + 1) * blocksize,
+		height: verticalblocks * blocksize
+	},
+	hAxis: {
+		gridlines: {
+			color: "#CACACA",
+			count: days + 2
+		},
+		viewWindow: {
+			min: startday,
+			max: startday + days + 1
+		},
+		baselineColor: "#CCC"
+	},
+	vAxis: {
+		gridlines: {
+			color: "#CACACA",
+			count: verticalblocks + 1
+		},
+		title: "Weight (lbs)",
+		titleTextStyle: {
+			fontSize: "16",
+			italic: false,
+			bold: true
+		},
+		textStyle: {
+			fontSize: 14
+		},
+		baselineColor: "transparent"
+	},
+	series: {
+		0: { color: actualColor, pointSize: 3 },
+		1: { color: measuredColor, lineWidth: 0, pointSize: 7 }
+	}
+};
 
 var approximateFractions = function(d) {
 	var numerators = [0, 1];
@@ -75,57 +127,10 @@ var getMaxNumerator = function(f) {
 };
 
 var drawChart = function() {
-	var tableData = new google.visualization.arrayToDataTable(data);
+	tableData = new google.visualization.arrayToDataTable(data);
 
-	// Set chart options
-	var topbuffer = 10, bottombuffer = 10;
-	var options = {
-		width: (days + 1) * blocksize + leftmargin,
-		height: verticalblocks * blocksize + topbuffer + bottombuffer,
-		legend: "none",
-		focusTarget: "category",
-		chartArea: {
-			left: leftmargin,
-			top: topbuffer,
-			bottom: bottombuffer,
-			right: 0,
-			width: (days + 1) * blocksize,
-			height: verticalblocks * blocksize
-		},
-		hAxis: {
-			gridlines: {
-				color: "#CACACA",
-				count: days + 2
-			},
-			viewWindow: {
-				min: startday,
-				max: startday + days + 1
-			},
-			baselineColor: "#CCC"
-		},
-		vAxis: {
-			gridlines: {
-				color: "#CACACA",
-				count: verticalblocks + 1
-			},
-			title: "Weight (lbs)",
-			titleTextStyle: {
-				fontSize: "16",
-				italic: false,
-				bold: true
-			},
-			textStyle: {
-				fontSize: 14
-			},
-			baselineColor: "transparent"
-		},
-		series: {
-			0: { color: actualColor, pointSize: 3 },
-			1: { color: measuredColor, lineWidth: 0, pointSize: 7 }
-		}
-	};
 
-	var chart = new google.visualization.LineChart(document.getElementById("Chart"));
+	chart = new google.visualization.LineChart(document.getElementById("Chart"));
 	var formatter2 = new google.visualization.NumberFormat({prefix: 'May ', fractionDigits: 0, suffix: ", 2012"});
 	formatter2.format(tableData, 0);
 	var formatter = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
@@ -173,7 +178,36 @@ var drawChart = function() {
 		}
 //		tbl[row].onclick = click_chart;
 	}
+
+	var inputs = document.getElementById("Table").getElementsByTagName("input");
+	for (var cell = 0; cell < inputs.length; cell++) {
+		inputs[cell].onchange = update_chart;
+	}
 };
+
+var update_chart = function(e) {
+	e = e || event;
+	var el = (e.srcElement || e.target);
+	var map = {};
+	map[measured] = 2;
+
+	var col = el.parentNode.cellIndex - 1;
+	var row = el.parentNode.parentNode.rowIndex;
+
+	if (row === food || row === exercise) {
+		recalculate_net(col);
+	} else {
+		tableData.setValue(col, map[row], Number(el.value));
+	}
+
+	chart.draw(tableData, options);
+};
+
+var recalculate_net = function(col) {
+	var table = document.getElementById("Table").rows;
+	table[net].cells[col+1].innerHTML = Number(table[food].cells[col+1].firstChild.value) - Number(table[exercise].cells[col+1].firstChild.value);
+	tableData.setValue(col, 1, 220);
+}
 
 var better_mouseover = function(sink, callback) {
 	if (typeof sink.onmouseenter !== "undefined")
@@ -203,7 +237,13 @@ var load_script = function(file) {
 	document.getElementsByTagName("head")[0].appendChild(s);
 };
 
-window.onload = function() {
+window.onload = function() { // make this ondomready
+	today = document.getElementById("Change").rowIndex;
+	food = document.getElementById("Food").rowIndex;
+	exercise = document.getElementById("Exercise").rowIndex;
+	net = document.getElementById("Net").rowIndex;
+	measured = document.getElementById("Measured").rowIndex;
+
 	var chart_lib = "http://www.google.com/jsapi?autoload=" + encodeURIComponent(JSON.stringify({
 		"modules": [{
 			"name": "visualization",

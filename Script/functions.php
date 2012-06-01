@@ -26,31 +26,37 @@ $measured = array();
 
 if (!isset($_SESSION["id"])) { ?>
 Not logged in. Can't fetch metabolism information.
-<? } elseif ($metabolism = get_metabolism($_SESSION["id"]) === FALSE) { ?>
-	User profile incomplete. Cannot calculate weight. <a href="profile.php">Enter information.</a>
 <? } else {
-	$bmr = expenditure($metabolism["sex"], $metabolism["startweight"], $metabolism["height"], $metabolism["age"]);
+	$metabolism = get_metabolism($_SESSION["id"]);
+	if ($metabolism === FALSE) { ?>
+	User profile incomplete. Cannot calculate weight. <a href="profile.php">Enter information.</a>
+<?	}
 }
 
-$loss = array();
+$change = array();
 $net = array();
 $measured = array();
 $months = array();
 $cumulative = array();
+$first_measured = FALSE;
 
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	$conn = database_connect();
-	$query = "SELECT date, food, exercise, net, measured FROM calories WHERE id=" . $_SESSION['id'] . " AND date >= '" . $date_start->format("Y-m-d") . "' AND date <= '" . $date_end->format("Y-m-d"). "'";
+	$query = "SELECT date, food, exercise, net, measured FROM calories WHERE id=" . $_SESSION['id'] . " ORDER BY date";
 	$result = mysqli_query($conn, $query);
+
 	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 		$food[$row["date"]] = $row["food"];
 		$exercise[$row["date"]] = $row["exercise"];
+		if ($first_measured === FALSE && $row["measured"] != "")
+			$first_measured = new DateTime($row["date"]);
 		$measured[$row["date"]] = $row["measured"];
 	}
+
 	mysqli_close($conn);
 }
 
-for ($day = 0; $day <= $days; $day++) {
+for ($day = 0; $day <= count($food); $day++) {
 	// find distinct months
 	$today = add_days($date_start, $day);
 	$months[$today->format("F Y")]++;
@@ -58,13 +64,16 @@ for ($day = 0; $day <= $days; $day++) {
 	$YMD = $today->format("Y-m-d");
 
 	$net[$YMD] = $food[$YMD] - $exercise[$YMD];
+}
 
-	if ($food[$YMD] == "") {
-		$loss[$YMD] = 0;
-	} else {
-		$loss[$YMD] = $net[$YMD] - expenditure($metabolism["sex"], $metabolism["startweight"] + $cumulative[$YMD] / 3500, $metabolism["height"], $metabolism["age"]) * $metabolism["lifestyle"];
-	}
-	$cumulative[$YMD] += $cumulative[sub_days($today, 1)->format("Y-m-d")] + $loss[$YMD];
+$actual[$first_measured->format("Y-m-d")] = (float) $measured[$first_measured->format("Y-m-d")];
+for ($day = add_days($first_measured, 1); $day <= new DateTime(array_pop(array_keys($food))); $day = add_days($day, 1)) {
+	$today = $day->format("Y-m-d");
+	$yesterday = sub_days($day, 1)->format("Y-m-d");
+	$bmr = expenditure($metabolism["sex"], $actual[$yesterday], $metabolism["height"], $metabolism["age"]);
+
+	$change[$today] = ($net[$today] - $bmr) / 3500;
+	$actual[$today] = $actual[$yesterday] + $change[$today];
 }
 
 function add_days($date, $days) {
@@ -152,7 +161,7 @@ function createSalt() {
 	return substr($string, 0, 3);
 }
 
-function output_json_table($date_start, $days, $metabolism, $cumulative, $measured) {
+function output_json_table($date_start, $days, $metabolism, $actual, $measured) {
 	$date_start_int = $date_start->format("j");
 	$table = array();
 	$table[] = array("Date", "Actual", "Measured");
@@ -161,7 +170,7 @@ function output_json_table($date_start, $days, $metabolism, $cumulative, $measur
 
 		$table[] = array(
 			$date_start_int + $day + 0.5,
-			$metabolism["startweight"] + $cumulative[$YMD] / 3500,
+			$actual[$YMD],
 			isset($measured[$YMD]) ? (float) $measured[$YMD] : null
 		);
 	}

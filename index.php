@@ -42,7 +42,7 @@ tr					{ border-bottom: 1px solid #CACACA; }
 var startday = <?= $date_start->format("j"); ?>;
 var days = <?= $days ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>;
 var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>";
-<? output_json_table($date_start, $days, $metabolism, $cumulative, $measured); ?>
+<? output_json_table($date_start, $days, $metabolism, $actual, $measured); ?>
 </script>
 <script src="Script/interactivity.js"></script>
 </head>
@@ -79,7 +79,7 @@ if (array_pop(array_keys($months)) == $month) { ?>
 <? } ?>
 </tr>
 
-<tr class="Food">
+<tr class="Food" id="Food">
  <th>Food</th>
 <? for ($day = 0; $day <= $days; $day++) {
 $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
@@ -87,7 +87,7 @@ $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
 <? } ?>
 </tr>
 
-<tr class="Exercise">
+<tr class="Exercise" id="Exercise">
  <th>Exercise</th>
 <? for ($day = 0; $day <= $days; $day++) {
 $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
@@ -95,7 +95,7 @@ $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
 <? } ?>
 </tr>
 
-<tr class="Net">
+<tr class="Net" id="Net">
  <th>Net</th>
 <? for ($day = 0; $day <= $days; $day++) {
 $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
@@ -109,11 +109,11 @@ $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
  </td>
 </tr>
 
-<tr class="Change">
+<tr class="Change" id="Change">
  <th>Change</th>
 <? for ($day = 0; $day <= $days; $day++) {
 $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
- <td><?= sprintf("%.2f", round($loss[$YMD] / 3500, 2)) ?></td>
+ <td><?= sprintf("%.2f", round($change[$YMD], 2)) ?></td>
 <? } ?>
 </tr>
 
@@ -121,11 +121,11 @@ $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
  <th>Actual</th>
 <? for ($day = 0; $day <= $days; $day++) {
 $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
- <td><?= sprintf("%.1f", round($metabolism["startweight"] + $cumulative[$YMD] / 3500, 1)) ?></td>
+ <td><?= sprintf("%.1f", round($actual[$YMD], 1)) ?></td>
 <? } ?>
 </tr>
 
-<tr class="Measured">
+<tr class="Measured" id="Measured">
  <th>Measured</th>
 <? for ($day = 0; $day <= $days; $day++) {
 $YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
