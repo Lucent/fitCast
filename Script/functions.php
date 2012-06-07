@@ -34,7 +34,6 @@ Not <a href="login.php">logged in</a>. Can't fetch metabolism information.
 }
 
 $change = array();
-$net = array();
 $measured = array();
 $cumulative = array();
 $first_measured = FALSE;
@@ -55,17 +54,9 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	mysqli_close($conn);
 }
 
-$months = array();
-for ($day = 0; $day <= $days; $day++) {
-	$month = add_days($date_start, $day)->format("F Y");
-	$months[$month]++;
-}
+$months = find_distinct_months($date_start, $days);
 
-for ($day = 0; $day <= count($food); $day++) {
-	$YMD = add_days($date_start, $day)->format("Y-m-d");
-
-	$net[$YMD] = $food[$YMD] - $exercise[$YMD];
-}
+$net = calculate_net($date_start, $food, $exercise);
 
 if ($first_measured) {
 	$actual[$first_measured->format("Y-m-d")] = (float) $measured[$first_measured->format("Y-m-d")];
@@ -91,6 +82,24 @@ function sub_days($date, $days) {
 	$temp = clone $date;
 	$temp->sub(new DateInterval("P".$days."D"));
 	return $temp;
+}
+
+function find_distinct_months($date_start, $days) {
+	$months = array();
+	for ($day = 0; $day <= $days; $day++) {
+		$month = add_days($date_start, $day)->format("F Y");
+		$months[$month]++;
+	}
+	return $months;
+}
+
+function calculate_net($date_start, $food, $exercise) {
+	$net = array();
+	for ($day = 0; $day <= count($food); $day++) {
+		$YMD = add_days($date_start, $day)->format("Y-m-d");
+		$net[$YMD] = $food[$YMD] - $exercise[$YMD];
+	}
+	return $net;
 }
 
 function expenditure($sex, $weight, $height, $age, $lifestyle) {
