@@ -36,7 +36,6 @@ Not <a href="login.php">logged in</a>. Can't fetch metabolism information.
 $change = array();
 $net = array();
 $measured = array();
-$months = array();
 $cumulative = array();
 $first_measured = FALSE;
 
@@ -56,12 +55,14 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	mysqli_close($conn);
 }
 
-for ($day = 0; $day <= count($food); $day++) {
-	// find distinct months
-	$today = add_days($date_start, $day);
-	$months[$today->format("F Y")]++;
+$months = array();
+for ($day = 0; $day <= $days; $day++) {
+	$month = add_days($date_start, $day)->format("F Y");
+	$months[$month]++;
+}
 
-	$YMD = $today->format("Y-m-d");
+for ($day = 0; $day <= count($food); $day++) {
+	$YMD = add_days($date_start, $day)->format("Y-m-d");
 
 	$net[$YMD] = $food[$YMD] - $exercise[$YMD];
 }
