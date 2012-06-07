@@ -3,16 +3,23 @@
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	$conn = database_connect();
 	$id = $_SESSION["id"];
+	$submission = array();
 
 	foreach ($_POST as $key => $val) {
-		if ($val == "") $val = "NULL";
 		$pair = explode(":", $key);
-		$date = date_create_from_format("Y-m-d", $pair[1]);
-		$query = "INSERT INTO calories (id, date, $pair[0]) VALUES ($id, '" . $date->format('Y-m-d') . "', $val) ON DUPLICATE KEY UPDATE $pair[0]=$val;";
+		if (!isset($submission[$pair[1]]))
+			$submission[$pair[1]] = array();
+		$submission[$pair[1]][$pair[0]] = $val == "" ? "NULL" : $val;
+	}
+
+	foreach ($submission as $date => $vals) {
+		$date = date_create_from_format("Y-m-d", $date)->format("Y-m-d");
+		$query = "INSERT INTO calories (id, date, food, exercise, measured) VALUES ($id, '$date', {$vals['food']}, {$vals['exercise']}, {$vals['measured']}) ON DUPLICATE KEY UPDATE food={$vals['food']}, exercise={$vals['exercise']}, measured={$vals['measured']};";
 		echo $query, "\n";
 		mysqli_query($conn, $query);
 		echo $conn->error;
 	}
+
 	mysqli_close($conn);
 }
 ?>
