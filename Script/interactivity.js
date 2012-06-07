@@ -231,7 +231,7 @@ var recalculate_net = function(col) {
 		table[actual].cells[col+1].innerHTML = actual_val.toFixed(1);
 		table[actual].cells[col+1].setAttribute("noround", actual_val);
 
-		tableData.setValue(col, 1, actual_val);
+		tableData.setValue(col, 1, actual_val || null);
 	}
 }
 
