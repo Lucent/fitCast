@@ -171,7 +171,7 @@ function output_json_table($range, $metabolism, $actual, $measured) {
 function fetch_calories($id) {
 	$first_measured = FALSE;
 	$conn = database_connect();
-	$query = "SELECT date, food, exercise, net, measured FROM calories WHERE id=$id ORDER BY date;";
+	$query = "SELECT date, food, exercise, measured FROM calories WHERE id=$id ORDER BY date;";
 	$result = mysqli_query($conn, $query);
 
 	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
