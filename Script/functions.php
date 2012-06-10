@@ -222,4 +222,22 @@ function draw_months_row($range) {
 	echo "</tr>\n";
 }
 
+function draw_date_row($label, $range) {
+	echo "<tr class='$label'>\n";
+	echo "<td></td>\n";
+	for ($day = 0; $day <= $range["days"]; $day++)
+		echo "<th" . new_week($day, $range["start"]) . ">" . add_days($range["start"], $day)->format("D<\b\\r>jS") . "</th>\n";
+	echo "</tr>\n";
+}
+
+function draw_input_row($label, $vals, $range) {
+	echo "<tr class='$label' id='$label'>\n";
+	echo "<th>$label</th>\n";
+	for ($day = 0; $day <= $range["days"]; $day++) {
+		$YMD = add_days($range["start"], $day)->format("Y-m-d");
+		echo "<td><input name='$label:$YMD' type='text' size='4' value='{$vals[$YMD]}'></td>\n";
+	}
+	echo "</tr>\n";
+}
+
 ?>

@@ -55,11 +55,8 @@ tr					{ border-bottom: 1px solid #CACACA; }
 
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	$db_data = fetch_calories($_SESSION["id"]);
-	$food = $db_data["food"];
-	$exercise = $db_data["exercise"];
-	$measured = $db_data["measured"];
 	$first_measured = $db_data["first_measured"];
-	$net = calculate_net($range["start"], $food, $exercise);
+	$net = calculate_net($range["start"], $db_data["food"], $db_data["exercise"]);
 
 	if ($first_measured) {
 		$daily = calculate_daily_changes($net, $measured, $metabolism, $first_measured);
@@ -80,30 +77,12 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <table id="Table" cellpadding="0" cellspacing="0" border="0">
 <tbody>
 
-<? draw_months_row($range); ?>
-
-<tr class="Date">
- <td></td>
-<? for ($day = 0; $day <= $range["days"]; $day++) { ?>
- <th<?= new_week($day, $range["start"]) ?>><?= add_days($range["start"], $day)->format("D<\b\\r>jS") ?></th>
-<? } ?>
-</tr>
-
-<tr class="Food" id="Food">
- <th>Food</th>
-<? for ($day = 0; $day <= $range["days"]; $day++) {
-$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
- <td><input name="food:<?= $YMD ?>" type="text" size="4" value="<?= $food[$YMD] ?>"></td>
-<? } ?>
-</tr>
-
-<tr class="Exercise" id="Exercise">
- <th>Exercise</th>
-<? for ($day = 0; $day <= $range["days"]; $day++) {
-$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
- <td><input name="exercise:<?= $YMD ?>" type="text" size="4" value="<?= $exercise[$YMD] ?>"></td>
-<? } ?>
-</tr>
+<?
+draw_months_row($range);
+draw_date_row("Date", $range);
+draw_input_row("Food", $db_data["food"], $range);
+draw_input_row("Exercise", $db_data["exercise"], $range);
+?>
 
 <tr class="Net" id="Net">
  <th>Net</th>
@@ -113,11 +92,7 @@ $YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
 <? } ?>
 </tr>
 
-<tr>
- <td colspan="<?= $range["days"] + 2 ?>" class="Chart">
-  <div id="Chart"></div>
- </td>
-</tr>
+<tr><td colspan="<?= $range["days"] + 2 ?>" class="Chart"><div id="Chart"></div></td></tr>
 
 <tr class="Change" id="Change">
  <th>Change</th>
@@ -135,13 +110,7 @@ $YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
 <? } ?>
 </tr>
 
-<tr class="Measured" id="Measured">
- <th>Measured</th>
-<? for ($day = 0; $day <= $range["days"]; $day++) {
-$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
- <td><input name="measured:<?= $YMD ?>" type="text" size="4" value="<?= $measured[$YMD] ?>"></td>
-<? } ?>
-</tr>
+<? draw_input_row("Measured", $db_data["measured"], $range); ?>
 
 </tbody>
 </table>
