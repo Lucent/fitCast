@@ -6,52 +6,14 @@ $blocksize = 60; $leftmargin = 90; $verticalblocks = 4;
 $actualColor = "#3366CC";
 $measuredColor = "#DC3912";
 
-// Date range displayed
-if (!isset($_GET["start"])) {
-	$date_start = new DateTime();
-	$date_start->sub(new DateInterval("P10D"));
-} else {
-	$date_start = new DateTime($_GET["start"]);
-}
-if (!isset($_GET["end"])) {
-	$date_end = new DateTime();
-} else {
-	$date_end = new DateTime($_GET["end"]);
-}
-$days = date_diff($date_start, $date_end)->format("%a");
+$range = get_date_range($_GET["start"], $_GET["end"]);
 
-$food = array();
-$exercise = array();
-$measured = array();
+function calculate_daily_changes($net, $measured, $metabolism, $first_measured) {
+	$change = array();
+	$actual = array();
 
-$change = array();
-$measured = array();
-$cumulative = array();
-$first_measured = FALSE;
-
-if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
-	$conn = database_connect();
-	$query = "SELECT date, food, exercise, net, measured FROM calories WHERE id=" . $_SESSION['id'] . " ORDER BY date;";
-	$result = mysqli_query($conn, $query);
-
-	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-		$food[$row["date"]] = $row["food"];
-		$exercise[$row["date"]] = $row["exercise"];
-		if ($first_measured === FALSE && $row["measured"] != "")
-			$first_measured = new DateTime($row["date"]);
-		$measured[$row["date"]] = $row["measured"];
-	}
-
-	mysqli_close($conn);
-}
-
-$months = find_distinct_months($date_start, $days);
-
-$net = calculate_net($date_start, $food, $exercise);
-
-if ($first_measured) {
 	$actual[$first_measured->format("Y-m-d")] = (float) $measured[$first_measured->format("Y-m-d")];
-	for ($day = add_days($first_measured, 1); $day <= new DateTime(array_pop(array_keys($food))); $day = add_days($day, 1)) {
+	for ($day = add_days($first_measured, 1); $day <= new DateTime(array_pop(array_keys($net))); $day = add_days($day, 1)) {
 		$today = $day->format("Y-m-d");
 		$yesterday = sub_days($day, 1)->format("Y-m-d");
 		$bmr = expenditure($metabolism["sex"], $actual[$yesterday], $metabolism["height"], $metabolism["age"], $metabolism["lifestyle"]);
@@ -62,6 +24,25 @@ if ($first_measured) {
 			$change[$today] = ($net[$today] - $bmr) / 3500;
 		$actual[$today] = $actual[$yesterday] + $change[$today];
 	}
+
+	return array("actual" => $actual, "change" => $change);
+}
+
+function get_date_range($start, $end) {
+	$range = array();
+	if (!isset($start)) {
+		$range["start"] = new DateTime();
+		$range["start"]->sub(new DateInterval("P10D"));
+	} else {
+		$range["start"] = new DateTime($start);
+	}
+	if (!isset($end)) {
+		$range["end"] = new DateTime();
+	} else {
+		$range["end"] = new DateTime($end);
+	}
+	$range["days"] = date_diff($range["start"], $range["end"])->format("%a");
+	return $range;
 }
 
 function add_days($date, $days) {
@@ -75,19 +56,22 @@ function sub_days($date, $days) {
 	return $temp;
 }
 
-function find_distinct_months($date_start, $days) {
+function find_distinct_months($range) {
 	$months = array();
-	for ($day = 0; $day <= $days; $day++) {
-		$month = add_days($date_start, $day)->format("F Y");
-		$months[$month]++;
+	for ($day = 0; $day <= $range["days"]; $day++) {
+		$month = add_days($range["start"], $day)->format("F Y");
+		if (isset($months[$month]))
+			$months[$month]++;
+		else
+			$months[$month] = 1;
 	}
 	return $months;
 }
 
-function calculate_net($date_start, $food, $exercise) {
+function calculate_net($start, $food, $exercise) {
 	$net = array();
 	for ($day = 0; $day <= count($food); $day++) {
-		$YMD = add_days($date_start, $day)->format("Y-m-d");
+		$YMD = add_days($start, $day)->format("Y-m-d");
 		$net[$YMD] = $food[$YMD] - $exercise[$YMD];
 	}
 	return $net;
@@ -168,12 +152,12 @@ function createSalt() {
 	return substr($string, 0, 3);
 }
 
-function output_json_table($date_start, $days, $metabolism, $actual, $measured) {
-	$date_start_int = $date_start->format("j");
+function output_json_table($range, $metabolism, $actual, $measured) {
+	$date_start_int = $range["start"]->format("j");
 	$table = array();
 	$table[] = array("Date", "Actual", "Measured");
-	for ($day = 0; $day <= $days; $day++) {
-		$YMD = add_days($date_start, $day)->format("Y-m-d");
+	for ($day = 0; $day <= $range["days"]; $day++) {
+		$YMD = add_days($range["start"], $day)->format("Y-m-d");
 
 		$table[] = array(
 			$date_start_int + $day + 0.5,
@@ -182,6 +166,24 @@ function output_json_table($date_start, $days, $metabolism, $actual, $measured) 
 		);
 	}
 	echo "var data = ", json_encode($table), ";";
+}
+
+function fetch_calories($id) {
+	$first_measured = FALSE;
+	$conn = database_connect();
+	$query = "SELECT date, food, exercise, net, measured FROM calories WHERE id=$id ORDER BY date;";
+	$result = mysqli_query($conn, $query);
+
+	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+		$food[$row["date"]] = $row["food"];
+		$exercise[$row["date"]] = $row["exercise"];
+		if ($first_measured === FALSE && $row["measured"] != "")
+			$first_measured = new DateTime($row["date"]);
+		$measured[$row["date"]] = $row["measured"];
+	}
+
+	mysqli_close($conn);
+	return array("food" => $food, "exercise" => $exercise, "measured" => $measured, "first_measured" => $first_measured);
 }
 
 function new_week($x, $start) {
@@ -201,6 +203,23 @@ function draw_login_register($legend, $username, $password, $submittype) {
 		echo "<input type='submit' name='Submit' value='$button'>\n";
 	echo "</fieldset>\n";
 	echo "</form>\n";
+}
+
+function draw_months_row($range) {
+	$months = find_distinct_months($range);
+	echo "<tr class='Month'>\n";
+	echo "<td></td>\n";
+	foreach ($months as $month => $start) {
+		echo "<th colspan='$start'>\n";
+		if (array_shift(array_keys($months)) == $month)
+			echo "<span class='First'><a href='/?start=" . sub_days($range["start"], $range["days"])->format("Y-m-d") . "&end=" . sub_days($range["end"], $range["days"])->format("Y-m-d") . "'>⇦</a></span>\n";
+		if ($start > 3)
+			echo "<h3>$month</h3>\n";
+		if (array_pop(array_keys($months)) == $month)
+			echo "<span class='Last'><a href='/?start=" . add_days($range["start"], $range["days"])->format("Y-m-d") . "&end=" . add_days($range["end"], $range["days"])->format("Y-m-d") . "'>⇨</a></span>\n";
+		echo "</th>\n";
+	}
+	echo "</tr>\n";
 }
 
 ?>

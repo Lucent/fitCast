@@ -1,4 +1,4 @@
-<?  include "Script/functions.php"; ?>
+<? include "Script/functions.php"; ?>
 <!doctype html>
 <html>
 <head>
@@ -27,7 +27,7 @@ input[type=text]	{ width: 42px; margin: 0; font-size: 100%; text-align: right; }
 #Table td			{ width: <?= $blocksize ?>px; padding: 0.8ex 0; text-align: center; font-size: 18px; }
 #Chart				{ height: <?= $blocksize * $verticalblocks + 10 + 10 ?>px; }
 .Chart				{ padding: 0; }
-#Table, #Chart		{ width: <?= ($days + 1) * $blocksize + $leftmargin ?>px; }
+#Table, #Chart		{ width: <?= ($range["days"] + 1) * $blocksize + $leftmargin ?>px; }
 .Date				{ text-align: center; border-style: hidden; }
 th:first-child		{ -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#eaeaea',gradientType=1)"; background: -webkit-linear-gradient(left, #FFFFFF 0%, #EAEAEA 100%); border-right: 1px solid #CACACA; }
 .Date th, .Month th	{ font-weight: normal; }
@@ -38,19 +38,11 @@ th:first-child		{ -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startC
 
 tr					{ border-bottom: 1px solid #CACACA; }
 </style>
-<script>
-var metabolism = <?= json_encode($metabolism) ?>;
-var startday = <?= $date_start->format("j"); ?>;
-var days = <?= $days ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>;
-var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>";
-<? output_json_table($date_start, $days, $metabolism, $actual, $measured); ?>
-</script>
-<script src="Script/interactivity.js"></script>
 </head>
 <body>
-<nav><a href="faq.html">Questions</a></nav>
 <h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
+<nav><a href="faq.html">Questions</a></nav>
 
 <? if (!isset($_SESSION["id"])) {
 	echo "Not <a href='login.php'>logged in</a>. Can't fetch metabolism information.";
@@ -60,86 +52,93 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 		echo "User profile incomplete. Cannot calculate weight. <a href='profile.php'>Enter information.</a>";
 	}
 }
-?>
 
+if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
+	$db_data = fetch_calories($_SESSION["id"]);
+	$food = $db_data["food"];
+	$exercise = $db_data["exercise"];
+	$measured = $db_data["measured"];
+	$first_measured = $db_data["first_measured"];
+	$net = calculate_net($range["start"], $food, $exercise);
+
+	if ($first_measured) {
+		$daily = calculate_daily_changes($net, $measured, $metabolism, $first_measured);
+		$actual = $daily["actual"];
+		$change = $daily["change"];
+	}
+}
+?>
+<script>
+var metabolism = <?= json_encode($metabolism) ?>;
+var startday = <?= $range["start"]->format("j"); ?>;
+var days = <?= $range["days"] ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>;
+var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>";
+<? output_json_table($range, $metabolism, $actual, $measured); ?>
+</script>
+<script src="Script/interactivity.js"></script>
 <form method="post" action="Script/storevalues.php">
 <table id="Table" cellpadding="0" cellspacing="0" border="0">
 <tbody>
 
- <tr class="Month">
-  <td></td>
-<? foreach ($months as $month => $start) { ?>
-  <th colspan="<?= $start ?>">
-<? if (array_shift(array_keys($months)) == $month) { ?>
-   <span class="First"><a href="/?start=<?= sub_days($date_start, $days)->format("Y-m-d") ?>&end=<?= sub_days($date_end, $days)->format("Y-m-d") ?>">⇦</a></span>
-<? }
-if ($start > 3) { ?>
-   <h3><?= $month ?></h3>
-<? }
-if (array_pop(array_keys($months)) == $month) { ?>
-   <span class="Last"><a href="/?start=<?= add_days($date_start, $days)->format("Y-m-d") ?>&end=<?= add_days($date_end, $days)->format("Y-m-d") ?>">⇨</a></span>
-<? } ?>
-  </th>
-<? } ?>
- </tr>
+<? draw_months_row($range); ?>
 
 <tr class="Date">
  <td></td>
-<? for ($day = 0; $day <= $days; $day++) { ?>
- <th<?= new_week($day, $date_start) ?>><?= add_days($date_start, $day)->format("D<\b\\r>jS") ?></th>
+<? for ($day = 0; $day <= $range["days"]; $day++) { ?>
+ <th<?= new_week($day, $range["start"]) ?>><?= add_days($range["start"], $day)->format("D<\b\\r>jS") ?></th>
 <? } ?>
 </tr>
 
 <tr class="Food" id="Food">
  <th>Food</th>
-<? for ($day = 0; $day <= $days; $day++) {
-$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+<? for ($day = 0; $day <= $range["days"]; $day++) {
+$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
  <td><input name="food:<?= $YMD ?>" type="text" size="4" value="<?= isset($food[$YMD]) ? $food[$YMD] : "" ?>"></td>
 <? } ?>
 </tr>
 
 <tr class="Exercise" id="Exercise">
  <th>Exercise</th>
-<? for ($day = 0; $day <= $days; $day++) {
-$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+<? for ($day = 0; $day <= $range["days"]; $day++) {
+$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
  <td><input name="exercise:<?= $YMD ?>" type="text" size="4" value="<?= isset($exercise[$YMD]) ? $exercise[$YMD] : "" ?>"></td>
 <? } ?>
 </tr>
 
 <tr class="Net" id="Net">
  <th>Net</th>
-<? for ($day = 0; $day <= $days; $day++) {
-$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+<? for ($day = 0; $day <= $range["days"]; $day++) {
+$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
  <td><?= round($net[$YMD]) ?></td>
 <? } ?>
 </tr>
 
 <tr>
- <td colspan="<?= $days + 2 ?>" class="Chart">
+ <td colspan="<?= $range["days"] + 2 ?>" class="Chart">
   <div id="Chart"></div>
  </td>
 </tr>
 
 <tr class="Change" id="Change">
  <th>Change</th>
-<? for ($day = 0; $day <= $days; $day++) {
-$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+<? for ($day = 0; $day <= $range["days"]; $day++) {
+$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
  <td><?= sprintf("%.2f", round($change[$YMD], 2)) ?></td>
 <? } ?>
 </tr>
 
 <tr class="Actual" id="Actual">
  <th>Actual</th>
-<? for ($day = 0; $day <= $days; $day++) {
-$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+<? for ($day = 0; $day <= $range["days"]; $day++) {
+$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
  <td noround="<?= $actual[$YMD] ?>"><?= sprintf("%.1f", round($actual[$YMD], 1)) ?></td>
 <? } ?>
 </tr>
 
 <tr class="Measured" id="Measured">
  <th>Measured</th>
-<? for ($day = 0; $day <= $days; $day++) {
-$YMD = add_days($date_start, $day)->format("Y-m-d"); ?>
+<? for ($day = 0; $day <= $range["days"]; $day++) {
+$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
  <td><input name="measured:<?= $YMD ?>" type="text" size="4" value="<?= isset($measured[$YMD]) ? $measured[$YMD] : "" ?>"></td>
 <? } ?>
 </tr>
