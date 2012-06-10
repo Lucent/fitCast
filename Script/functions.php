@@ -251,6 +251,9 @@ function draw_number_row($label, $vals, $range, $rounding, $pattern, $exact = FA
 }
 
 function draw_table_chart($db_data, $net, $change, $actual, $range) {
+	echo "<form method='post' action='Script/storevalues.php'>\n";
+	echo "<table id='Table' cellpadding='0' cellspacing='0' border='0'>\n";
+	echo "<tbody>\n";
 	draw_months_row($range);
 	draw_date_row("Date", $range);
 	draw_input_row("Food", $db_data["food"], $range);
@@ -260,6 +263,10 @@ function draw_table_chart($db_data, $net, $change, $actual, $range) {
 	draw_number_row("Change", $change, $range, 2, "%.2f");
 	draw_number_row("Actual", $actual, $range, 1, "%.1f", TRUE);
 	draw_input_row("Measured", $db_data["measured"], $range);
+	echo "</tbody>\n";
+	echo "</table>\n";
+	echo "<input type='submit'>\n";
+	echo "</form>\n";
 }
 
 ?>

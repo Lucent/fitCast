@@ -73,16 +73,8 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <? output_json_table($range, $metabolism, $actual, $measured); ?>
 </script>
 <script src="Script/interactivity.js"></script>
-<form method="post" action="Script/storevalues.php">
-<table id="Table" cellpadding="0" cellspacing="0" border="0">
-<tbody>
 
 <? draw_table_chart($db_data, $net, $change, $actual, $range); ?>
-
-</tbody>
-</table>
-<input type="submit">
-</form>
 
 </body>
 </html>
