@@ -11,34 +11,15 @@ if (!empty($_POST)) {
 	}
 	if (is_array($userdata)) {
 		set_session_vars($userdata);
-	?>
-Login accepted, <?= $userdata["username"] ?>.
-	<? } elseif ($userdata === "NOUSER") { ?>
-<form method="post">
-<fieldset>
-That username doesn't exist. Want to register it?
- <legend>Register</legend>
- Username: <input type="text" name="username" maxlength="30" value="<?= $_POST["username"] ?>"><br>
- Password: <input type="password" name="password" value="<?= $_POST["password"] ?>"><br>
- <input type="submit" name="Submit" value="Register">
-</form>
-	<? } elseif ($userdata === "BADPASS") { ?>
-<form method="post">
-<fieldset>
-"<?= $_POST["username"] ?>" exists. Did you forget your password?
- <legend>Retry Log in</legend>
- Username: <input type="text" name="username" maxlength="30" value="<?= $_POST["username"] ?>"><br>
- Password: <input type="password" name="password"><br>
- <input type="submit" name="Submit" value="Log in">
-</form>
-	<? }
-} else { ?>
-<form method="post">
-<fieldset>
- <legend>Log in or Register</legend>
- Username: <input type="text" name="username" maxlength="30"><br>
- Password: <input type="password" name="password"><br>
- <input type="submit" name="Submit" value="Log in">
- <input type="submit" name="Submit" value="Register">
-</form>
-<? } ?>
+		echo 'Login accepted, $userdata["username"]';
+	} elseif ($userdata === "NOUSER") {
+		echo "That username doesn't exist. Want to register it?";
+		draw_login_register("Register", $_POST["username"], $_POST["password"], array("Register"));
+	} elseif ($userdata === "BADPASS") {
+		echo '$_POST["username"] exists. Did you forget your password?';
+		draw_login_register("Retry Log in", $_POST["username"], "", array("Log in"));
+	}
+} else {
+	draw_login_register("Log in or Register", "", "", array("Log in", "Register"));
+}
+?>
