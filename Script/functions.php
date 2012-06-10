@@ -192,15 +192,15 @@ function new_week($x, $start) {
 }
 
 function draw_login_register($legend, $username, $password, $submittype) {
-	echo '<form method="post">';
-	echo '<fieldset>';
-	echo "<legend>$legend</legend>";
-	echo "<label for='Username'>Username:</label> <input id='Username' type='text' name='username' value='$username'>";
-	echo "<label for='Password'>Password:</label> <input id='Password' type='password' name='password' value='$password'>";
+	echo "<form method='post'>\n";
+	echo "<fieldset>\n";
+	echo "<legend>$legend</legend>\n";
+	echo "<label for='Username'>Username</label> <input id='Username' type='text' name='username' value='$username'>\n";
+	echo "<label for='Password'>Password</label> <input id='Password' type='password' name='password' value='$password'>\n";
 	foreach ($submittype as $button)
-		echo "<input type='submit' name='Submit' value='$button'>";
-	echo '<fieldset>';
-	echo '</form>';
+		echo "<input type='submit' name='Submit' value='$button'>\n";
+	echo "</fieldset>\n";
+	echo "</form>\n";
 }
 
 ?>

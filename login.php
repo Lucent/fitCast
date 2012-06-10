@@ -1,6 +1,16 @@
+<? include "Script/functions.php"; ?>
+<!doctype html>
+<html>
+<head>
+<title>fitCast - Log in or Register</title>
+<style>
+fieldset	{ padding: 1em; border: thin solid black; display: inline-block; }
+label		{ text-transform: uppercase; font-size: small; }
+input[type=text],input[type=password]	{ min-width: 15em; display: block; margin-bottom: 1em; }
+</style>
+</head>
+<body>
 <?
-include "Script/functions.php";
-
 if (!empty($_POST)) {
 	switch ($_POST["Submit"]) {
 		case "Log in":
@@ -11,15 +21,17 @@ if (!empty($_POST)) {
 	}
 	if (is_array($userdata)) {
 		set_session_vars($userdata);
-		echo 'Login accepted, $userdata["username"]';
+		echo "Login accepted, {$userdata['username']}.";
 	} elseif ($userdata === "NOUSER") {
-		echo "That username doesn't exist. Want to register it?";
+		echo "That username doesn't exist. Did you mistype it, forget your username, or do you want to create an account?";
 		draw_login_register("Register", $_POST["username"], $_POST["password"], array("Register"));
 	} elseif ($userdata === "BADPASS") {
-		echo '$_POST["username"] exists. Did you forget your password?';
+		echo "The username {$_POST['username']} is registered, but you entered the incorrect password. Did you forget it?";
 		draw_login_register("Retry Log in", $_POST["username"], "", array("Log in"));
 	}
 } else {
 	draw_login_register("Log in or Register", "", "", array("Log in", "Register"));
 }
 ?>
+</body>
+</html>
