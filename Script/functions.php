@@ -24,15 +24,6 @@ $food = array();
 $exercise = array();
 $measured = array();
 
-if (!isset($_SESSION["id"])) { ?>
-Not <a href="login.php">logged in</a>. Can't fetch metabolism information.
-<?} else {
-	$metabolism = get_metabolism($_SESSION["id"]);
-	if ($metabolism === FALSE) { ?>
-	User profile incomplete. Cannot calculate weight. <a href="profile.php">Enter information.</a>
-<?	}
-}
-
 $change = array();
 $measured = array();
 $cumulative = array();
@@ -40,7 +31,7 @@ $first_measured = FALSE;
 
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	$conn = database_connect();
-	$query = "SELECT date, food, exercise, net, measured FROM calories WHERE id=" . $_SESSION['id'] . " ORDER BY date";
+	$query = "SELECT date, food, exercise, net, measured FROM calories WHERE id=" . $_SESSION['id'] . " ORDER BY date;";
 	$result = mysqli_query($conn, $query);
 
 	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {

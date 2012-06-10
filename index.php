@@ -52,6 +52,16 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
 
+<? if (!isset($_SESSION["id"])) {
+	echo "Not <a href='login.php'>logged in</a>. Can't fetch metabolism information.";
+} else {
+	$metabolism = get_metabolism($_SESSION["id"]);
+	if ($metabolism === FALSE) {
+		echo "User profile incomplete. Cannot calculate weight. <a href='profile.php'>Enter information.</a>";
+	}
+}
+?>
+
 <form method="post" action="Script/storevalues.php">
 <table id="Table" cellpadding="0" cellspacing="0" border="0">
 <tbody>
