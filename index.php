@@ -59,7 +59,7 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	$net = calculate_net($range["start"], $db_data["food"], $db_data["exercise"]);
 
 	if ($first_measured) {
-		$daily = calculate_daily_changes($net, $measured, $metabolism, $first_measured);
+		$daily = calculate_daily_changes($net, $db_data["measured"], $metabolism, $first_measured);
 		$actual = $daily["actual"];
 		$change = $daily["change"];
 	}
@@ -70,7 +70,7 @@ var metabolism = <?= json_encode($metabolism) ?>;
 var startday = <?= $range["start"]->format("j"); ?>;
 var days = <?= $range["days"] ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>;
 var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>";
-<? output_json_table($range, $metabolism, $actual, $measured); ?>
+<? output_json_table($range, $metabolism, $actual, $db_data["measured"]); ?>
 </script>
 <script src="Script/interactivity.js"></script>
 

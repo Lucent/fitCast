@@ -240,7 +240,7 @@ function draw_input_row($label, $vals, $range) {
 	echo "</tr>\n";
 }
 
-function draw_number_row($label, $vals, $range, $rounding, $pattern, $exact = FALSE) {
+function draw_number_row($label, $vals, $range, $rounding, $pattern = "%d", $exact = FALSE) {
 	echo "<tr class='$label' id='$label'>\n";
 	echo " <th>$label</th>\n";
 	for ($day = 0; $day <= $range["days"]; $day++) {
