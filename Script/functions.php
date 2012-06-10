@@ -208,36 +208,58 @@ function draw_login_register($legend, $username, $password, $submittype) {
 function draw_months_row($range) {
 	$months = find_distinct_months($range);
 	echo "<tr class='Month'>\n";
-	echo "<td></td>\n";
+	echo " <td></td>\n";
 	foreach ($months as $month => $start) {
-		echo "<th colspan='$start'>\n";
+		echo " <th colspan='$start'>\n";
 		if (array_shift(array_keys($months)) == $month)
-			echo "<span class='First'><a href='/?start=" . sub_days($range["start"], $range["days"])->format("Y-m-d") . "&end=" . sub_days($range["end"], $range["days"])->format("Y-m-d") . "'>⇦</a></span>\n";
+			echo "  <span class='First'><a href='/?start=" . sub_days($range["start"], $range["days"])->format("Y-m-d") . "&end=" . sub_days($range["end"], $range["days"])->format("Y-m-d") . "'>⇦</a></span>\n";
 		if ($start > 3)
-			echo "<h3>$month</h3>\n";
+			echo "  <h3>$month</h3>\n";
 		if (array_pop(array_keys($months)) == $month)
-			echo "<span class='Last'><a href='/?start=" . add_days($range["start"], $range["days"])->format("Y-m-d") . "&end=" . add_days($range["end"], $range["days"])->format("Y-m-d") . "'>⇨</a></span>\n";
-		echo "</th>\n";
+			echo "  <span class='Last'><a href='/?start=" . add_days($range["start"], $range["days"])->format("Y-m-d") . "&end=" . add_days($range["end"], $range["days"])->format("Y-m-d") . "'>⇨</a></span>\n";
+		echo " </th>\n";
 	}
 	echo "</tr>\n";
 }
 
 function draw_date_row($label, $range) {
 	echo "<tr class='$label'>\n";
-	echo "<td></td>\n";
+	echo " <td></td>\n";
 	for ($day = 0; $day <= $range["days"]; $day++)
-		echo "<th" . new_week($day, $range["start"]) . ">" . add_days($range["start"], $day)->format("D<\b\\r>jS") . "</th>\n";
+		echo " <th" . new_week($day, $range["start"]) . ">" . add_days($range["start"], $day)->format("D<\b\\r>jS") . "</th>\n";
 	echo "</tr>\n";
 }
 
 function draw_input_row($label, $vals, $range) {
 	echo "<tr class='$label' id='$label'>\n";
-	echo "<th>$label</th>\n";
+	echo " <th>$label</th>\n";
 	for ($day = 0; $day <= $range["days"]; $day++) {
 		$YMD = add_days($range["start"], $day)->format("Y-m-d");
-		echo "<td><input name='$label:$YMD' type='text' size='4' value='{$vals[$YMD]}'></td>\n";
+		echo " <td><input name='$label:$YMD' type='text' size='4' value='{$vals[$YMD]}'></td>\n";
 	}
 	echo "</tr>\n";
+}
+
+function draw_number_row($label, $vals, $range, $rounding, $pattern, $exact = FALSE) {
+	echo "<tr class='$label' id='$label'>\n";
+	echo " <th>$label</th>\n";
+	for ($day = 0; $day <= $range["days"]; $day++) {
+		$YMD = add_days($range["start"], $day)->format("Y-m-d");
+		echo " <td" . ($exact ? " noround='{$vals[$YMD]}'" : "") . ">" . sprintf($pattern, round($vals[$YMD], $rounding)) . "</td>\n";
+	}
+	echo "</tr>\n";
+}
+
+function draw_table_chart($db_data, $net, $change, $actual, $range) {
+	draw_months_row($range);
+	draw_date_row("Date", $range);
+	draw_input_row("Food", $db_data["food"], $range);
+	draw_input_row("Exercise", $db_data["exercise"], $range);
+	draw_number_row("Net", $net, $range, 0);
+	echo "<tr><td colspan='" . ($range["days"] + 2) . "' class='Chart'><div id='Chart'></div></td></tr>\n";
+	draw_number_row("Change", $change, $range, 2, "%.2f");
+	draw_number_row("Actual", $actual, $range, 1, "%.1f", TRUE);
+	draw_input_row("Measured", $db_data["measured"], $range);
 }
 
 ?>

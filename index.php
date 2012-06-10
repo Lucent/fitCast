@@ -77,40 +77,7 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <table id="Table" cellpadding="0" cellspacing="0" border="0">
 <tbody>
 
-<?
-draw_months_row($range);
-draw_date_row("Date", $range);
-draw_input_row("Food", $db_data["food"], $range);
-draw_input_row("Exercise", $db_data["exercise"], $range);
-?>
-
-<tr class="Net" id="Net">
- <th>Net</th>
-<? for ($day = 0; $day <= $range["days"]; $day++) {
-$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
- <td><?= round($net[$YMD]) ?></td>
-<? } ?>
-</tr>
-
-<tr><td colspan="<?= $range["days"] + 2 ?>" class="Chart"><div id="Chart"></div></td></tr>
-
-<tr class="Change" id="Change">
- <th>Change</th>
-<? for ($day = 0; $day <= $range["days"]; $day++) {
-$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
- <td><?= sprintf("%.2f", round($change[$YMD], 2)) ?></td>
-<? } ?>
-</tr>
-
-<tr class="Actual" id="Actual">
- <th>Actual</th>
-<? for ($day = 0; $day <= $range["days"]; $day++) {
-$YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
- <td noround="<?= $actual[$YMD] ?>"><?= sprintf("%.1f", round($actual[$YMD], 1)) ?></td>
-<? } ?>
-</tr>
-
-<? draw_input_row("Measured", $db_data["measured"], $range); ?>
+<? draw_table_chart($db_data, $net, $change, $actual, $range); ?>
 
 </tbody>
 </table>
