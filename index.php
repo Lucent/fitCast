@@ -93,7 +93,7 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
  <th>Food</th>
 <? for ($day = 0; $day <= $range["days"]; $day++) {
 $YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
- <td><input name="food:<?= $YMD ?>" type="text" size="4" value="<?= isset($food[$YMD]) ? $food[$YMD] : "" ?>"></td>
+ <td><input name="food:<?= $YMD ?>" type="text" size="4" value="<?= $food[$YMD] ?>"></td>
 <? } ?>
 </tr>
 
@@ -101,7 +101,7 @@ $YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
  <th>Exercise</th>
 <? for ($day = 0; $day <= $range["days"]; $day++) {
 $YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
- <td><input name="exercise:<?= $YMD ?>" type="text" size="4" value="<?= isset($exercise[$YMD]) ? $exercise[$YMD] : "" ?>"></td>
+ <td><input name="exercise:<?= $YMD ?>" type="text" size="4" value="<?= $exercise[$YMD] ?>"></td>
 <? } ?>
 </tr>
 
@@ -139,7 +139,7 @@ $YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
  <th>Measured</th>
 <? for ($day = 0; $day <= $range["days"]; $day++) {
 $YMD = add_days($range["start"], $day)->format("Y-m-d"); ?>
- <td><input name="measured:<?= $YMD ?>" type="text" size="4" value="<?= isset($measured[$YMD]) ? $measured[$YMD] : "" ?>"></td>
+ <td><input name="measured:<?= $YMD ?>" type="text" size="4" value="<?= $measured[$YMD] ?>"></td>
 <? } ?>
 </tr>
 
