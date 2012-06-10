@@ -129,13 +129,12 @@ var getMaxNumerator = function(f) {
 var drawChart = function() {
 	tableData = new google.visualization.arrayToDataTable(data);
 
-
 	chart = new google.visualization.LineChart(document.getElementById("Chart"));
-	var formatter2 = new google.visualization.NumberFormat({prefix: 'May ', fractionDigits: 0, suffix: ", 2012"});
-	formatter2.format(tableData, 0);
-	var formatter = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
-	formatter.format(tableData, 1);
-	formatter.format(tableData, 2);
+//	var formatter2 = new google.visualization.DateFormat({});
+//	formatter2.format(tableData, 0);
+	var format_weight = new google.visualization.NumberFormat({suffix: ' lbs', fractionDigits: 1});
+	format_weight.format(tableData, 1);
+	format_weight.format(tableData, 2);
 
 	var color_table_row = function(num, color) {
 		var rows = document.getElementById("Table").tBodies[0].rows;
