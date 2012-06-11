@@ -1,4 +1,5 @@
 <? include "Script/functions.php"; ?>
+<? $range = get_date_range($_GET["start"], $_GET["end"]); ?>
 <!doctype html>
 <html>
 <head>
@@ -63,7 +64,7 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 		$actual = $daily["actual"];
 		$change = $daily["change"];
 	}
-}
+
 ?>
 <script>
 var metabolism = <?= json_encode($metabolism) ?>;
@@ -73,8 +74,10 @@ var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>"
 <? output_json_table($range, $metabolism, $actual, $db_data["measured"]); ?>
 </script>
 <script src="Script/interactivity.js"></script>
-
-<? draw_table_chart($db_data, $net, $change, $actual, $range); ?>
+<?
+	draw_table_chart($db_data, $net, $change, $actual, $range);
+}
+?>
 
 </body>
 </html>

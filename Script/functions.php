@@ -6,8 +6,6 @@ $blocksize = 60; $leftmargin = 90; $verticalblocks = 4;
 $actualColor = "#3366CC";
 $measuredColor = "#DC3912";
 
-$range = get_date_range($_GET["start"], $_GET["end"]);
-
 function calculate_daily_changes($net, $measured, $metabolism, $first_measured) {
 	$change = array();
 	$actual = array();
