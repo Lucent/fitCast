@@ -96,7 +96,7 @@ function set_session_vars($userdata) {
 function login($username, $password) {
 	$conn = database_connect();
 	$username = mysqli_real_escape_string($conn, $username);
-	$query = "SELECT id, username, password, salt FROM users WHERE username = '$username';";
+	$query = "SELECT id, username, password, salt FROM users WHERE username = '$username' OR email = '$username';";
 	$result = mysqli_query($conn, $query);
 	if (mysqli_num_rows($result) < 1) {
 		return "NOUSER";
@@ -195,13 +195,21 @@ function new_week($x, $start) {
 
 function draw_login_register($legend, $username, $password, $submittype) {
 	echo "<form method='post'>\n";
-	echo "<fieldset>\n";
-	echo "<legend>$legend</legend>\n";
-	echo "<label for='Username'>Username</label> <input id='Username' type='text' name='username' value='$username'>\n";
-	echo "<label for='Password'>Password</label> <input id='Password' type='password' name='password' value='$password'>\n";
+	echo " <fieldset>\n";
+	echo "  <legend>$legend</legend>\n";
+	if ($legend == "Register") {
+		echo "  <label for='Username'>Username</label> <input id='Username' type='text' name='username' value='$username'>\n";
+		echo "  <label for='E-mail'>E-mail (optional)</label> <input id='E-mail' type='email' name='email' value=''>\n";
+	} else {
+		echo "  <label for='Username'>Username or E-mail</label> <input id='Username' type='text' name='username' value='$username'>\n";
+	}
+	echo "  <label for='Password'>Password</label> <input id='Password' type='password' name='password' value='$password'>\n";
+	if ($legend == "Register") {
+		echo "  <label for='Password2'>Re-type Password</label> <input id='Password2' type='password' name='password2' value=''>\n";
+	}
 	foreach ($submittype as $button)
-		echo "<input type='submit' name='Submit' value='$button'>\n";
-	echo "</fieldset>\n";
+		echo "  <input type='submit' name='Submit' value='$button'>\n";
+	echo " </fieldset>\n";
 	echo "</form>\n";
 }
 
