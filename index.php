@@ -67,14 +67,15 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	}
 
 ?>
+<script src="Script/interactivity.php"></script>
 <script>
 var metabolism = <?= json_encode($metabolism) ?>;
 var startday = <?= $range["start"]->format("j"); ?>;
 var days = <?= $range["days"] ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>;
 var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>";
+window.onload = fitCast.draw_chart_page;
 <? output_json_table($range, $metabolism, $actual, $db_data["measured"]); ?>
 </script>
-<script src="Script/interactivity.js"></script>
 <?
 	draw_table_chart($db_data, $net, $change, $actual, $range);
 }

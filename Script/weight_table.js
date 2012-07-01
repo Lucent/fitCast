@@ -1,4 +1,3 @@
-"use strict";
 var food, exercise, net, change, actual, measured;
 var tableData, chart;
 
@@ -20,57 +19,6 @@ var calc_color = function(value, start, end, min, max) {
 	}
 	return minmax;
 };*/
-
-var topbuffer = 10, bottombuffer = 10;
-var options = {
-	animation: {
-		duration: 500,
-		easing: "inAndOut"
-	},
-	width: (days + 1) * blocksize + leftmargin,
-	height: verticalblocks * blocksize + topbuffer + bottombuffer,
-	legend: "none",
-	focusTarget: "category",
-	chartArea: {
-		left: leftmargin,
-		top: topbuffer,
-		bottom: bottombuffer,
-		right: 0,
-		width: (days + 1) * blocksize,
-		height: verticalblocks * blocksize
-	},
-	hAxis: {
-		gridlines: {
-			color: "#CACACA",
-			count: days + 2
-		},
-		viewWindow: {
-			min: startday,
-			max: startday + days + 1
-		},
-		baselineColor: "#CCC"
-	},
-	vAxis: {
-		gridlines: {
-			color: "#CACACA",
-			count: verticalblocks + 1
-		},
-		title: "Weight (lbs)",
-		titleTextStyle: {
-			fontSize: "16",
-			italic: false,
-			bold: true
-		},
-		textStyle: {
-			fontSize: 14
-		},
-		baselineColor: "transparent"
-	},
-	series: {
-		0: { color: actualColor, pointSize: 3 },
-		1: { color: measuredColor, lineWidth: 0, pointSize: 7 }
-	}
-};
 
 var approximateFractions = function(d) {
 	var numerators = [0, 1];
@@ -126,7 +74,58 @@ var getMaxNumerator = function(f) {
 	 return L;
 };
 
-var drawChart = function() {
+this.drawChart = function() {
+	var topbuffer = 10, bottombuffer = 10;
+	var options = {
+		animation: {
+			duration: 500,
+			easing: "inAndOut"
+		},
+		width: (days + 1) * blocksize + leftmargin,
+		height: verticalblocks * blocksize + topbuffer + bottombuffer,
+		legend: "none",
+		focusTarget: "category",
+		chartArea: {
+			left: leftmargin,
+			top: topbuffer,
+			bottom: bottombuffer,
+			right: 0,
+			width: (days + 1) * blocksize,
+			height: verticalblocks * blocksize
+		},
+		hAxis: {
+			gridlines: {
+				color: "#CACACA",
+				count: days + 2
+			},
+			viewWindow: {
+				min: startday,
+				max: startday + days + 1
+			},
+			baselineColor: "#CCC"
+		},
+		vAxis: {
+			gridlines: {
+				color: "#CACACA",
+				count: verticalblocks + 1
+			},
+			title: "Weight (lbs)",
+			titleTextStyle: {
+				fontSize: "16",
+				italic: false,
+				bold: true
+			},
+			textStyle: {
+				fontSize: 14
+			},
+			baselineColor: "transparent"
+		},
+		series: {
+			0: { color: actualColor, pointSize: 3 },
+			1: { color: measuredColor, lineWidth: 0, pointSize: 7 }
+		}
+	};
+
 	tableData = new google.visualization.arrayToDataTable(data);
 
 	chart = new google.visualization.LineChart(document.getElementById("Chart"));
@@ -301,7 +300,7 @@ var draw_change_colors = function() {
 	}
 };
 
-window.onload = function() { // make this ondomready
+this.draw_chart_page = function() {
 	food = document.getElementById("Food").rowIndex;
 	exercise = document.getElementById("Exercise").rowIndex;
 	net = document.getElementById("Net").rowIndex;
@@ -314,7 +313,7 @@ window.onload = function() { // make this ondomready
 			"name": "visualization",
 			"version": "1",
 			"packages": ["corechart"],
-			"callback": "drawChart"
+			"callback": "fitCast.drawChart"
 		}]
 	}));
 	load_script(chart_lib);
