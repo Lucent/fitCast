@@ -22,7 +22,7 @@ if (!empty($_POST)) {
 	}
 	if (is_array($userdata)) {
 		set_session_vars($userdata);
-		echo "Login accepted, {$userdata['username']}.";
+		echo "Login accepted, {$userdata['username']}.<br><a href='/'>Continue to fitCast.</a>";
 	} elseif ($userdata === "NOUSER") {
 		echo "That username doesn't exist. Did you mistype it, <a href='forgotusername.php'>forget your username</a>, or do you want to create an account?";
 		draw_login_register("Register", $_POST["username"], $_POST["password"], array("Register"));

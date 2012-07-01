@@ -13,6 +13,7 @@ h3					{ margin: 1ex 0; font-weight: normal; font-size: 1.5em; display: inline; 
 .Month, .Month td, .Chart, #Table	{ border-style: hidden; }
 .Month th			{ border: 1px solid black; border: 1px solid black; text-align: center; }
 .Month span			{ font-size: xx-large; }
+.Month a			{ text-decoration: none; }
 .First				{ float: left; }
 .Last				{ float: right; }
 
