@@ -149,15 +149,19 @@ var drawChart = function() {
 	var chart_leave = function(e) {
 		color_table_row(e.row + 1, "")
 	};
-	var enter_table_row = function(el) {
-		el = this || el;
+	var enter_table_row = function(e) {
+		e = e || event;
+		var el = (e.srcElement || e.target);
+		console.log("entering " + el.cellIndex);
 		if (el.colSpan === 1) {
 			chart.setSelection([{row: el.cellIndex - 1}]);
 			chart_hover({row: el.cellIndex - 1});
 		}
 	};
-	var leave_table_row = function(el) {
-		el = this || el;
+	var leave_table_row = function(e) {
+		e = e || event;
+		var el = (e.srcElement || e.target);
+		console.log("leaving " + el.cellIndex);
 		if (el.colSpan === 1) {
 			chart.setSelection([{}]);
 			chart_leave({row: el.cellIndex - 1});
@@ -248,8 +252,8 @@ var better_mouseover = function(sink, callback) {
 		sink.onmouseenter = callback;
 	else
 		sink.onmouseover = function (e) {
-			for (var el = e.relatedTarget; el && (el !== sink); el = el.parentNode) {};
-			if (!el) callback(e.toElement);
+			for (var el = e.relatedTarget; el && el !== sink; el = el.parentNode) {};
+			if (!el && e.fromElement.cellIndex !== e.toElement.cellIndex) callback(e);
 		};
 };
 
@@ -258,8 +262,8 @@ var better_mouseout = function(sink, callback) {
 		sink.onmouseleave = callback;
 	else
 		sink.onmouseout = function (e) {
-			for (var el = e.relatedTarget; el && (el !== sink); el = el.parentNode) {};
-			if (!el) callback(e.fromElement);
+			for (var el = e.relatedTarget; el && el !== sink; el = el.parentNode) {};
+			if (!el && e.fromElement.cellIndex !== e.toElement.cellIndex) callback(e);
 		};
 };
 
