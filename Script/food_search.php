@@ -3,7 +3,7 @@ header("Content-type: application/json");
 
 $conn = database_connect();
 $search = mysqli_real_escape_string($conn, $_GET["search"]);
-$query = "SELECT `id`,`long` FROM `food_usda_desc` WHERE `long` LIKE '%$search%';";
+$query = "SELECT `id`,`long` FROM `food_usda_desc` WHERE `long` LIKE '%$search%' LIMIT 0,30;";
 $result = mysqli_query($conn, $query);
 
 $row_set = array();

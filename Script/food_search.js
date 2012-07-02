@@ -40,14 +40,41 @@ this.load_details = function(e) {
 	}
 };
 
+var handleDragStart = function(e) {
+	e.dataTransfer.effectAllowed = "copy";
+	e.dataTransfer.setData("Text", this.innerHTML);
+//	this.addClassName('moving');
+};
+
+var handleOver = function(e) {
+	if (e.preventDefault) e.preventDefault();
+	e.dataTransfer.dropEffect = "copy";
+};
+
+var handleDrop = function(e) {
+	var el = document.createElement("a");
+	el.innerHTML = e.dataTransfer.getData("Text");
+	document.getElementById("DragTarget").appendChild(el);
+	e.dataTransfer.dropEffect = "copy";
+};
+
 var populate_search_results = function(results) {
 	var returned_data = JSON.parse(results.responseText);
 	var container = document.getElementById("SearchResults");
 	container.innerHTML = "";
 
 	for (var item in returned_data) {
-		var cont = document.createElement("div");
+		var cont = document.createElement("a");
 		cont.innerHTML = returned_data[item]["long"];
-		container.appendChild(cont);
+		var final = container.appendChild(cont);
+		final.setAttribute("draggable", "true");
+		final.addEventListener("dragstart", handleDragStart, false);
+//		box.addEventListener('dragenter', this.handleDragEnter, false);
+//		box.addEventListener('dragover', this.handleDragOver, false);
+//		box.addEventListener('dragleave', this.handleDragLeave, false);
+//		box.addEventListener('drop', this.handleDrop, false);
+//		box.addEventListener('dragend', this.handleDragEnd, false);
 	}
+	document.getElementById("DragTarget").addEventListener("dragover", handleOver, false);
+	document.getElementById("DragTarget").addEventListener("drop", handleDrop, false);
 };
