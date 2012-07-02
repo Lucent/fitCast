@@ -41,21 +41,23 @@ this.load_details = function(e) {
 };
 
 var handleDragStart = function(e) {
+	e.preventDefault();
 	e.dataTransfer.effectAllowed = "copy";
 	e.dataTransfer.setData("Text", this.innerHTML);
 //	this.addClassName('moving');
 };
 
-var handleOver = function(e) {
+var cancel = function(e) {
 	if (e.preventDefault) e.preventDefault();
-	e.dataTransfer.dropEffect = "copy";
+	return false;
 };
 
 var handleDrop = function(e) {
+	if (e.preventDefault) e.preventDefault();
 	var el = document.createElement("a");
 	el.innerHTML = e.dataTransfer.getData("Text");
 	document.getElementById("DragTarget").appendChild(el);
-	e.dataTransfer.dropEffect = "copy";
+//	e.dataTransfer.dropEffect = "copy";
 };
 
 var populate_search_results = function(results) {
@@ -66,15 +68,14 @@ var populate_search_results = function(results) {
 	for (var item in returned_data) {
 		var cont = document.createElement("a");
 		cont.innerHTML = returned_data[item]["long"];
+		cont.href = "#";
 		var final = container.appendChild(cont);
-		final.setAttribute("draggable", "true");
-		final.addEventListener("dragstart", handleDragStart, false);
-//		box.addEventListener('dragenter', this.handleDragEnter, false);
-//		box.addEventListener('dragover', this.handleDragOver, false);
-//		box.addEventListener('dragleave', this.handleDragLeave, false);
-//		box.addEventListener('drop', this.handleDrop, false);
-//		box.addEventListener('dragend', this.handleDragEnd, false);
+		final.setAttribute("draggable", "true"); // unnecessary?
 	}
-	document.getElementById("DragTarget").addEventListener("dragover", handleOver, false);
-	document.getElementById("DragTarget").addEventListener("drop", handleDrop, false);
 };
+
+window.onload = function() {
+	document.getElementById("DragTarget").addEventListener("drop", handleDrop, false);
+	document.getElementById("DragTarget").addEventListener("dragover", cancel, false);
+	document.getElementById("DragTarget").addEventListener("dragenter", cancel, false);
+}
