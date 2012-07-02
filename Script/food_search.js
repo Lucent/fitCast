@@ -40,24 +40,28 @@ this.load_details = function(e) {
 	}
 };
 
-var handleDragStart = function(e) {
-	e.preventDefault();
-	e.dataTransfer.effectAllowed = "copy";
-	e.dataTransfer.setData("Text", this.innerHTML);
-//	this.addClassName('moving');
+var handleSelectStart = function(e) {
+	e.target.dragDrop();
+	e.dataTransfer.setData("Text", e.target.id);
+	return false;
 };
 
 var cancel = function(e) {
 	if (e.preventDefault) e.preventDefault();
-	return false;
+	e.dataTransfer.dropEffect = "copy";
+};
+
+var handleDragStart = function(e) {
+	e.dataTransfer.setData("Text", e.target.id);
+	e.dataTransfer.effectAllowed = "copy";
 };
 
 var handleDrop = function(e) {
-	if (e.preventDefault) e.preventDefault();
-	var el = document.createElement("a");
-	el.innerHTML = e.dataTransfer.getData("Text");
+	var el = document.createElement("div");
+	var id = e.dataTransfer.getData("Text");
+	el.innerHTML = document.getElementById(id).innerHTML;
 	document.getElementById("DragTarget").appendChild(el);
-//	e.dataTransfer.dropEffect = "copy";
+	e.preventDefault(); // so firefox won't navigate to it
 };
 
 var populate_search_results = function(results) {
@@ -66,11 +70,14 @@ var populate_search_results = function(results) {
 	container.innerHTML = "";
 
 	for (var item in returned_data) {
-		var cont = document.createElement("a");
+		var cont = document.createElement("div");
 		cont.innerHTML = returned_data[item]["long"];
+		cont.id = returned_data[item]["id"];
 		cont.href = "#";
-		var final = container.appendChild(cont);
-		final.setAttribute("draggable", "true"); // unnecessary?
+		cont.addEventListener("selectstart", handleSelectStart, false);
+		cont.addEventListener("dragstart", handleDragStart, false);
+		cont.setAttribute("draggable", "true"); // unnecessary?
+		container.appendChild(cont);
 	}
 };
 
