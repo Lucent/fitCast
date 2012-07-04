@@ -71,12 +71,16 @@ var populate_search_results = function(results) {
 
 	for (var item in returned_data) {
 		var cont = document.createElement("div");
-		cont.innerHTML = returned_data[item]["long"];
+		var maker = document.createElement("span");
+		var food = document.createElement("span");
+		maker.innerHTML = returned_data[item]["manufacturer"];
+		food.innerHTML = returned_data[item]["long"];
 		cont.id = returned_data[item]["id"];
-		cont.href = "#";
 		cont.addEventListener("selectstart", handleSelectStart, false);
 		cont.addEventListener("dragstart", handleDragStart, false);
 		cont.setAttribute("draggable", "true"); // unnecessary?
+		cont.appendChild(maker);
+		cont.appendChild(food);
 		container.appendChild(cont);
 	}
 };
