@@ -42,7 +42,6 @@ this.load_details = function(e) {
 
 var handleSelectStart = function(e) {
 	e.target.dragDrop();
-	e.dataTransfer.setData("Text", e.target.id);
 	return false;
 };
 
@@ -52,7 +51,7 @@ var cancel = function(e) {
 };
 
 var handleDragStart = function(e) {
-	e.dataTransfer.setData("Text", e.target.id);
+	e.dataTransfer.setData("Text", this.id);
 	e.dataTransfer.effectAllowed = "copy";
 };
 
@@ -60,8 +59,8 @@ var handleDrop = function(e) {
 	var el = document.createElement("div");
 	var id = e.dataTransfer.getData("Text");
 	el.innerHTML = document.getElementById(id).innerHTML;
-	document.getElementById("DragTarget").appendChild(el);
-	e.preventDefault(); // so firefox won't navigate to it
+	e.target.appendChild(el);
+	if (e.preventDefault) e.preventDefault(); // so firefox won't navigate to it
 };
 
 var populate_search_results = function(results) {
@@ -76,8 +75,9 @@ var populate_search_results = function(results) {
 		maker.innerHTML = returned_data[item]["manufacturer"];
 		food.innerHTML = returned_data[item]["long"];
 		cont.id = returned_data[item]["id"];
+		cont.className = "Food";
 		cont.addEventListener("selectstart", handleSelectStart, false);
-		cont.addEventListener("dragstart", handleDragStart, false);
+		cont.addEventListener("dragstart", handleDragStart, true);
 		cont.setAttribute("draggable", "true"); // unnecessary?
 		cont.appendChild(maker);
 		cont.appendChild(food);

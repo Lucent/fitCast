@@ -4,9 +4,10 @@
 <script src="Script/interactivity.php"></script>
 <style type="text/css">
 #DragTarget		{ float: right; width: 50%; height: 200px; }
+.Hour			{ border-bottom: thin solid black; height: 2.2em; }
 .List div span	{ display: block; }
-.List			{ border-top: thin solid black; border-bottom: thin solid black; width: 30%; white-space: nowrap; }
-.List div		{ text-overflow: ellipsis; overflow: hidden; margin: 2px; border: thin solid transparent; display: block; padding: 0 0.5ex; border-radius: 0.5ex; }
+.List			{ width: 30%; white-space: nowrap; }
+.List .Food		{ text-overflow: ellipsis; overflow: hidden; margin: 2px; border: thin solid transparent; display: block; padding: 0 0.5ex; border-radius: 0.5ex; }
 .List div:hover	{ overflow: visible; border: thin solid #CCC; background-color: #EEE; }
 [draggable] {
 	-moz-user-select: none;
@@ -20,8 +21,15 @@
 <form>
 <input type="text" id="SearchInput">
 </form>
-<div id="DragTarget" class="List"></div>
+
+<div id="DragTarget" class="List">
+<? for ($hour = 0; $hour < 24; $hour++) { ?>
+<div class="Hour"></div>
+<? } ?>
+</div>
+
 <div id="SearchResults" class="List"></div>
+
 <script>
 document.getElementById("SearchInput").onkeyup = fitCast.load_details;
 </script>
