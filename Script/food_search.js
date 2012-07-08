@@ -9,7 +9,7 @@ var getAjaxObj = function() {
 	else
 		return null;
 
-	this.connect = function (sURL, sVars, fnDone) {
+	this.connect = function (sURL, sVars, fnDone, el) {
 		if (!xmlhttp) return false;
 		complete = false;
 		try {
@@ -17,7 +17,7 @@ var getAjaxObj = function() {
 			xmlhttp.onreadystatechange = function () {
 				if (xmlhttp.readyState == 4 && !complete) {
 					complete = true;
-					fnDone(xmlhttp, sVars);
+					fnDone(xmlhttp, sVars, el);
 				}
 			};
 			xmlhttp.send("");
@@ -137,6 +137,7 @@ var obj_to_dom = function(obj, dom, count) {
 				anchor.addEventListener("selectstart", handleSelectStart, false);
 				anchor.addEventListener("dragstart", handleDragStart, true);
 				item.appendChild(anchor);
+				item.onclick = fetch_nutrition_data;
 			} else {
 				// folder
 				count[count.length - 1]++;
@@ -154,6 +155,24 @@ var obj_to_dom = function(obj, dom, count) {
 		}
 		dom.appendChild(list);
 	}
+};
+
+var fetch_nutrition_data = function(e) {
+	var conn = new getAjaxObj();
+	conn.connect("Script/nutrition_data.php?id=", this.id, show_nutrition_data, this);
+};
+
+var show_nutrition_data = function(data, id, el) {
+	var returned_data = JSON.parse(data.responseText);
+	var info = document.createElement("span");
+	info.innerHTML = Math.round(returned_data.kcal * returned_data.weight1 / 100) + " cal in " + returned_data.units1;
+	el.appendChild(info);
+	el.onclick = destroy_nutrition_data;
+};
+
+var destroy_nutrition_data = function(e) {
+	this.removeChild(this.getElementsByTagName("span")[0]);
+	this.onclick = fetch_nutrition_data;
 };
 
 window.onload = function() {
