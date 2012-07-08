@@ -75,7 +75,6 @@ var populate_search_results = function(results) {
 	while (move_singles_up_level(tree)) { }
 
 	obj_to_dom(tree, container);
-//	console.log(dump(tree, "\t"));
 };
 
 var results_to_nested_list = function(data) {
@@ -88,13 +87,17 @@ var results_to_nested_list = function(data) {
 		var pointer = obj;
 		for (var x = 0; x < desc.length; x++) {
 			var attr = desc[x];
+			var just_set_number = false;
 			if (!(attr in pointer)) {
-				if (x === desc.length - 1) // if we're at the last level
+				if (x === desc.length - 1) { // if we're at the last level
 					pointer[attr] = result["id"];
-				else
+					just_set_number = true;
+				} else
 					pointer[attr] = {};
 			}
-			var pointer = pointer[attr];
+			if (!just_set_number && typeof pointer[attr] === "number")
+				pointer[attr] = {"Default": pointer[attr]};
+			pointer = pointer[attr];
 		}
 	}
 	return obj;
