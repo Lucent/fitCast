@@ -105,7 +105,6 @@ var results_to_nested_list = function(data) {
 
 var move_singles_up_level = function(obj) {
 	var change_made = false;
-	var item = [], x = 0;
 	for (var node in obj) {
 		var obj2 = obj[node];
 		for (var node2 in obj2) {
@@ -123,17 +122,16 @@ var move_singles_up_level = function(obj) {
 };
 
 var obj_to_dom = function(obj, dom) {
-	var item = [], x = 0;
 	for (var node in obj) {
-		item[x] = document.createElement("div");
-		item[x].innerHTML = node;
+		var item = document.createElement("div");
+		item.innerHTML = node;
 		if (typeof obj[node] === "number") {
-			item[x].id = obj[node];
-			item[x].addEventListener("selectstart", handleSelectStart, false);
-			item[x].addEventListener("dragstart", handleDragStart, true);
+			item.id = obj[node];
+			item.addEventListener("selectstart", handleSelectStart, false);
+			item.addEventListener("dragstart", handleDragStart, true);
 		}
-		dom.appendChild(item[x]);
-		obj_to_dom(obj[node], item[x]);
+		dom.appendChild(item);
+		obj_to_dom(obj[node], item);
 	}
 };
 
