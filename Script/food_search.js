@@ -1,3 +1,5 @@
+var delimiter = ", ";
+
 var getAjaxObj = function() {
 	var xmlhttp, complete = false;
 	if (window.XMLHttpRequest)
@@ -72,13 +74,13 @@ var populate_search_results = function(results) {
 	for (var item in returned_data) {
 		var result = returned_data[item];
 		var brand = result["manufacturer"] || "Generic";
-		var desc = [brand].concat(result["long"].split(", "));
+		var desc = [brand].concat(result["long"].split(delimiter));
 
 		var pointer = tree;
 		for (var x = 0; x < desc.length; x++) {
 			var attr = desc[x];
 			if (!(attr in pointer)) {
-				if (x === desc.length - 1)
+				if (x === desc.length - 1) // if we're at the last level
 					pointer[attr] = result["id"];
 				else
 					pointer[attr] = {};
@@ -87,8 +89,29 @@ var populate_search_results = function(results) {
 		}
 	}
 
+	while (move_singles_up_level(tree)) { }
+
 	obj_to_dom(tree, container);
 //	console.log(dump(tree, "\t"));
+};
+
+var move_singles_up_level = function(obj) {
+	var change_made = false;
+	var item = [], x = 0;
+	for (var node in obj) {
+		var obj2 = obj[node];
+		for (var node2 in obj2) {
+			var item = obj2[node2];
+			if (typeof item === "number" && Object.size(obj2) === 1) {
+				obj[node + delimiter + node2] = item;
+				delete obj[node];
+				change_made = true;
+			}
+		}
+		if (move_singles_up_level(obj2))
+			change_made = true;
+	}
+	return change_made;
 };
 
 var obj_to_dom = function(obj, dom) {
