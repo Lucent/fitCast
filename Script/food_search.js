@@ -70,16 +70,18 @@ var populate_search_results = function(results) {
 
 	for (var item in returned_data) {
 		var cont = document.createElement("div");
-		var maker = document.createElement("span");
+//		var maker = document.createElement("span");
 		var food = document.createElement("span");
-		maker.innerHTML = returned_data[item]["manufacturer"];
+//		maker.innerHTML = returned_data[item]["manufacturer"];
 		food.innerHTML = returned_data[item]["long"];
 		cont.id = returned_data[item]["id"];
-		cont.className = "Food";
+		addclass(cont, "Food");
+		if (returned_data[item]["manufacturer"])
+			addclass(cont, "Branded");
 		cont.addEventListener("selectstart", handleSelectStart, false);
 		cont.addEventListener("dragstart", handleDragStart, true);
 		cont.setAttribute("draggable", "true"); // unnecessary?
-		cont.appendChild(maker);
+//		cont.appendChild(maker);
 		cont.appendChild(food);
 		container.appendChild(cont);
 	}

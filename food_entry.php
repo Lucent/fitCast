@@ -10,6 +10,7 @@
 .List			{ width: 30%; white-space: nowrap; }
 .List .Food		{ text-overflow: ellipsis; overflow: hidden; margin: 2px; border: thin solid transparent; display: block; padding: 0 0.5ex; border-radius: 0.5ex; }
 .List div:hover	{ overflow: visible; border: thin solid #CCC; background-color: #EEE; }
+.Branded		{ color: #600; }
 [draggable] {
 	-moz-user-select: none;
 	-khtml-user-select: none;
