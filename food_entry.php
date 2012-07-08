@@ -1,3 +1,4 @@
+<? $hour_shift = 5; ?>
 <!doctype html>
 <html>
 <head>
@@ -23,8 +24,8 @@
 </form>
 
 <div id="DragTarget" class="List">
-<? for ($hour = 0; $hour < 24; $hour++) { ?>
-<div class="Hour"></div>
+<? for ($hour = 0 + $hour_shift; $hour < 24 + $hour_shift; $hour++) { ?>
+<div class="Hour"><?= date("g:i a", mktime($hour, 0, 0, 1, 1, 2012)) ?></div>
 <? } ?>
 </div>
 
