@@ -74,7 +74,7 @@ var populate_search_results = function(results) {
 
 	while (move_singles_up_level(tree)) { }
 
-	obj_to_dom(tree, container);
+	obj_to_dom(tree, container, []);
 };
 
 var results_to_nested_list = function(data) {
@@ -121,17 +121,40 @@ var move_singles_up_level = function(obj) {
 	return change_made;
 };
 
-var obj_to_dom = function(obj, dom) {
-	for (var node in obj) {
-		var item = document.createElement("div");
-		item.innerHTML = node;
-		if (typeof obj[node] === "number") {
-			item.id = obj[node];
-			item.addEventListener("selectstart", handleSelectStart, false);
-			item.addEventListener("dragstart", handleDragStart, true);
+var obj_to_dom = function(obj, dom, count) {
+	var count = count.slice();
+	count.push(0);
+
+	if (Object.size(obj)) {
+		var list = document.createElement("ul");
+		for (var node in obj) {
+			var item = document.createElement("li");
+			if (typeof obj[node] === "number") {
+				// item
+				var anchor = document.createElement("a");
+				anchor.innerHTML = node;
+				anchor.id = obj[node];
+				anchor.addEventListener("selectstart", handleSelectStart, false);
+				anchor.addEventListener("dragstart", handleDragStart, true);
+				item.appendChild(anchor);
+				addclass(item, "file");
+			} else {
+				// folder
+				count[count.length - 1]++;
+				console.log(count);
+				var checkbox = document.createElement("input");
+				checkbox.setAttribute("type", "checkbox");
+				checkbox.id = "Folder_" + count.join("-");
+				var label = document.createElement("label");
+				label.innerHTML = node;
+				label.htmlFor = "Folder_" + count.join("-");
+				item.appendChild(label);
+				item.appendChild(checkbox);
+			}
+			list.appendChild(item);
+			obj_to_dom(obj[node], item, count);
 		}
-		dom.appendChild(item);
-		obj_to_dom(obj[node], item);
+		dom.appendChild(list);
 	}
 };
 
