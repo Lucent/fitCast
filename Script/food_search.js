@@ -70,13 +70,22 @@ var populate_search_results = function(results) {
 	var container = document.getElementById("SearchResults");
 	container.innerHTML = "";
 
-	var tree = {};
-	for (var item in returned_data) {
-		var result = returned_data[item];
+	var tree = results_to_nested_list(returned_data);
+
+	while (move_singles_up_level(tree)) { }
+
+	obj_to_dom(tree, container);
+//	console.log(dump(tree, "\t"));
+};
+
+var results_to_nested_list = function(data) {
+	var obj = {};
+	for (var item in data) {
+		var result = data[item];
 		var brand = result["manufacturer"] || "Generic";
 		var desc = [brand].concat(result["long"].split(delimiter));
 
-		var pointer = tree;
+		var pointer = obj;
 		for (var x = 0; x < desc.length; x++) {
 			var attr = desc[x];
 			if (!(attr in pointer)) {
@@ -88,11 +97,7 @@ var populate_search_results = function(results) {
 			var pointer = pointer[attr];
 		}
 	}
-
-	while (move_singles_up_level(tree)) { }
-
-	obj_to_dom(tree, container);
-//	console.log(dump(tree, "\t"));
+	return obj;
 };
 
 var move_singles_up_level = function(obj) {
