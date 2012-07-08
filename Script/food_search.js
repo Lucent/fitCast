@@ -68,29 +68,41 @@ var populate_search_results = function(results) {
 	var container = document.getElementById("SearchResults");
 	container.innerHTML = "";
 
+	var tree = {};
 	for (var item in returned_data) {
-		var brand = returned_data[item]["manufacturer"] || "Generic";
-		var cont = document.createElement("div");
-		var food = document.createElement("span");
-		food.innerHTML = returned_data[item]["long"];
-		cont.id = returned_data[item]["id"];
-		addclass(cont, "Food");
-		cont.addEventListener("selectstart", handleSelectStart, false);
-		cont.addEventListener("dragstart", handleDragStart, true);
-//		cont.setAttribute("draggable", "true"); // unnecessary?
-		cont.appendChild(food);
+		var result = returned_data[item];
+		var brand = result["manufacturer"] || "Generic";
+		var desc = [brand].concat(result["long"].split(", "));
 
-		if (!document.getElementById("Brand_" + brand)) {
-			var brand_container = document.createElement("fieldset");
-			var brand_label = document.createElement("legend");
-			brand_label.innerHTML = brand;
-			brand_container.appendChild(brand_label);
-			brand_container.id = "Brand_" + brand;
-			container.appendChild(brand_container);
-		} else
-			brand_container = document.getElementById("Brand_" + brand);
+		var pointer = tree;
+		for (var x = 0; x < desc.length; x++) {
+			var attr = desc[x];
+			if (!(attr in pointer)) {
+				if (x === desc.length - 1)
+					pointer[attr] = result["id"];
+				else
+					pointer[attr] = {};
+			}
+			var pointer = pointer[attr];
+		}
+	}
 
-		brand_container.appendChild(cont);
+	obj_to_dom(tree, container);
+//	console.log(dump(tree, "\t"));
+};
+
+var obj_to_dom = function(obj, dom) {
+	var item = [], x = 0;
+	for (var node in obj) {
+		item[x] = document.createElement("div");
+		item[x].innerHTML = node;
+		if (typeof obj[node] === "number") {
+			item[x].id = obj[node];
+			item[x].addEventListener("selectstart", handleSelectStart, false);
+			item[x].addEventListener("dragstart", handleDragStart, true);
+		}
+		dom.appendChild(item[x]);
+		obj_to_dom(obj[node], item[x]);
 	}
 };
 

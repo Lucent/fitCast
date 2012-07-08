@@ -9,6 +9,7 @@
 .List			{ width: 30%; white-space: nowrap; }
 .Food			{ text-overflow: ellipsis; overflow: hidden; margin: 2px; border: thin solid transparent; display: block; padding: 0 0.5ex; border-radius: 0.5ex; }
 fieldset div:hover	{ overflow: visible; background-color: #EEE; }
+div > div		{ margin-left: 1ex; border-left: thin solid gray; }
 legend			{ font-size: large; }
 
 [draggable] {
