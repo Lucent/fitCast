@@ -6,11 +6,11 @@
 <style type="text/css">
 #DragTarget		{ float: right; width: 50%; height: 200px; }
 .Hour			{ border-bottom: thin solid black; height: 2.2em; }
-.List div span	{ display: block; }
 .List			{ width: 30%; white-space: nowrap; }
-.List .Food		{ text-overflow: ellipsis; overflow: hidden; margin: 2px; border: thin solid transparent; display: block; padding: 0 0.5ex; border-radius: 0.5ex; }
-.List div:hover	{ overflow: visible; border: thin solid #CCC; background-color: #EEE; }
-.Branded		{ color: #600; }
+.Food			{ text-overflow: ellipsis; overflow: hidden; margin: 2px; border: thin solid transparent; display: block; padding: 0 0.5ex; border-radius: 0.5ex; }
+fieldset div:hover	{ overflow: visible; background-color: #EEE; }
+legend			{ font-size: large; }
+
 [draggable] {
 	-moz-user-select: none;
 	-khtml-user-select: none;
