@@ -12,5 +12,6 @@ var fitCast = new function() {
 <?
 include "weight_table.js";
 include "food_search.js";
+include "utility.js";
 ?>
 }; // End fitCast namespace
