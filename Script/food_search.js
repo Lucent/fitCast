@@ -133,15 +133,13 @@ var obj_to_dom = function(obj, dom, count) {
 				// item
 				var anchor = document.createElement("a");
 				anchor.innerHTML = node;
-				anchor.id = obj[node];
+				item.id = obj[node];
 				anchor.addEventListener("selectstart", handleSelectStart, false);
 				anchor.addEventListener("dragstart", handleDragStart, true);
 				item.appendChild(anchor);
-				addclass(item, "file");
 			} else {
 				// folder
 				count[count.length - 1]++;
-				console.log(count);
 				var checkbox = document.createElement("input");
 				checkbox.setAttribute("type", "checkbox");
 				checkbox.id = "Folder_" + count.join("-");

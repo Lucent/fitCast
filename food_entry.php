@@ -18,10 +18,10 @@ li {
     margin-left: -15px;
     list-style: none;
 }
-li.file {
+li[id] {
     margin-left: -1px !important;
 }
-li a[id] {
+li[id] a {
     background: url("/images/document.png") 0 -1px no-repeat;
     padding-left: 21px;
     text-decoration: none;
