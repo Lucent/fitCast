@@ -107,7 +107,7 @@ var move_singles_up_level = function(obj) {
 		var obj2 = obj[node];
 		for (var node2 in obj2) {
 			var item = obj2[node2];
-			if (Object.size(obj2) === 1 && (typeof item === "number" || Object.size(obj) === 1)) {
+			if (Object.size(obj2) === 1) {
 				obj[node + delimiter + node2] = item;
 				delete obj[node];
 				change_made = true;
