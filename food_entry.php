@@ -5,6 +5,7 @@
 <script src="Script/interactivity.php"></script>
 <style type="text/css">
 /*** Nutrition Facts box ***/
+#FactsHolder		{ display: none; }
 #NutritionFacts		{ border: thin solid black; font-family: Helvetica, sans-serif; padding: 0 0.5ex; width: 15em; }
 #NutritionFacts h1	{ font-family: "Franklin Gothic Heavy", "Helvetica Black"; font-weight: normal; margin: 0; }
 #NutritionFacts h2	{ font-weight: normal; margin: 0; font-size: small; }
@@ -94,6 +95,7 @@ li input:checked + ul > li:last-child { margin: 0 0 1px; }
 document.getElementById("SearchInput").onkeyup = fitCast.load_details;
 </script>
 
+<div id="FactsHolder">
 <div id="NutritionFacts">
 <h1>Nutrition Facts</h1>
 <h2>Serving Size <span id="ServingSize"></span></h2>
@@ -110,6 +112,7 @@ document.getElementById("SearchInput").onkeyup = fitCast.load_details;
 <p class="Indent">Dietary Fiber <span id="DietaryFiber"></span></p>
 <p class="Indent">Sugars <span id="Sugars"></span></p>
 <p><strong>Protein</strong> <span id="Protein"></span></p>
+</div>
 </div>
 
 </body>

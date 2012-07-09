@@ -32,7 +32,11 @@ this.load_details = function(e) {
 	e = e || event;
 	var search = document.getElementById("SearchInput").value;
 	var container = document.getElementById("SearchResults");
-	container.innerHTML = "";
+
+	document.getElementById("FactsHolder").appendChild(document.getElementById("NutritionFacts"));
+	if (container.firstChild)
+		container.removeChild(container.firstChild);
+
 	if (search.length >= 3) {
 //	if (!waiting) {
 //		waiting = true;
@@ -68,7 +72,6 @@ var handleDrop = function(e) {
 var populate_search_results = function(results) {
 	var returned_data = JSON.parse(results.responseText);
 	var container = document.getElementById("SearchResults");
-	container.innerHTML = "";
 
 	if (returned_data.length) {
 		var tree = results_to_nested_list(returned_data);
