@@ -187,9 +187,9 @@ var fill_nutrition_facts_box = function(data) {
 	for (var row = 0; row < field_map.length; row++) {
 		var num = field_map[row];
 		if (num[2] !== null)
-			document.getElementById(num[0]).innerHTML = Math.round(data[num[1]] * data.weight1 / 100) + num[2];
+			document.getElementById(num[0]).innerHTML = Math.round(data[num[1]] * (data.weight1 || 100) / 100) + num[2];
 		else
-			document.getElementById(num[0]).innerHTML = data[num[1]];
+			document.getElementById(num[0]).innerHTML = data[num[1]] || "100g";
 	}
 };
 
