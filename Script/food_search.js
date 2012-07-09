@@ -70,11 +70,13 @@ var populate_search_results = function(results) {
 	var container = document.getElementById("SearchResults");
 	container.innerHTML = "";
 
-	var tree = results_to_nested_list(returned_data);
-
-	while (move_singles_up_level(tree)) { }
-
-	obj_to_dom(tree, container, []);
+	if (returned_data.length) {
+		var tree = results_to_nested_list(returned_data);
+		while (move_singles_up_level(tree)) { }
+		obj_to_dom(tree, container, []);
+	} else {
+		container.innerHTML = "No results";
+	}
 };
 
 var results_to_nested_list = function(data) {
