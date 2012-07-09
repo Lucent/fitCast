@@ -143,8 +143,13 @@ var obj_to_dom = function(obj, dom, count) {
 				var anchor = document.createElement("a");
 				anchor.innerHTML = node;
 				item.id = obj[node];
-				item.addEventListener("selectstart", handleSelectStart, false);
-				item.addEventListener("dragstart", handleDragStart, true);
+				if (item.addEventListener) {
+					item.addEventListener("selectstart", handleSelectStart, false);
+					item.addEventListener("dragstart", handleDragStart, true);
+				} else {
+					item.attachEvent("selectstart", handleSelectStart, false);
+					item.attachEvent("dragstart", handleDragStart, true);
+				}
 				item.appendChild(anchor);
 				item.onclick = fetch_nutrition_data;
 			} else {
@@ -201,7 +206,13 @@ var fill_nutrition_facts_box = function(data) {
 };
 
 window.onload = function() {
-	document.getElementById("DragTarget").addEventListener("drop", handleDrop, false);
-	document.getElementById("DragTarget").addEventListener("dragover", cancel, false);
-	document.getElementById("DragTarget").addEventListener("dragenter", cancel, false);
+	if (document.getElementById("DragTarget").addEventListener) {
+		document.getElementById("DragTarget").addEventListener("drop", handleDrop, false);
+		document.getElementById("DragTarget").addEventListener("dragover", cancel, false);
+		document.getElementById("DragTarget").addEventListener("dragenter", cancel, false);
+	} else {
+		document.getElementById("DragTarget").attachEvent("drop", handleDrop, false);
+		document.getElementById("DragTarget").attachEvent("dragover", cancel, false);
+		document.getElementById("DragTarget").attachEvent("dragenter", cancel, false);
+	}
 }
