@@ -134,8 +134,8 @@ var obj_to_dom = function(obj, dom, count) {
 				var anchor = document.createElement("a");
 				anchor.innerHTML = node;
 				item.id = obj[node];
-				anchor.addEventListener("selectstart", handleSelectStart, false);
-				anchor.addEventListener("dragstart", handleDragStart, true);
+				item.addEventListener("selectstart", handleSelectStart, false);
+				item.addEventListener("dragstart", handleDragStart, true);
 				item.appendChild(anchor);
 				item.onclick = fetch_nutrition_data;
 			} else {
@@ -165,7 +165,12 @@ var fetch_nutrition_data = function(e) {
 var show_nutrition_data = function(data, id, el) {
 	var returned_data = JSON.parse(data.responseText);
 	var info = document.createElement("span");
-	info.innerHTML = Math.round(returned_data.kcal * returned_data.weight1 / 100) + " cal in " + returned_data.units1;
+	if (!returned_data.weight1 && !returned_data.weight2)
+		info.innerHTML += Math.round(returned_data.kcal) + " cal in 100 g";
+	if (returned_data.weight1)
+		info.innerHTML += Math.round(returned_data.kcal * returned_data.weight1 / 100) + " cal in " + returned_data.units1;
+	if (returned_data.weight2)
+		info.innerHTML += "<br>" + Math.round(returned_data.kcal * returned_data.weight2 / 100) + " cal in " + returned_data.units2;
 	el.appendChild(info);
 	el.onclick = destroy_nutrition_data;
 };
