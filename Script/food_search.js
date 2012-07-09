@@ -1,4 +1,5 @@
-var delimiter = ", ";
+var delimiter = ", ", search_waiting = false;
+var KEYPRESS_DELAY = 200;
 
 var getAjaxObj = function() {
 	var xmlhttp, complete = false;
@@ -30,6 +31,7 @@ var getAjaxObj = function() {
 
 this.load_details = function(e) {
 	e = e || event;
+
 	var search = document.getElementById("SearchInput").value;
 	var container = document.getElementById("SearchResults");
 
@@ -38,12 +40,14 @@ this.load_details = function(e) {
 		container.removeChild(container.firstChild);
 
 	if (search.length >= 3) {
-//	if (!waiting) {
-//		waiting = true;
-//		throb_properties(document.getElementById("PropertyTab"));
-		var conn = new getAjaxObj();
-		conn.connect("Script/food_search.php?search=", search, populate_search_results);
+		clearTimeout(search_waiting);
+		search_waiting = setTimeout(function() { execute_search(search); }, KEYPRESS_DELAY);
 	}
+};
+
+var execute_search = function(search) {
+	var conn = new getAjaxObj();
+	conn.connect("Script/food_search.php?search=", search, populate_search_results);
 };
 
 var handleSelectStart = function(e) {
