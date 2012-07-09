@@ -166,20 +166,31 @@ var fetch_nutrition_data = function(e) {
 
 var show_nutrition_data = function(data, id, el) {
 	var returned_data = JSON.parse(data.responseText);
-	var info = document.createElement("span");
-	if (!returned_data.weight1 && !returned_data.weight2)
-		info.innerHTML += Math.round(returned_data.kcal) + " cal in 100 g";
-	if (returned_data.weight1)
-		info.innerHTML += Math.round(returned_data.kcal * returned_data.weight1 / 100) + " cal in " + returned_data.units1;
-	if (returned_data.weight2)
-		info.innerHTML += "<br>" + Math.round(returned_data.kcal * returned_data.weight2 / 100) + " cal in " + returned_data.units2;
-	el.appendChild(info);
-	el.onclick = destroy_nutrition_data;
+
+	fill_nutrition_facts_box(returned_data);
+	el.appendChild(document.getElementById("NutritionFacts"));
 };
 
-var destroy_nutrition_data = function(e) {
-	this.removeChild(this.getElementsByTagName("span")[0]);
-	this.onclick = fetch_nutrition_data;
+var fill_nutrition_facts_box = function(data) {
+	var field_map = [
+		["Calories",	"kcal",			""],
+		["ServingSize",	"units1",		null],
+		["TotalFat",	"fat",			"g"],
+		["SaturatedFat","fat_sat",		"g"],
+		["Cholesterol",	"cholesterol",	"mg"],
+		["Sodium",		"sodium",		"mg"],
+		["TotalCarbohydrate",	"carb",	"g"],
+		["DietaryFiber","fiber",		"g"],
+		["Sugars",		"sugar",		"g"],
+		["Protein",		"protein",		"g"]
+	];
+	for (var row = 0; row < field_map.length; row++) {
+		var num = field_map[row];
+		if (num[2] !== null)
+			document.getElementById(num[0]).innerHTML = Math.round(data[num[1]] * data.weight1 / 100) + num[2];
+		else
+			document.getElementById(num[0]).innerHTML = data[num[1]];
+	}
 };
 
 window.onload = function() {
