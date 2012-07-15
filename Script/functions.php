@@ -141,6 +141,7 @@ function database_connect() {
 	$dbuser = "weightcast";
 	$dbpass = "looseint";
 	$conn = mysqli_connect($dbhost, $dbuser, $dbpass);
+	$conn->set_charset("utf8");
 	mysqli_select_db($conn, $dbname);
 	return $conn;
 }
