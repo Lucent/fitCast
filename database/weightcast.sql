@@ -83,6 +83,82 @@ INSERT INTO `calories` VALUES (1,'2012-06-10',NULL,NULL,NULL);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `food_fast`
+--
+
+DROP TABLE IF EXISTS `food_fast`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `food_fast` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `manufacturer` varchar(60) CHARACTER SET utf8 NOT NULL,
+  `long` varchar(200) CHARACTER SET utf8 NOT NULL,
+  `water` float unsigned DEFAULT NULL,
+  `kcal` smallint(5) unsigned NOT NULL,
+  `protein` float unsigned NOT NULL,
+  `fat` float unsigned NOT NULL,
+  `ash` float unsigned DEFAULT NULL,
+  `carb` float unsigned NOT NULL,
+  `fiber` float unsigned DEFAULT NULL,
+  `sugar` float unsigned DEFAULT NULL,
+  `calcium` smallint(5) unsigned DEFAULT NULL,
+  `iron` float unsigned DEFAULT NULL,
+  `magnesium` smallint(5) unsigned DEFAULT NULL,
+  `phosphorus` smallint(5) unsigned DEFAULT NULL,
+  `potassium` smallint(5) unsigned DEFAULT NULL,
+  `sodium` smallint(5) unsigned DEFAULT NULL,
+  `zinc` float unsigned DEFAULT NULL,
+  `copper` float unsigned DEFAULT NULL,
+  `manganese` float unsigned DEFAULT NULL,
+  `selenium` float unsigned DEFAULT NULL,
+  `c` float unsigned DEFAULT NULL,
+  `thiamin` float unsigned DEFAULT NULL,
+  `riboflavin` float unsigned DEFAULT NULL,
+  `niacin` float unsigned DEFAULT NULL,
+  `panto` float unsigned DEFAULT NULL,
+  `b6` float unsigned DEFAULT NULL,
+  `folate_total` smallint(5) unsigned DEFAULT NULL,
+  `folic` smallint(5) unsigned DEFAULT NULL,
+  `folate_food` smallint(5) unsigned DEFAULT NULL,
+  `folate_dfe` smallint(5) unsigned DEFAULT NULL,
+  `choline` smallint(5) unsigned DEFAULT NULL,
+  `b12` float unsigned DEFAULT NULL,
+  `a_iu` mediumint(8) unsigned DEFAULT NULL,
+  `a_rae` smallint(6) unsigned DEFAULT NULL,
+  `retinol` smallint(6) unsigned DEFAULT NULL,
+  `alpha_carot` smallint(6) unsigned DEFAULT NULL,
+  `beta_carot` smallint(6) unsigned DEFAULT NULL,
+  `crypt` smallint(5) unsigned DEFAULT NULL,
+  `lycopene` smallint(5) unsigned DEFAULT NULL,
+  `lut_zea` smallint(5) unsigned DEFAULT NULL,
+  `e` float unsigned DEFAULT NULL,
+  `d_ug` float unsigned DEFAULT NULL,
+  `d_iu` smallint(5) unsigned DEFAULT NULL,
+  `k` float unsigned DEFAULT NULL,
+  `fat_sat` float unsigned DEFAULT NULL,
+  `fat_mono` float unsigned DEFAULT NULL,
+  `fat_poly` float unsigned DEFAULT NULL,
+  `cholesterol` smallint(5) unsigned DEFAULT NULL,
+  `weight1` float unsigned DEFAULT NULL,
+  `units1` varchar(120) DEFAULT NULL,
+  `weight2` float unsigned DEFAULT NULL,
+  `units2` varchar(120) DEFAULT NULL,
+  `refuse` tinyint(3) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `manufacturer` (`manufacturer`,`long`)
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `food_fast`
+--
+
+LOCK TABLES `food_fast` WRITE;
+/*!40000 ALTER TABLE `food_fast` DISABLE KEYS */;
+/*!40000 ALTER TABLE `food_fast` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `food_usda`
 --
 
@@ -16072,4 +16148,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-07-01 13:59:08
+-- Dump completed on 2012-07-15 21:12:19
