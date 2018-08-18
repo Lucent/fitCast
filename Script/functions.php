@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 
 // Layout options
@@ -233,7 +233,7 @@ function draw_date_row($label, $range) {
 	echo "<tr class='$label'>\n";
 	echo " <td></td>\n";
 	for ($day = 0; $day <= $range["days"]; $day++)
-		echo " <th" . new_week($day, $range["start"]) . ">" . add_days($range["start"], $day)->format("D<\b\\r>jS") . "</th>\n";
+		echo " <th" . new_week($day, $range["start"]) . ">" . add_days($range["start"], $day)->format("D<\b\\r>j") . "</th>\n";
 	echo "</tr>\n";
 }
 

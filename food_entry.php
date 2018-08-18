@@ -1,4 +1,4 @@
-<? $hour_shift = 5; ?>
+<?php $hour_shift = 5; ?>
 <!doctype html>
 <html>
 <head>
@@ -6,7 +6,7 @@
 <style type="text/css">
 /*** Nutrition Facts box ***/
 #FactsHolder		{ display: none; }
-#NutritionFacts		{ border: thin solid black; font-family: Helvetica, sans-serif; padding: 0 0.5ex; width: 15em; }
+#NutritionFacts		{ border: thin solid black; font-family: Helvetica, sans-serif; padding: 0 0.5ex; width: 14em; }
 #NutritionFacts h1	{ font-family: "Franklin Gothic Heavy", "Helvetica Black"; font-weight: normal; margin: 0; }
 #NutritionFacts h2	{ font-weight: normal; margin: 0; font-size: small; }
 #NutritionFacts h3	{ border-top: 1em solid black; margin-top: 1ex; padding-top: 1ex; font-size: x-small; border-bottom: thin solid black; }
@@ -84,9 +84,9 @@ li input:checked + ul > li:last-child { margin: 0 0 1px; }
 </form>
 
 <div id="DragTarget" class="List">
-<? for ($hour = 0 + $hour_shift; $hour < 24 + $hour_shift; $hour++) { ?>
+<?php for ($hour = 0 + $hour_shift; $hour < 24 + $hour_shift; $hour++) { ?>
 <div class="Hour"><?= date("g:i a", mktime($hour, 0, 0, 1, 1, 2012)) ?></div>
-<? } ?>
+<?php } ?>
 </div>
 
 <div id="SearchResults" class="List"></div>

@@ -1,4 +1,4 @@
-<? include "functions.php";
+<?php include "functions.php";
 header("Content-type: application/json");
 
 $conn = database_connect();

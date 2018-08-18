@@ -9,7 +9,7 @@ window.onerror = function(msg, url, line) {
 var _gaq = [["_setAccount", "UA-99745-1"], ["_trackPageview"]], _qoptions = { qacct: "p-acpWpszny_8go" };
 
 var fitCast = new function() {
-<?
+<?php
 include "weight_table.js";
 include "food_search.js";
 include "utility.js";

@@ -91,11 +91,11 @@ var results_to_nested_list = function(data) {
 	for (var item in data) {
 		var result = data[item];
 		var brand = result["manufacturer"] || "Generic";
-		var desc = [brand].concat(result["long"].split(delimiter));
+		var desc = [].concat(replacements(result["long"]).split(delimiter));
 
 		var pointer = obj;
 		for (var x = 0; x < desc.length; x++) {
-			var attr = desc[x];
+			var attr = clean_string(desc[x]);
 			var just_set_number = false;
 			if (!(attr in pointer)) {
 				if (x === desc.length - 1) { // if we're at the last level
@@ -110,6 +110,16 @@ var results_to_nested_list = function(data) {
 		}
 	}
 	return obj;
+};
+
+var clean_string = function(str) {
+	return str.replace(/^([\s]*)|([\s]*)$/g, "");
+};
+
+var replacements = function(str) {
+	str = str.replace("Cereals ready-to-eat", "Cereals");
+	str = str.replace("KELLOGG'S", "KELLOGG");
+	return str;
 };
 
 var move_singles_up_level = function(obj) {

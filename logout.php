@@ -1,4 +1,4 @@
-<?
+<?php
 include "Script/functions.php";
 
 $_SESSION = array();

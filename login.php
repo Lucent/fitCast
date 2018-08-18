@@ -1,4 +1,4 @@
-<? include "Script/functions.php"; ?>
+<?php include "Script/functions.php"; ?>
 <!doctype html>
 <html>
 <head>
@@ -11,7 +11,7 @@ input[type=text],input[type=password],input[type=email]	{ min-width: 15em; displ
 </style>
 </head>
 <body>
-<?
+<?php
 if (!empty($_POST)) {
 	switch ($_POST["Submit"]) {
 		case "Log in":

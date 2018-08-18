@@ -1,5 +1,5 @@
 var food, exercise, net, change, actual, measured;
-var tableData, chart;
+var tableData, chart, options;
 
 var calc_color = function(value, start, end, min, max) {
 	var n = (value - min) / (max - min), result;
@@ -76,7 +76,7 @@ var getMaxNumerator = function(f) {
 
 this.drawChart = function() {
 	var topbuffer = 10, bottombuffer = 10;
-	var options = {
+	options = {
 		animation: {
 			duration: 500,
 			easing: "inAndOut"

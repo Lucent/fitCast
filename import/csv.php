@@ -1,4 +1,4 @@
-<? include "../Script/functions.php";
+<?php include "../Script/functions.php";
 
 if (!empty($_POST)) {
 	$conn = database_connect();

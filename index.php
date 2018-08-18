@@ -1,5 +1,16 @@
-<? include "Script/functions.php"; ?>
-<? $range = get_date_range($_GET["start"], $_GET["end"]); ?>
+<?php
+include "Script/functions.php";
+if (array_key_exists("start", $_GET))
+	$start = $_GET["start"];
+else
+	$start = "2013-10-01";
+
+if (array_key_exists("end", $_GET))
+	$end = $_GET["end"];
+else
+	$end = "2013-10-10";
+
+$range = get_date_range($start, $end); ?>
 <!doctype html>
 <html>
 <head>
@@ -44,9 +55,9 @@ tr					{ border-bottom: 1px solid #CACACA; }
 <body>
 <h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
-<nav><a href="faq.html">Questions</a></nav>
+<nav><a href="faq.html">Questions</a> <a href="/foodpicker/">Food picker</a></nav>
 
-<? if (!isset($_SESSION["id"])) {
+<?php if (!isset($_SESSION["id"])) {
 	echo "Not <a href='login.php'>logged in</a>. Can't fetch metabolism information.";
 } else {
 	$metabolism = get_metabolism($_SESSION["id"]);
@@ -74,9 +85,9 @@ var startday = <?= $range["start"]->format("j"); ?>;
 var days = <?= $range["days"] ?>, blocksize = <?= $blocksize ?>, leftmargin = <?= $leftmargin ?>, verticalblocks = <?= $verticalblocks ?>;
 var actualColor = "<?= $actualColor ?>", measuredColor = "<?= $measuredColor ?>";
 window.onload = fitCast.draw_chart_page;
-<? output_json_table($range, $metabolism, $actual, $db_data["measured"]); ?>
+<?php output_json_table($range, $metabolism, $actual, $db_data["measured"]); ?>
 </script>
-<?
+<?php
 	draw_table_chart($db_data, $net, $change, $actual, $range);
 }
 ?>
