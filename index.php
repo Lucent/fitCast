@@ -55,7 +55,7 @@ tr					{ border-bottom: 1px solid #CACACA; }
 <body>
 <h1>fitCast</h1>
 <h2>Forecasting your fitness with more precision than a jeweler's scale.</h2>
-<nav><a href="faq.html">Questions</a> <a href="/foodpicker/">Food picker</a></nav>
+<nav><a href="faq.html">Questions</a> <a href="//foodpicker.fitcast.com/">Food picker</a></nav>
 
 <?php if (!isset($_SESSION["id"])) {
 	echo "Not <a href='login.php'>logged in</a>. Can't fetch metabolism information.";
