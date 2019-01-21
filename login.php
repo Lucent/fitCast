@@ -1,4 +1,4 @@
-<?php include "Script/functions.php"; ?>
+<?php include "server/login.php"; ?>
 <!doctype html>
 <html>
 <head>
