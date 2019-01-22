@@ -1,12 +1,13 @@
-<?php include "server/login.php"; ?>
+<?php include "server/session.php"; ?>
 <!doctype html>
 <html>
 <head>
 <title>fitCast - Log in or Register</title>
 <style>
+body		{ font-family: sans-serif; }
 fieldset	{ padding: 1em; border: thin solid black; display: inline-block; }
-legend		{ font-size: large; }
-label		{ text-transform: uppercase; font-size: small; }
+legend		{ font-size: x-large; }
+label		{ text-transform: uppercase; }
 input[type=text],input[type=password],input[type=email]	{ min-width: 15em; display: block; margin-bottom: 1em; }
 </style>
 </head>

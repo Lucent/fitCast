@@ -1,3 +1,3 @@
-<?php include "login.php";
+<?php include "session.php";
 
 ?>

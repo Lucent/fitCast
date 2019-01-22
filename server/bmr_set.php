@@ -1,4 +1,4 @@
-<?php include "login.php";
+<?php include "session.php";
 
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	$conn = database_connect();
