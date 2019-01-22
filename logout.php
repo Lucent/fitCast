@@ -1,5 +1,5 @@
 <?php
-include "Script/functions.php";
+include "server/login.php";
 
 $_SESSION = array();
 session_destroy();

@@ -18,12 +18,13 @@ function set_session_vars($userdata) {
 	$_SESSION["valid"] = 1;
 	$_SESSION["username"] = $userdata["username"];
 	$_SESSION["id"] = $userdata["id"];
+	$_SESSION["bmr"] = $userdata["bmr"];
 }
 
 function login($username, $password) {
 	$conn = database_connect();
 	$username = mysqli_real_escape_string($conn, $username);
-	$query = "SELECT id, username, password FROM users WHERE username='$username' OR email='$username';";
+	$query = "SELECT id, username, password, bmr FROM users WHERE username='$username' OR email='$username';";
 	$result = mysqli_query($conn, $query);
 	if (mysqli_num_rows($result) < 1) {
 		return "NOUSER";
