@@ -19,58 +19,13 @@ tbody td			{ text-align: right; }
 .Today				{ border-bottom: thick solid red; }
 tbody tr			{ color: gray; }
 .Today ~ tr			{ color: black; }
+#LineChart			{ width: 10em; }
+
+.Black				{ color: black; }
+.White				{ color: white; }
 </style>
-<script src="https://d3js.org/d3-array.v1.min.js"></script>
-<script src="https://d3js.org/d3-scale.v2.min.js"></script>
-<script src="https://d3js.org/d3-color.v1.min.js"></script>
-<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-<script>
-window.onload = bootstrap;
-function bootstrap() {
-	append_running_total();
-	colorize_inputs();
-	watch_changes();
-}
-
-var colorize_inputs = function() {
-	const range = ["green", "white", "red"];
-
-	let domain = [BMR/2 * 1, BMR/2 * 2, BMR/2 * 3];
-	const daily_interpolator = d3.scaleLinear().domain(domain).range(range).interpolate(d3.interpolateLab);
-	const inputs = document.querySelectorAll("tbody input");
-	for (const input of inputs) {
-		if (input.value)
-			input.style.backgroundColor = daily_interpolator(input.value);
-	}
-
-	const POUND = 3500;
-	domain = [-1 * POUND, 0, 1 * POUND];
-	const cumulative_interpolator = d3.scaleLinear().domain(domain).range(range).interpolate(d3.interpolateLab);
-	const outputs = document.querySelectorAll("tbody output");
-	for (const output of outputs) {
-		output.parentNode.style.backgroundColor = cumulative_interpolator(output.textContent * 1);
-	}
-}
-
-var append_running_total = function() {
-	const rows = document.querySelectorAll("tbody tr");
-	let running_total = 0;
-	for (const row of rows) {
-		let intake = row.querySelector("input").value * 1;
-		if (intake === 0)
-			intake = BMR;
-		running_total += intake - BMR;
-		row.cells[2].querySelector("output").textContent = running_total;
-		row.cells[3].querySelector("output").textContent = (running_total / 3500).toFixed(1);
-	}
-}
-
-function watch_changes() {
-	const inputs = document.querySelectorAll("tbody input");
-	for (const input of inputs) {
-		input.onchange = append_running_total;
-	}
-}
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script type="module" src="js/load.js">
 </script>
 </head>
 <body>
@@ -90,6 +45,8 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
  <input name="bmr" type="number" value="<?= isset($bmr) ? $bmr : 2000 ?>">
  <input type="submit" value="Save BMR">
 </form>
+
+<div id="LineChart"></div>
 
 <?php
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1)

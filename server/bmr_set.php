@@ -6,10 +6,11 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 
 	$bmr = mysqli_real_escape_string($conn, $_POST["bmr"]);
 	$query = "UPDATE users SET bmr='$bmr' WHERE id='$id';";
-	echo $query;
+	$_SESSION["bmr"] = $bmr;
 	mysqli_query($conn, $query);
 	echo $conn->error;
 
 	mysqli_close($conn);
+	header('Location: https://fitcast.com/');
 }
 ?>

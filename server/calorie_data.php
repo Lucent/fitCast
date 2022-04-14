@@ -11,7 +11,7 @@ function intake_get() {
 
 		$intake = [];
 		while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
-			$intake[$row["date"]] = $row["intake"];
+			$intake[] = ["date" => $row["date"], "intake" => (int) $row["intake"]];
 
 		mysqli_close($conn);
 
@@ -21,10 +21,12 @@ function intake_get() {
 
 function draw_table_chart($start = -7, $end = 21) {
 	$intake_array = intake_get();
+	echo "<script>let intake_array = " . json_encode($intake_array) . ";</script>";
 	echo "<form method='post' action='server/intake_set.php'>\n";
 	echo "<table id='Table'>\n";
 	echo "<thead><tr><th>Date</th><th>Intake</th><th>Cumulative</th><th>Pounds</th></tr></thead>\n";
 	echo "<tbody>\n";
+	echo "<tr><td><td><td><td><td rowspan=200 id='LineChart'></td></tr>";
 	$now = new DateTime();
 	for ($x = $start; $x < $end; $x++) {
 		$date = clone $now;
@@ -38,8 +40,9 @@ function draw_table_chart($start = -7, $end = 21) {
 		$month_day = $date->format("M d");
 		$weekday = $date->format("D");
 		$today = $x == -1 ? "Today" : "";
-		if (array_key_exists($date_string, $intake_array))
-			$intake = $intake_array[$date_string];
+		$result = array_search($date_string, array_column($intake_array, "date"));
+		if ($result)
+			$intake = $intake_array[$result]["intake"];
 		else
 			$intake = "";
 		echo " <tr class='{$weekday} {$today}' id='${date_string}'><th>{$weekday} {$month_day}</th><td><input type='number' name='{$date_string}' min='0' max='10000' value='{$intake}'></td><td><output></output></td><td><output></output></td></tr>\n";
