@@ -5,9 +5,11 @@ include "server/calorie_data.php";
 <html>
 <head>
 <title>fitCast - Predict your weight using calorie counting</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 table				{ border-collapse: collapse; }
-body				{ font-family: sans-serif; }
+:root				{ color-scheme: light dark; }
+body				{ font-family: sans-serif; color: CanvasText; background-color: Canvas; }
 
 tbody				{ font-size: large; }
 tbody th			{ font-weight: normal; text-align: right; }
@@ -18,7 +20,7 @@ tbody td			{ text-align: right; }
 .Sun > *			{ padding-top: 1em; }
 .Today				{ border-bottom: thick solid red; }
 tbody tr			{ color: gray; }
-.Today ~ tr			{ color: black; }
+.Today ~ tr			{ color: revert; }
 #LineChart			{ width: 10em; }
 
 .Black				{ color: black; }

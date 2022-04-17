@@ -8,7 +8,7 @@ function bootstrap() {
 var colorize_inputs = function() {
 	const range = ["green", "white", "red"];
 
-	let domain = [0, BMR, BMR * 1.5];
+	let domain = [BMR - 500, BMR, BMR + 500];
 	const daily_interpolator = d3.scaleLinear().domain(domain).range(range).interpolate(d3.interpolateLab);
 	const inputs = document.querySelectorAll("tbody input");
 	for (const input of inputs)
@@ -18,30 +18,32 @@ var colorize_inputs = function() {
 			set_text_color.call(input, color);
 		}
 
+/*
 	const POUND = 3500;
 	domain = [-5 * POUND, 0, 5 * POUND];
 	const cumulative_interpolator = d3.scaleLinear().domain(domain).range(range).interpolate(d3.interpolateLab);
-	const outputs = document.querySelectorAll("tbody output");
+	const outputs = document.querySelectorAll("tbody td:not(:last-of-type) output");
 	for (const output of outputs) {
 		let color = cumulative_interpolator(output.textContent * 1);
 		output.parentNode.style.backgroundColor = color;
 		set_text_color.call(output.parentNode, color);
 	}
+*/
 }
 
 var append_running_total = function() {
-	const rows = document.querySelectorAll("tbody tr");
+	const has_value = [...document.querySelectorAll("tbody td:first-of-type input:not([value=''])")].reverse();
+
 	let running_total = 0;
-	for (const row of rows) {
+	has_value.forEach(input => {
+		const row = input.parentNode.parentNode;
 		if (row.querySelector("input")) {
 			let intake = row.querySelector("input").value * 1;
-			if (intake === 0)
-				intake = BMR;
 			running_total += intake - BMR;
-			row.cells[2].querySelector("output").textContent = running_total;
-			row.cells[3].querySelector("output").textContent = (running_total / 3500).toFixed(1);
+//			row.cells[2].querySelector("output").textContent = running_total;
+			row.cells[2].querySelector("output").textContent = (running_total / 3500).toFixed(1);
 		}
-	}
+	});
 }
 
 function watch_changes() {
