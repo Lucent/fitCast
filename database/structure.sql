@@ -26,6 +26,7 @@ CREATE TABLE `calories` (
   `id` mediumint unsigned NOT NULL,
   `date` date NOT NULL,
   `intake` smallint unsigned DEFAULT NULL,
+  `weight` float unsigned DEFAULT NULL,
   UNIQUE KEY `id` (`id`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -47,21 +48,6 @@ CREATE TABLE `users` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `weight`
---
-
-DROP TABLE IF EXISTS `weight`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `weight` (
-  `id` mediumint unsigned NOT NULL,
-  `date` date NOT NULL,
-  `weight` float unsigned DEFAULT NULL,
-  UNIQUE KEY `id` (`id`,`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -72,4 +58,4 @@ CREATE TABLE `weight` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-17 12:39:53
+-- Dump completed on 2022-04-18  0:34:12

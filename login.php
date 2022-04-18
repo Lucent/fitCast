@@ -3,9 +3,11 @@
 <html>
 <head>
 <title>fitCast - Log in or Register</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body		{ font-family: sans-serif; }
-fieldset	{ padding: 1em; border: thin solid black; display: inline-block; }
+:root		{ color-scheme: light dark; }
+body		{ font-family: sans-serif; color: CanvasText; background-color: Canvas; }
+fieldset	{ padding: 1em; border: thin solid CanvasText; display: inline-block; }
 legend		{ font-size: x-large; }
 label		{ text-transform: uppercase; }
 input[type=text],input[type=password],input[type=email]	{ min-width: 15em; display: block; margin-bottom: 1em; }

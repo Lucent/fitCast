@@ -4,38 +4,24 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	$conn = database_connect();
 	$id = $_SESSION["id"];
 
-	$weight = array_filter($_POST,
-		fn($key) => str_starts_with($key, "Weight-") === true,
-		ARRAY_FILTER_USE_KEY
-	);
-	$intake = array_filter($_POST,
-		fn($key) => str_starts_with($key, "Intake-") === true,
-		ARRAY_FILTER_USE_KEY
-	);
+	$by_date = [];
+	foreach ($_POST as $key => $value) {
+		$field_date = explode("-", $key, 2);
+		$field = strtolower($field_date[0]);
+		$date = mysqli_real_escape_string($conn, $field_date[1]);
+		$by_date[$date][$field] = $value === "" ? "NULL" : mysqli_real_escape_string($conn, $value);
+	}
 
-	$intake_sql = array_to_sql($intake, "Intake-");
-	$weight_sql = array_to_sql($weight, "Weight-");
+	$submission = [];
+	foreach ($by_date as $date => $assoc)
+		$submission[] = "($id, STR_TO_DATE('$date', '%Y-%m-%d'), {$assoc['intake']}, {$assoc['weight']})";
+	$sql_replace = implode(", ", $submission);
 
-	$query = "REPLACE INTO calories (id, date, intake) VALUES {$intake_sql};";
-	mysqli_query($conn, $query);
-	echo $conn->error;
+	$query = "REPLACE INTO calories (id, date, intake, weight) VALUES {$sql_replace};";
 
-	$query = "REPLACE INTO weight (id, date, weight) VALUES {$weight_sql};";
 	mysqli_query($conn, $query);
 	echo $conn->error;
 
 	mysqli_close($conn);
-}
-
-function array_to_sql($array, $prefix) {
-	global $id, $conn;
-	$submission = [];
-	foreach ($array as $date => $value) {
-		$date = substr($date, strlen($prefix));
-		$date = mysqli_real_escape_string($conn, $date);
-		$value = $value === "" ? "NULL" : mysqli_real_escape_string($conn, $value);
-		$submission[] = "($id, STR_TO_DATE('$date', '%Y-%m-%d'), $value)";
-	}
-	return implode(", ", $submission);
 }
 ?>

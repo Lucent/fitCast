@@ -4,7 +4,7 @@ include "server/calorie_data.php";
 <!doctype html>
 <html>
 <head>
-<title>fitCast - Predict your weight using calorie counting</title>
+<title>fitCast - Predict your weight and BMR using calorie counting</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 table				{ border-collapse: collapse; }
@@ -27,12 +27,15 @@ tbody tr			{ color: gray; }
 .White				{ color: white; }
 </style>
 <script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/regression@2.0.1/dist/regression.min.js"></script>
 <script type="module" src="js/load.js">
 </script>
 </head>
 <body>
 <h1>fitCast</h1>
-<h2>Forecast your weight with the precision of a jeweler's scale.</h2>
+<h2>Enter your daily calorie intake and weight to calculate your BMR and forecast future weight loss or gain.</h2>
 <?php
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 	if (array_key_exists("bmr", $_SESSION)) {
@@ -44,11 +47,12 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 }
 ?>
 <form method="post" action="server/bmr_set.php">
- <input name="bmr" type="number" value="<?= isset($bmr) ? $bmr : 2000 ?>">
+ <input name="bmr" type="number" step="0.01" value="<?= isset($bmr) ? $bmr : 2000 ?>">
  <input type="submit" value="Save BMR">
 </form>
+<h3>Your predicted BMR from the entered intake and weights is <output></output></h3>
 
-<div id="LineChart"></div>
+<canvas id="LineChart"></canvas>
 
 <?php
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1)

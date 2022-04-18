@@ -1,8 +1,10 @@
+const CALS_PER_POUND = 3500;
+
 function bootstrap() {
 	append_running_total();
+	draw_chart();
 	colorize_inputs();
 	watch_changes();
-	draw_graph();
 }
 
 var colorize_inputs = function() {
@@ -19,7 +21,6 @@ var colorize_inputs = function() {
 		}
 
 /*
-	const POUND = 3500;
 	domain = [-5 * POUND, 0, 5 * POUND];
 	const cumulative_interpolator = d3.scaleLinear().domain(domain).range(range).interpolate(d3.interpolateLab);
 	const outputs = document.querySelectorAll("tbody td:not(:last-of-type) output");
@@ -40,8 +41,11 @@ var append_running_total = function() {
 		if (row.querySelector("input")) {
 			let intake = row.querySelector("input").value * 1;
 			running_total += intake - BMR;
-//			row.cells[2].querySelector("output").textContent = running_total;
-			row.cells[2].querySelector("output").textContent = (running_total / 3500).toFixed(1);
+			row.cells[2].querySelector("output").textContent = (running_total / CALS_PER_POUND).toFixed(1);
+			const index = intake_array.findIndex(e => e.date === row.id);
+			const predicted_delta = (running_total / CALS_PER_POUND);
+			intake_array[index].predicted = predicted_delta;
+			row.cells[4].querySelector("output").textContent = predicted_delta.toFixed(1);
 		}
 	});
 }
@@ -93,6 +97,74 @@ function draw_graph() {
 	svg.append("path")
 		.datum(intake_array)
 		.attr("d", line);
+}
+
+function draw_chart() {
+	intake_array = intake_array.filter(e => e.intake != null || e.weight != null);
+
+	const days_calories_measured = intake_array.filter(e => e.weight != null).map((x,y) => [Date.parse(x.date) / 1000 / 60 / 60 / 24, Number(x.weight) * CALS_PER_POUND]);
+	const measured_range = [Math.min(...days_calories_measured.map(e => e[1])), Math.max(...days_calories_measured.map(e => e[1]))];
+	const weight_eq = regression.linear(days_calories_measured).equation;
+	console.log(regression.linear(days_calories_measured))
+
+	const days_calories_predicted = intake_array.filter(e => e.predicted != null).map((x,y) => [Date.parse(x.date) / 1000 / 60 / 60 / 24, Number(x.predicted) * CALS_PER_POUND]);
+	const predicted_range = [Math.min(...days_calories_predicted.map(e => e[1])), Math.max(...days_calories_predicted.map(e => e[1]))];
+	const predict_eq = regression.linear(days_calories_predicted).equation;
+	console.log(regression.linear(days_calories_predicted))
+
+	const BMR_adjust = predict_eq[0] - weight_eq[0];
+	const graph_offset = predict_eq[1] - weight_eq[1];
+	document.querySelector("h3 > output").textContent = BMR + BMR_adjust;
+
+	let range;
+	if (predicted_range[1] - predicted_range[0] > measured_range[1] - measured_range[0])
+		range = predicted_range[1] - predicted_range[0];
+	else
+		range = measured_range[1] - measured_range[0];
+
+	const data = {
+		labels: intake_array.map(e => e.date),
+		datasets: [{
+			label: 'Measured weight',
+			data: intake_array.map(e => e.weight),
+			borderColor: "blue",
+			yAxisID: "weight"
+		},{
+			label: 'Predicted weight',
+			data: intake_array.map(e => e.predicted),
+			borderColor: "red",
+			yAxisID: "predict"
+		}]
+	};
+
+	const context = document.getElementById("LineChart").getContext("2d");
+	const chart = new Chart(context, {
+		type: "line",
+		data,
+		options: {
+			spanGaps: true,
+			scales: {
+				x: {
+					type: 'time'
+				},
+				predict: {
+					type: "linear",
+					display: true,
+					position: "left",
+					min: (measured_range[0] + graph_offset) / CALS_PER_POUND,
+					max: (measured_range[0] + graph_offset + range) / CALS_PER_POUND
+				},
+				weight: {
+					type: "linear",
+					display: true,
+					position: "right",
+					min: measured_range[0] / CALS_PER_POUND,
+					max: (measured_range[0] + range) / CALS_PER_POUND
+				}
+			}
+		}
+	});
+
 }
 
 bootstrap();
