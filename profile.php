@@ -21,10 +21,5 @@ Sex: <input type="radio" name="sex" value="male" id="male" <?= ($_GET["sex"] == 
 Height: <select name="feet"><?php for ($x = 4; $x <= 6; $x++) { ?><option value=<?= $x ?> <?= ($_GET["feet"] == $x ? "selected" : "") ?>><?= $x ?></option><?php } ?></select> ft <select name="inches"><?php for ($x = 0; $x < 12; $x++) { ?><option value=<?= $x ?> <?= ($_GET["inches"] == $x ? "selected" : "") ?>><?= $x ?></option><?php } ?></select> in<br>
 </fieldset>
 
-<fieldset>
-<legend>Lifestyle (BMR=<?= round($bmr) ?>)</legend>
-<input type="radio" name="lifestyle" value="1.2" id="sedentary" checked><label for="sedentary">Sedentary: <?= round($bmr * $_GET["lifestyle"]) ?> cal/day</label><br>
-</fieldset>
-
 <input type="submit">
 </form>

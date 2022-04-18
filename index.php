@@ -38,18 +38,10 @@ tbody tr			{ color: gray; }
 <h2>Enter your daily calorie intake and weight to calculate your BMR and forecast future weight loss or gain.</h2>
 <?php
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
-	if (array_key_exists("bmr", $_SESSION)) {
-		$bmr = $_SESSION["bmr"];
-		echo "<script>const BMR = {$_SESSION["bmr"]};</script>";
-	}
 } else {
 	echo "<p>Please <a href='login.php'>log in or register</a> to save your data.</p>";
 }
 ?>
-<form method="post" action="server/bmr_set.php">
- <input name="bmr" type="number" step="0.01" value="<?= isset($bmr) ? $bmr : 2000 ?>">
- <input type="submit" value="Save BMR">
-</form>
 <h3>Your predicted BMR from the entered intake and weights is <output></output></h3>
 
 <canvas id="LineChart"></canvas>

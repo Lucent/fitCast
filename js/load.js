@@ -1,18 +1,42 @@
 const CALS_PER_POUND = 3500;
 
 function bootstrap() {
-	append_running_total();
-	draw_chart();
-	colorize_inputs();
+	const weight_eq = regress_property("weight");
+	console.log(weight_eq);
+
+	store_cumulative_intake(0);
+	let intake_eq = regress_property("predicted");
+	let BMR = intake_eq[0] - weight_eq[0];
+
+	store_cumulative_intake(BMR);
+	intake_eq = regress_property("predicted");
+	console.log(intake_eq);
+	const offset = weight_eq[1] - intake_eq[1];
+	predict_from_eq(offset);
+
+	document.querySelector("h3 > output").textContent = BMR * CALS_PER_POUND;
+	draw_chart(offset);
+
+	colorize_inputs(BMR);
 	watch_changes();
 }
 
-var colorize_inputs = function() {
-	const range = ["green", "white", "red"];
+function predict_from_eq(offset) {
+	const rows = [...document.querySelectorAll("tbody > tr")].reverse();
+	rows.forEach(row => {
+		const index = intake_array.findIndex(e => e.date === row.id);
+		if (intake_array[index].predicted)
+			row.cells[4].querySelector("output").textContent = (intake_array[index].predicted + offset).toFixed(1);
+	});
+}
 
-	let domain = [BMR - 500, BMR, BMR + 500];
+function colorize_inputs(BMR) {
+	const range = ["green", "black", "red"];
+	BMR *= CALS_PER_POUND;
+
+	let domain = [BMR * 0.6, BMR, BMR * 1.2];
 	const daily_interpolator = d3.scaleLinear().domain(domain).range(range).interpolate(d3.interpolateLab);
-	const inputs = document.querySelectorAll("tbody input");
+	const inputs = document.querySelectorAll("tbody td:first-of-type input");
 	for (const input of inputs)
 		if (input.value) {
 			let color = daily_interpolator(input.value);
@@ -20,19 +44,21 @@ var colorize_inputs = function() {
 			set_text_color.call(input, color);
 		}
 
-/*
-	domain = [-5 * POUND, 0, 5 * POUND];
+
+	domain = [-2.5, 0, 2.5];
 	const cumulative_interpolator = d3.scaleLinear().domain(domain).range(range).interpolate(d3.interpolateLab);
-	const outputs = document.querySelectorAll("tbody td:not(:last-of-type) output");
+	const outputs = document.querySelectorAll("tbody td:last-of-type output");
 	for (const output of outputs) {
-		let color = cumulative_interpolator(output.textContent * 1);
-		output.parentNode.style.backgroundColor = color;
-		set_text_color.call(output.parentNode, color);
+		const actual_weight = output.parentNode.previousSibling.querySelector("input");
+		if (actual_weight.value) {
+			let color = cumulative_interpolator(Number(output.textContent) - Number(actual_weight.value));
+			output.parentNode.style.backgroundColor = color;
+			set_text_color.call(output.parentNode, color);
+		}
 	}
-*/
 }
 
-var append_running_total = function() {
+function store_cumulative_intake(BMR) {
 	const has_value = [...document.querySelectorAll("tbody td:first-of-type input:not([value=''])")].reverse();
 
 	let running_total = 0;
@@ -40,12 +66,10 @@ var append_running_total = function() {
 		const row = input.parentNode.parentNode;
 		if (row.querySelector("input")) {
 			let intake = row.querySelector("input").value * 1;
-			running_total += intake - BMR;
-			row.cells[2].querySelector("output").textContent = (running_total / CALS_PER_POUND).toFixed(1);
 			const index = intake_array.findIndex(e => e.date === row.id);
-			const predicted_delta = (running_total / CALS_PER_POUND);
-			intake_array[index].predicted = predicted_delta;
-			row.cells[4].querySelector("output").textContent = predicted_delta.toFixed(1);
+			running_total += intake / CALS_PER_POUND - BMR;
+			row.cells[2].querySelector("output").textContent = running_total.toFixed(1);
+			intake_array[index].predicted = running_total;
 		}
 	});
 }
@@ -53,7 +77,7 @@ var append_running_total = function() {
 function watch_changes() {
 	const inputs = document.querySelectorAll("tbody input");
 	for (const input of inputs) {
-		input.addEventListener("change", append_running_total);
+		input.addEventListener("change", store_cumulative_intake);
 		input.addEventListener("change", colorize_inputs);
 	}
 }
@@ -80,60 +104,24 @@ function set_text_color(color) {
 	this.classList.toggle("White", contrasting === "White");
 }
 
-function draw_graph() {
-	const width = "4em";
-	const height = "500px";
-
-	let svg = d3.select("#LineChart").append("svg")
-		.attr("width", width)
-		.attr("height", height);
-	let x = d3.scaleTime();//.rangeRound([0, width]);
-	let y = d3.scaleLinear();//.rangeRound([height, 0]);
-	let parse_time = d3.timeParse("%Y-%m-%d");
-//	x.domain(d3.extent(intake_array, d => d.date));
-//	y.domain([0, d3.max(intake_array, d => d.intake)]);
-	let line = d3.line().x(d => x(parse_time(d.date))).y(d => d.intake);
-
-	svg.append("path")
-		.datum(intake_array)
-		.attr("d", line);
+function regress_property(property) {
+	const days_property = intake_array.filter(e => e[property] != null).map((x,y) => [Date.parse(x.date) / 1000 / 60 / 60 / 24, Number(x[property])]);
+	return regression.linear(days_property).equation;
 }
 
-function draw_chart() {
+function draw_chart(offset) {
 	intake_array = intake_array.filter(e => e.intake != null || e.weight != null);
-
-	const days_calories_measured = intake_array.filter(e => e.weight != null).map((x,y) => [Date.parse(x.date) / 1000 / 60 / 60 / 24, Number(x.weight) * CALS_PER_POUND]);
-	const measured_range = [Math.min(...days_calories_measured.map(e => e[1])), Math.max(...days_calories_measured.map(e => e[1]))];
-	const weight_eq = regression.linear(days_calories_measured).equation;
-	console.log(regression.linear(days_calories_measured))
-
-	const days_calories_predicted = intake_array.filter(e => e.predicted != null).map((x,y) => [Date.parse(x.date) / 1000 / 60 / 60 / 24, Number(x.predicted) * CALS_PER_POUND]);
-	const predicted_range = [Math.min(...days_calories_predicted.map(e => e[1])), Math.max(...days_calories_predicted.map(e => e[1]))];
-	const predict_eq = regression.linear(days_calories_predicted).equation;
-	console.log(regression.linear(days_calories_predicted))
-
-	const BMR_adjust = predict_eq[0] - weight_eq[0];
-	const graph_offset = predict_eq[1] - weight_eq[1];
-	document.querySelector("h3 > output").textContent = BMR + BMR_adjust;
-
-	let range;
-	if (predicted_range[1] - predicted_range[0] > measured_range[1] - measured_range[0])
-		range = predicted_range[1] - predicted_range[0];
-	else
-		range = measured_range[1] - measured_range[0];
 
 	const data = {
 		labels: intake_array.map(e => e.date),
 		datasets: [{
 			label: 'Measured weight',
 			data: intake_array.map(e => e.weight),
-			borderColor: "blue",
-			yAxisID: "weight"
+			borderColor: "green"
 		},{
 			label: 'Predicted weight',
-			data: intake_array.map(e => e.predicted),
-			borderColor: "red",
-			yAxisID: "predict"
+			data: intake_array.map(e => e.predicted + offset),
+			borderColor: "red"
 		}]
 	};
 
@@ -146,25 +134,10 @@ function draw_chart() {
 			scales: {
 				x: {
 					type: 'time'
-				},
-				predict: {
-					type: "linear",
-					display: true,
-					position: "left",
-					min: (measured_range[0] + graph_offset) / CALS_PER_POUND,
-					max: (measured_range[0] + graph_offset + range) / CALS_PER_POUND
-				},
-				weight: {
-					type: "linear",
-					display: true,
-					position: "right",
-					min: measured_range[0] / CALS_PER_POUND,
-					max: (measured_range[0] + range) / CALS_PER_POUND
 				}
 			}
 		}
 	});
-
 }
 
 bootstrap();
