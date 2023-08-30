@@ -1,5 +1,8 @@
 <?php
-session_start();
+session_set_cookie_params(31536000);
+session_start([
+	"cookie_lifetime" => 60 * 60 * 24 * 365
+]);
 include "db_password.php";
 
 function database_connect() {
@@ -61,7 +64,7 @@ function draw_login_register($legend, $username, $password, $submittype) {
 	}
 	echo "  <label for='Password'>Password</label> <input id='Password' type='password' name='password' value='$password'>\n";
 	if ($legend == "Register") {
-		echo "  <label for='Password2'>Re-type Password</label> <input id='Password2' type='password' name='password2' value=''>\n";
+		echo "  <label for='Password2'>Re-enter Password</label> <input id='Password2' type='password' name='password2' value=''>\n";
 	}
 	foreach ($submittype as $button)
 		echo "  <input type='submit' name='Submit' value='$button'>\n";

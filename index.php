@@ -39,7 +39,7 @@ tbody tr			{ color: gray; }
 <?php
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 } else {
-	echo "<p>Please <a href='login.php'>log in or register</a> to save your data.</p>";
+	echo "<p><a href='login.php'>Log in or register</a> to save your data.</p>";
 }
 ?>
 <h3>Your predicted BMR from the entered intake and weights is <output></output></h3>
@@ -48,7 +48,7 @@ if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1) {
 
 <?php
 if (isset($_SESSION["valid"]) && $_SESSION["valid"] === 1)
-	draw_table_chart(-3, 200);
+	draw_table_chart(-1, 40);
 ?>
 <nav>
  <a href="faq.html">Questions</a>
